@@ -401,6 +401,7 @@
 				F2C8A2831F41428500E246F7 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		F2C8A2841F41428500E246F7 /* Build configuration list for PBXNativeTarget "TodoTests" */ = {
 			isa = XCConfigurationList;
@@ -409,6 +410,7 @@
 				F2C8A2861F41428500E246F7 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 
