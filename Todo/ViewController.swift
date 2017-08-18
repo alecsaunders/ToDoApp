@@ -11,6 +11,9 @@ import CoreData
 
 class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelegate {
 
+    var reorderArray: [String] = ["item 1", "item 2", "item 3", "item 4"]
+    let registeredTypes:[String] = [NSStringPboardType]
+    
     @IBOutlet var mainTableView: NSTableView!
     @IBOutlet var textAddToDo: NSTextField!
     @IBAction func btnAdd(_ sender: NSButton) {
@@ -34,6 +37,10 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
         
         mainTableView.delegate = self
         mainTableView.dataSource = self
+        mainTableView.usesAlternatingRowBackgroundColors = true
+        mainTableView.setDraggingSourceOperationMask(NSDragOperation.every, forLocal: false)
+        mainTableView.register(forDraggedTypes: registeredTypes)
+        mainTableView.doubleAction = #selector(self.doubleClickMainTVCell)
         mainTableView.reloadData()
     }
     
@@ -49,11 +56,11 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
     }
     
     func numberOfRows(in tableView: NSTableView) -> Int {
-        return toDoEntityArray.count
+        return reorderArray.count
     }
     
     func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
-        let theToDo = toDoEntityArray[row]
+        let reorderItem = reorderArray[row]
         var cellIdentifier: String = ""
         
         var cell: NSTableCellView? = nil
@@ -68,7 +75,7 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
         } else if tableColumn == tableView.tableColumns[1] {
             cellIdentifier = CellIdentifiers.col_toDoText
             cell = tableView.make(withIdentifier: cellIdentifier, owner: nil) as? NSTableCellView
-            cell?.textField?.stringValue = theToDo.value(forKeyPath: "title") as! String
+            cell?.textField?.stringValue = reorderItem
         }
         
         return cell!
@@ -77,8 +84,36 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
     
     /////////////////
     // test stuff
-    func tableView(_ tableView: NSTableView, pasteboardWriterForRow row: Int) -> NSPasteboardWriting? {
-        return nil
+    
+    func doubleClickMainTVCell(sender: AnyObject) {
+        guard let tv = sender as? NSTableView else { return }
+        print("Double-clicked cell at index: \(tv.selectedRow)")
+    }
+    
+//    func tableView(_ tableView: NSTableView, pasteboardWriterForRow row: Int) -> NSPasteboardWriting? {
+//        let item = reorderArray[row]
+//        return item as NSPasteboardWriting
+//    }
+    
+    func tableView(_ tableView: NSTableView, validateDrop info: NSDraggingInfo, proposedRow row: Int, proposedDropOperation dropOperation: NSTableViewDropOperation) -> NSDragOperation {
+        if dropOperation == .above {
+            return .move
+        }
+        return .every
+    }
+    
+    func tableView(_ tableView: NSTableView, writeRowsWith rowIndexes: IndexSet, to pboard: NSPasteboard) -> Bool {
+        let data = NSKeyedArchiver.archivedData(withRootObject: rowIndexes)
+        pboard.declareTypes(registeredTypes, owner: self)
+        pboard.setData(data, forType: NSStringPboardType)
+        return true
+    }
+    
+    func tableView(_ tableView: NSTableView, acceptDrop info: NSDraggingInfo, row: Int, dropOperation: NSTableViewDropOperation) -> Bool {
+//        let dragData = info.draggingPasteboard().data(forType: NSStringPboardType)!
+//        let rowIndexes: IndexSet? = NSKeyedUnarchiver.unarchiveObject(with: dragData) as? IndexSet
+        
+        return true
     }
     // end test stuff
     /////////////////
