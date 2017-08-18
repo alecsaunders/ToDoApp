@@ -16,35 +16,35 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
     @IBAction func btnAdd(_ sender: NSButton) {
         pressToDoBtn()
     }
+    @IBAction func completedCheck(_ sender: NSButton) {
+        completedWasChecked(checkedBox: sender)
+    }
+    
+    fileprivate enum CellIdentifiers {
+        static let col_complete = "col_complete"
+        static let col_toDoText = "col_toDoText"
+    }
     
     var toDoEntityArray: [NSManagedObject] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        fetchCDEntities()
+        
         mainTableView.delegate = self
         mainTableView.dataSource = self
-        
-        guard let appDelegate = NSApplication.shared().delegate as? AppDelegate else {
-                return
-        }
-        
-        let managedContext = appDelegate.persistentContainer.viewContext
-        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "ToDo")
-        do {
-            toDoEntityArray = try managedContext.fetch(fetchRequest)
-        } catch let error as NSError {
-            print("Could not fetch. \(error), \(error.userInfo)")
-        }
-        
         mainTableView.reloadData()
     }
     
-    
-
-    override var representedObject: Any? {
-        didSet {
-        // Update the view, if already loaded.
+    func fetchCDEntities() {
+        let appDelegate = NSApplication.shared().delegate as? AppDelegate
+        let managedContext = appDelegate?.persistentContainer.viewContext
+        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "ToDo")
+        do {
+            try toDoEntityArray = managedContext!.fetch(fetchRequest)
+        } catch let error as NSError {
+            print("Could not fetch. \(error), \(error.userInfo)")
         }
     }
     
@@ -53,12 +53,36 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
     }
     
     func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
-        let cell = mainTableView.make(withIdentifier: "toDoCell", owner: self) as! NSTableCellView
         let theToDo = toDoEntityArray[row]
-        cell.textField?.stringValue = theToDo.value(forKeyPath: "title") as! String
+        var cellIdentifier: String = ""
         
-        return cell
+        var cell: NSTableCellView? = nil
+        
+        if tableColumn == tableView.tableColumns[0] {
+            cellIdentifier = CellIdentifiers.col_complete
+            cell = tableView.make(withIdentifier: cellIdentifier, owner: nil) as? NSTableCellView
+            if let completedCheck = cell?.subviews[0] as? NSButton {
+                completedCheck.tag = row
+                completedCheck.state = 0 // remove this code, it's a hack
+            }
+        } else if tableColumn == tableView.tableColumns[1] {
+            cellIdentifier = CellIdentifiers.col_toDoText
+            cell = tableView.make(withIdentifier: cellIdentifier, owner: nil) as? NSTableCellView
+            cell?.textField?.stringValue = theToDo.value(forKeyPath: "title") as! String
+        }
+        
+        return cell!
     }
+    
+    
+    /////////////////
+    // test stuff
+    func tableView(_ tableView: NSTableView, pasteboardWriterForRow row: Int) -> NSPasteboardWriting? {
+        return nil
+    }
+    // end test stuff
+    /////////////////
+    
     
     func pressToDoBtn() {
         if !textAddToDo.stringValue.isEmpty {
@@ -74,11 +98,11 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
         }
         let managedContext = appDelegate.persistentContainer.viewContext
         let entity = NSEntityDescription.entity(forEntityName: "ToDo", in: managedContext)!
-        let person = NSManagedObject(entity: entity, insertInto: managedContext)
-        person.setValue(currentToDoItem, forKeyPath: "title")
+        let toDoEntityRecord = NSManagedObject(entity: entity, insertInto: managedContext)
+        toDoEntityRecord.setValue(currentToDoItem, forKeyPath: "title")
         do {
             try managedContext.save()
-            toDoEntityArray.append(person)
+            toDoEntityArray.append(toDoEntityRecord)
         } catch let error as NSError {
             print("Could not save. \(error), \(error.userInfo)")
         }
@@ -87,6 +111,33 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
     func clearTextAddToDo() {
         textAddToDo.stringValue = ""
         textAddToDo.becomeFirstResponder()
+    }
+    
+    func completedWasChecked(checkedBox: NSButton) {
+        switch checkedBox.state {
+        case NSOnState:
+            removeToDoEntityRecord(atIndex: checkedBox.tag)
+        case NSOffState:
+            break
+        default:
+            break
+        }
+    }
+    
+    
+    func removeToDoEntityRecord(atIndex: Int) {
+        let appDelegate = NSApplication.shared().delegate as? AppDelegate
+        let managedContext = appDelegate?.persistentContainer.viewContext
+        if let context = managedContext {
+            context.delete(toDoEntityArray[atIndex])
+            do {
+                try context.save()
+            } catch let error as NSError {
+                print("Could not delete. \(error), \(error.userInfo)")
+            }
+        }
+        fetchCDEntities()
+        mainTableView.reloadData()
     }
 
 }
