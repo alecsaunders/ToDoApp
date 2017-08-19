@@ -111,32 +111,25 @@ class MainController: NSObject {
         print("Drag Dest: \(dragDest)")
         
         guard let mc = managedContext else { return }
-        var tmpArray: [ToDo] = []
-        for td in mainTableToDoArray {
-            var tmpToDo = ToDo(title: td.title, completed: td.completed, ordinalPosition: td.ordinalPosition, managedContextID: td.managedContextID)
-            let mngdObj = mc.object(with: td.managedContextID)
-            if dragOrigin > dragDest {
-                if td.ordinalPosition == dragOrigin {
-                    tmpToDo.ordinalPosition = dragDest
-                    mngdObj.setValue(dragDest, forKey: "ordinalPosition")
-                } else if td.ordinalPosition >= dragDest && td.ordinalPosition < dragOrigin {
-                    tmpToDo.ordinalPosition = tmpToDo.ordinalPosition + 1
-                    mngdObj.setValue(tmpToDo.ordinalPosition + 1, forKey: "ordinalPosition")
-                }
-            } else {
-                if td.ordinalPosition == dragOrigin {
-                    tmpToDo.ordinalPosition = dragDest
-                    mngdObj.setValue(dragDest, forKey: "ordinalPosition")
-                } else if td.ordinalPosition <= dragDest && td.ordinalPosition > dragOrigin {
-                    tmpToDo.ordinalPosition = tmpToDo.ordinalPosition - 1
-                    mngdObj.setValue(tmpToDo.ordinalPosition - 1, forKey: "ordinalPosition")
-                }
-            }
-            tmpArray.append(tmpToDo)
+        var alteredDragDest = dragDest
+        if dragOrigin == dragDest - 1 { return }
+        if dragOrigin < dragDest {
+            alteredDragDest = dragDest - 1
         }
+        
+        let draggedItem = mainTableToDoArray[dragOrigin]
+        mainTableToDoArray.remove(at: dragOrigin)
+        mainTableToDoArray.insert(draggedItem, at: alteredDragDest)
+        
+        
+        for i in 0..<mainTableToDoArray.count {
+            mainTableToDoArray[i].ordinalPosition = i
+            let mngdObj = mc.object(with: mainTableToDoArray[i].managedContextID)
+            mngdObj.setValue(i, forKey: "ordinalPosition")
+        }
+
         do {
             try mc.save()
-            mainTableToDoArray = tmpArray.sorted{ $0.ordinalPosition < $1.ordinalPosition }
             coreDataToDoManagedObjects = fetchManagedObjectsFromCoreData(entityName: "ToDo")
         } catch let error as NSError {
             print("Could not save. \(error), \(error.userInfo)")
