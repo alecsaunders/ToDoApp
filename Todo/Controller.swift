@@ -107,9 +107,6 @@ class MainController: NSObject {
     }
     
     func reorderToDos(dragOrigin: Int, dragDest: Int) {
-        print("Drag Origin: \(dragOrigin)")
-        print("Drag Dest: \(dragDest)")
-        
         guard let mc = managedContext else { return }
         var alteredDragDest = dragDest
         if dragOrigin == dragDest - 1 { return }
