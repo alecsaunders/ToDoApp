@@ -15,6 +15,16 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTableViewDelegate, NSTable
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
     }
+    
+    func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
+        print("Should handle reopen")
+        if !flag {
+            for window in sender.windows {
+                window.makeKeyAndOrderFront(self)
+            }
+        }
+        return true
+    }
 
     func applicationWillTerminate(_ aNotification: Notification) {
         // Insert code here to tear down your application

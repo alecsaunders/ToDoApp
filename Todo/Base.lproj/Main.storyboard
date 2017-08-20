@@ -678,7 +678,6 @@
                                 <toolbarItem implicitItemIdentifier="NSToolbarSpaceItem" id="bFl-hf-Mhx"/>
                                 <toolbarItem implicitItemIdentifier="NSToolbarFlexibleSpaceItem" id="Dxx-cQ-SUD"/>
                                 <toolbarItem implicitItemIdentifier="9B4F5EE3-0EFD-4E2E-8D57-B241C72D3E1C" label="To Do Title" paletteLabel="To Do Title" visibilityPriority="1" id="wNL-DJ-ncd">
-                                    <nil key="toolTip"/>
                                     <size key="minSize" width="96" height="22"/>
                                     <size key="maxSize" width="4000" height="22"/>
                                     <textField key="view" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" id="OpW-ny-htd">
@@ -691,8 +690,7 @@
                                         </textFieldCell>
                                     </textField>
                                 </toolbarItem>
-                                <toolbarItem implicitItemIdentifier="53C991DF-E651-4603-8DC1-DC7B15883833" label="Add To Do" paletteLabel="Add To Do" id="Dts-h2-OdS">
-                                    <nil key="toolTip"/>
+                                <toolbarItem implicitItemIdentifier="53C991DF-E651-4603-8DC1-DC7B15883833" label="Add To Do" paletteLabel="Add To Do" toolTip="Add To Do" id="Dts-h2-OdS" userLabel="Add To Do Button">
                                     <size key="minSize" width="40" height="32"/>
                                     <size key="maxSize" width="40" height="32"/>
                                     <button key="view" verticalHuggingPriority="750" id="fOr-J1-ohX">
@@ -762,8 +760,8 @@
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
                                                                 <button autoresizesSubviews="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TrI-Qm-cqG">
-                                                                    <rect key="frame" x="0.0" y="-1" width="22" height="18"/>
-                                                                    <buttonCell key="cell" type="check" bezelStyle="regularSquare" imagePosition="left" controlSize="small" continuous="YES" inset="2" id="0nS-0I-tGK">
+                                                                    <rect key="frame" x="0.0" y="-1" width="18" height="18"/>
+                                                                    <buttonCell key="cell" type="check" bezelStyle="regularSquare" imagePosition="only" controlSize="small" continuous="YES" inset="2" id="0nS-0I-tGK">
                                                                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                                         <font key="font" metaFont="smallSystem"/>
                                                                     </buttonCell>

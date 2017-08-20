@@ -28,7 +28,7 @@ class ViewController: NSViewController, MainTableViewDelgate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         cntlr.mainTableViewDelgate = self
         mainTableView.delegate = cntlr
         mainTableView.dataSource = cntlr
