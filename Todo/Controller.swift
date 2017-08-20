@@ -144,7 +144,6 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource {
 
         do {
             try mc.save()
-            print("MC saved")
             coreDataToDoManagedObjects = fetchManagedObjectsFromCoreData(entityName: "ToDo")
             mainTableViewDelgate?.reloadData()
         } catch let error as NSError {

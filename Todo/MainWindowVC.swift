@@ -12,17 +12,26 @@ import CoreData
 
 class ViewController: NSViewController, MainTableViewDelgate {
     @IBOutlet var mainTableView: NSTableView!
-    @IBOutlet var textAddToDo: NSTextField!
-    @IBAction func btnAdd(_ sender: NSButton) {
-        let txt = textAddToDo.stringValue
-        cntlr.save(currentToDoTitle: txt)
-        textAddToDo.stringValue = ""
+    @IBAction func btnAddItem(_ sender: NSButton) {
+        if let windowConroller = self.view.window?.windowController as? WindowController {
+            let txt = windowConroller.toDoTextField.stringValue
+            cntlr.save(currentToDoTitle: txt)
+            windowConroller.toDoTextField.stringValue = ""
+            
+        }
     }
     @IBAction func completedCheck(_ sender: NSButton) {
         cntlr.completedWasChecked(state: sender.state, btnIndex: sender.tag)
     }
 
     let cntlr = MainController()
+    
+    override func viewWillAppear() {
+        super.viewWillAppear()
+        if let windowController = view.window?.windowController as? WindowController {
+            windowController.toDoTextField.sizeToFit()
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()

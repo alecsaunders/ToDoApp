@@ -663,21 +663,66 @@
         <!--Window Controller-->
         <scene sceneID="R2V-B0-nI4">
             <objects>
-                <windowController id="B8D-0N-5wS" sceneMemberID="viewController">
+                <windowController id="B8D-0N-5wS" customClass="WindowController" customModule="Todo" customModuleProvider="target" sceneMemberID="viewController">
                     <window key="window" title="ToDo" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" animationBehavior="default" id="IQv-IB-iLA">
-                        <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
+                        <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" fullSizeContentView="YES"/>
                         <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-                        <rect key="contentRect" x="196" y="240" width="500" height="425"/>
+                        <rect key="contentRect" x="196" y="239" width="500" height="426"/>
                         <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1027"/>
                         <value key="minSize" type="size" width="200" height="200"/>
+                        <toolbar key="toolbar" implicitIdentifier="E185E366-9819-42ED-ACF9-530116E1855C" autosavesConfiguration="NO" displayMode="iconOnly" sizeMode="regular" id="pa6-7T-ffC">
+                            <allowedToolbarItems>
+                                <toolbarItem implicitItemIdentifier="NSToolbarShowColorsItem" id="y8l-z4-rsv"/>
+                                <toolbarItem implicitItemIdentifier="NSToolbarShowFontsItem" id="zT9-yb-xjj"/>
+                                <toolbarItem implicitItemIdentifier="NSToolbarPrintItem" id="Xkm-WN-WEC"/>
+                                <toolbarItem implicitItemIdentifier="NSToolbarSpaceItem" id="bFl-hf-Mhx"/>
+                                <toolbarItem implicitItemIdentifier="NSToolbarFlexibleSpaceItem" id="Dxx-cQ-SUD"/>
+                                <toolbarItem implicitItemIdentifier="9B4F5EE3-0EFD-4E2E-8D57-B241C72D3E1C" label="To Do Title" paletteLabel="To Do Title" id="wNL-DJ-ncd">
+                                    <nil key="toolTip"/>
+                                    <size key="minSize" width="96" height="22"/>
+                                    <size key="maxSize" width="4000" height="22"/>
+                                    <textField key="view" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" id="OpW-ny-htd">
+                                        <rect key="frame" x="0.0" y="14" width="96" height="22"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                        <textFieldCell key="cell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" placeholderString="To Do" drawsBackground="YES" usesSingleLineMode="YES" id="jfk-Aa-Z2h">
+                                            <font key="font" metaFont="system"/>
+                                            <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                        </textFieldCell>
+                                    </textField>
+                                </toolbarItem>
+                                <toolbarItem implicitItemIdentifier="53C991DF-E651-4603-8DC1-DC7B15883833" label="Add To Do" paletteLabel="Add To Do" id="Dts-h2-OdS">
+                                    <nil key="toolTip"/>
+                                    <size key="minSize" width="40" height="32"/>
+                                    <size key="maxSize" width="40" height="32"/>
+                                    <button key="view" verticalHuggingPriority="750" id="fOr-J1-ohX">
+                                        <rect key="frame" x="11" y="14" width="40" height="32"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                        <buttonCell key="cell" type="push" title="+" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="fuM-sl-lXs">
+                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                            <font key="font" metaFont="system"/>
+                                        </buttonCell>
+                                        <connections>
+                                            <action selector="btnAddItem:" target="Oky-zY-oP4" id="DJd-mA-3iI"/>
+                                        </connections>
+                                    </button>
+                                </toolbarItem>
+                            </allowedToolbarItems>
+                            <defaultToolbarItems>
+                                <toolbarItem reference="wNL-DJ-ncd"/>
+                                <toolbarItem reference="Dxx-cQ-SUD"/>
+                                <toolbarItem reference="Dts-h2-OdS"/>
+                            </defaultToolbarItems>
+                        </toolbar>
                     </window>
                     <connections>
+                        <outlet property="toDoTextField" destination="OpW-ny-htd" id="ESF-Gm-gP5"/>
                         <segue destination="XfG-lQ-9wD" kind="relationship" relationship="window.shadowedContentViewController" id="cq2-FE-JQM"/>
                     </connections>
                 </windowController>
                 <customObject id="Oky-zY-oP4" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="192.5" y="332"/>
+            <point key="canvasLocation" x="192" y="331"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="hIz-AP-VOD">
@@ -687,35 +732,14 @@
                         <rect key="frame" x="0.0" y="0.0" width="500" height="425"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
-                            <textField verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="I3F-XA-QKo">
-                                <rect key="frame" x="20" y="389" width="355" height="22"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="100" id="Itb-8n-0xm"/>
-                                </constraints>
-                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="W4F-US-u4t">
-                                    <font key="font" metaFont="system"/>
-                                    <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
-                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                </textFieldCell>
-                            </textField>
-                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="ouL-dH-48I">
-                                <rect key="frame" x="382" y="382" width="104" height="32"/>
-                                <buttonCell key="cell" type="push" title="Add To Do" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="QA6-26-CAB">
-                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                    <font key="font" metaFont="system"/>
-                                </buttonCell>
-                                <connections>
-                                    <action selector="btnAdd:" target="XfG-lQ-9wD" id="bXy-QO-ZTk"/>
-                                </connections>
-                            </button>
                             <scrollView autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ULl-uZ-358">
-                                <rect key="frame" x="0.0" y="0.0" width="500" height="381"/>
+                                <rect key="frame" x="0.0" y="0.0" width="500" height="382"/>
                                 <clipView key="contentView" id="ij8-Wb-Bj5">
-                                    <rect key="frame" x="1" y="1" width="498" height="379"/>
+                                    <rect key="frame" x="1" y="1" width="498" height="380"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnReordering="NO" multipleSelection="NO" autosaveColumns="NO" rowSizeStyle="automatic" viewBased="YES" id="XzW-r6-qup">
-                                            <rect key="frame" x="0.0" y="0.0" width="498" height="379"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="498" height="380"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <size key="intercellSpacing" width="3" height="2"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -804,20 +828,14 @@
                             </scrollView>
                         </subviews>
                         <constraints>
-                            <constraint firstItem="ouL-dH-48I" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" constant="15" id="D04-eA-m5r"/>
                             <constraint firstItem="ULl-uZ-358" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" id="Daf-YA-yzY"/>
                             <constraint firstAttribute="bottom" secondItem="ULl-uZ-358" secondAttribute="bottom" id="Ehx-T0-uLX"/>
-                            <constraint firstItem="I3F-XA-QKo" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" constant="20" id="HcZ-Ug-RVS"/>
-                            <constraint firstItem="ULl-uZ-358" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" constant="44" id="L9y-9t-AUX"/>
                             <constraint firstAttribute="trailing" secondItem="ULl-uZ-358" secondAttribute="trailing" id="XpI-1r-0sg"/>
-                            <constraint firstItem="ouL-dH-48I" firstAttribute="leading" secondItem="I3F-XA-QKo" secondAttribute="trailing" constant="13" id="d9m-41-QTl"/>
-                            <constraint firstAttribute="trailing" secondItem="ouL-dH-48I" secondAttribute="trailing" constant="20" id="k70-No-e1G"/>
-                            <constraint firstItem="I3F-XA-QKo" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" constant="14" id="ohK-pJ-GJB"/>
+                            <constraint firstItem="ULl-uZ-358" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" constant="43" id="n6Y-tj-7Te"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="mainTableView" destination="XzW-r6-qup" id="A6z-mM-u73"/>
-                        <outlet property="textAddToDo" destination="I3F-XA-QKo" id="7yZ-0a-O9x"/>
                     </connections>
                 </viewController>
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
