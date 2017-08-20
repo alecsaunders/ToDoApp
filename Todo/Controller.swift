@@ -177,6 +177,7 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource {
             cellIdentifier = CellIdentifiers.col_toDoText
             cell = tableView.make(withIdentifier: cellIdentifier, owner: nil) as? NSTableCellView
             cell?.textField?.stringValue = theToDo.title
+            cell?.textField?.isEditable = true
         }
         
         return cell!
