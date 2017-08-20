@@ -669,7 +669,7 @@
                         <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
                         <rect key="contentRect" x="196" y="239" width="500" height="426"/>
                         <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1027"/>
-                        <value key="minSize" type="size" width="200" height="200"/>
+                        <value key="minSize" type="size" width="230" height="200"/>
                         <toolbar key="toolbar" implicitIdentifier="E185E366-9819-42ED-ACF9-530116E1855C" autosavesConfiguration="NO" displayMode="iconOnly" sizeMode="regular" id="pa6-7T-ffC">
                             <allowedToolbarItems>
                                 <toolbarItem implicitItemIdentifier="NSToolbarShowColorsItem" id="y8l-z4-rsv"/>
@@ -679,10 +679,10 @@
                                 <toolbarItem implicitItemIdentifier="NSToolbarFlexibleSpaceItem" id="Dxx-cQ-SUD"/>
                                 <toolbarItem implicitItemIdentifier="9B4F5EE3-0EFD-4E2E-8D57-B241C72D3E1C" label="To Do Title" paletteLabel="To Do Title" visibilityPriority="1" id="wNL-DJ-ncd">
                                     <nil key="toolTip"/>
-                                    <size key="minSize" width="120" height="22"/>
+                                    <size key="minSize" width="96" height="22"/>
                                     <size key="maxSize" width="4000" height="22"/>
                                     <textField key="view" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" id="OpW-ny-htd">
-                                        <rect key="frame" x="0.0" y="14" width="120" height="22"/>
+                                        <rect key="frame" x="0.0" y="14" width="96" height="22"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" placeholderString="To Do" drawsBackground="YES" usesSingleLineMode="YES" id="jfk-Aa-Z2h">
                                             <font key="font" metaFont="system"/>
@@ -732,13 +732,13 @@
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <scrollView autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ULl-uZ-358">
-                                <rect key="frame" x="0.0" y="0.0" width="500" height="382"/>
+                                <rect key="frame" x="0.0" y="0.0" width="500" height="386"/>
                                 <clipView key="contentView" id="ij8-Wb-Bj5">
-                                    <rect key="frame" x="1" y="1" width="498" height="380"/>
+                                    <rect key="frame" x="1" y="1" width="498" height="384"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnReordering="NO" multipleSelection="NO" autosaveColumns="NO" rowSizeStyle="automatic" viewBased="YES" id="XzW-r6-qup">
-                                            <rect key="frame" x="0.0" y="0.0" width="498" height="380"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="498" height="384"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <size key="intercellSpacing" width="3" height="2"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -830,7 +830,7 @@
                             <constraint firstItem="ULl-uZ-358" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" id="Daf-YA-yzY"/>
                             <constraint firstAttribute="bottom" secondItem="ULl-uZ-358" secondAttribute="bottom" id="Ehx-T0-uLX"/>
                             <constraint firstAttribute="trailing" secondItem="ULl-uZ-358" secondAttribute="trailing" id="XpI-1r-0sg"/>
-                            <constraint firstItem="ULl-uZ-358" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" constant="43" id="n6Y-tj-7Te"/>
+                            <constraint firstItem="ULl-uZ-358" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" constant="39" id="n6Y-tj-7Te"/>
                         </constraints>
                     </view>
                     <connections>
