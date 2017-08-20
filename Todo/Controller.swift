@@ -69,6 +69,8 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource {
     }
     
     func save(currentToDoTitle: String) {
+        if currentToDoTitle.isEmpty { return }
+        
         guard let mc = managedContext else { return }
         
         let entityName = "ToDo"

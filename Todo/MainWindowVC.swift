@@ -26,13 +26,6 @@ class ViewController: NSViewController, MainTableViewDelgate {
 
     let cntlr = MainController()
     
-    override func viewWillAppear() {
-        super.viewWillAppear()
-        if let windowController = view.window?.windowController as? WindowController {
-            windowController.toDoTextField.sizeToFit()
-        }
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
