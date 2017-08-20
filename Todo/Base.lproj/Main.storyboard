@@ -688,6 +688,9 @@
                                             <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                         </textFieldCell>
+                                        <connections>
+                                            <action selector="toDoTextFieldAction:" target="B8D-0N-5wS" id="guQ-1L-Prw"/>
+                                        </connections>
                                     </textField>
                                 </toolbarItem>
                                 <toolbarItem implicitItemIdentifier="53C991DF-E651-4603-8DC1-DC7B15883833" label="Add To Do" paletteLabel="Add To Do" toolTip="Add To Do" id="Dts-h2-OdS" userLabel="Add To Do Button">

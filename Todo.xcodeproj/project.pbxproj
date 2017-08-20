@@ -115,8 +115,8 @@
 		F2E8228F1F48959100EEEA07 /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				F2C8A2691F41428500E246F7 /* MainWindowVC.swift */,
 				F255491E1F493A2300AE360B /* WindowController.swift */,
+				F2C8A2691F41428500E246F7 /* MainWindowVC.swift */,
 			);
 			name = "View Controllers";
 			sourceTree = "<group>";

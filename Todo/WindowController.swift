@@ -8,8 +8,18 @@
 
 import Cocoa
 
+protocol WindowControllerDelegate: class {
+    func addToDo(toDoText: String)
+    func clearToDoTextField(sender: NSTextField)
+}
+
 class WindowController: NSWindowController {
     @IBOutlet var toDoTextField: NSTextField!
+    @IBAction func toDoTextFieldAction(_ sender: NSTextField) {
+        windowControllerDelegate?.addToDo(toDoText: sender.stringValue)
+        windowControllerDelegate?.clearToDoTextField(sender: sender)
+    }
+    weak var windowControllerDelegate: WindowControllerDelegate?
 
 //    override func windowWillLoad() {
 //        super.windowWillLoad()
