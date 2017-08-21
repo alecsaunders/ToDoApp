@@ -12,6 +12,7 @@ import CoreData
 
 class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDelegate {
     @IBOutlet var mainTableView: NSTableView!
+    @IBOutlet var lblStatusBottom: NSTextField!
     @IBAction func btnAddItem(_ sender: NSButton) {
         if let windowConroller = self.view.window?.windowController as? WindowController {
             let txt = windowConroller.toDoTextField.stringValue
@@ -33,18 +34,23 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         cntlr.mainTableViewDelgate = self
+        lblStatusBottom.textColor = NSColor.darkGray
+        updateStatusBar(numOfItems: cntlr.mainTableToDoArray.count)
         mainTableView.delegate = cntlr
         mainTableView.dataSource = cntlr
         mainTableView.usesAlternatingRowBackgroundColors = true
         mainTableView.setDraggingSourceOperationMask(NSDragOperation.every, forLocal: false)
         mainTableView.register(forDraggedTypes: cntlr.registeredTypes)
-        mainTableView.doubleAction = #selector(cntlr.doubleClickMainTVCell)
+        mainTableView.doubleAction = #selector(self.doubleClick)
         mainTableView.reloadData()
     }
     
     // MARK: - Main Table View Delegate Functions
+    func doubleClick(sender: AnyObject) {
+        cntlr.doubleClickMainTVCell(sender: sender)
+    }
+    
     func reloadData() {
         mainTableView.reloadData()
     }
@@ -60,6 +66,10 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
     // MARK: - Controller functions
     func addToDoItemToMainTableView(toDoText: String) {
         cntlr.save(currentToDoTitle: toDoText)
+    }
+    
+    func updateStatusBar(numOfItems: Int) {
+        lblStatusBottom.stringValue = "\(numOfItems) items"
     }
     
 }

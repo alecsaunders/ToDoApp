@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="16G29" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="11201" systemVersion="16G29" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="12121"/>
-        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11201"/>
     </dependencies>
     <scenes>
         <!--Application-->
@@ -680,7 +679,7 @@
                                 <toolbarItem implicitItemIdentifier="9B4F5EE3-0EFD-4E2E-8D57-B241C72D3E1C" label="To Do Title" paletteLabel="To Do Title" visibilityPriority="1" id="wNL-DJ-ncd">
                                     <size key="minSize" width="96" height="22"/>
                                     <size key="maxSize" width="4000" height="22"/>
-                                    <textField key="view" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" id="OpW-ny-htd">
+                                    <textField key="view" verticalHuggingPriority="750" id="OpW-ny-htd">
                                         <rect key="frame" x="0.0" y="14" width="96" height="22"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" placeholderString="To Do" drawsBackground="YES" usesSingleLineMode="YES" id="jfk-Aa-Z2h">
@@ -711,9 +710,9 @@
                             </allowedToolbarItems>
                             <defaultToolbarItems>
                                 <toolbarItem reference="wNL-DJ-ncd"/>
-                                <toolbarItem reference="Dts-h2-OdS"/>
                             </defaultToolbarItems>
                         </toolbar>
+                        <contentBorderThickness minY="20"/>
                     </window>
                     <connections>
                         <outlet property="toDoTextField" destination="OpW-ny-htd" id="ESF-Gm-gP5"/>
@@ -733,13 +732,13 @@
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <scrollView autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ULl-uZ-358">
-                                <rect key="frame" x="0.0" y="0.0" width="500" height="386"/>
+                                <rect key="frame" x="0.0" y="19" width="500" height="406"/>
                                 <clipView key="contentView" id="ij8-Wb-Bj5">
-                                    <rect key="frame" x="1" y="1" width="498" height="384"/>
+                                    <rect key="frame" x="1" y="1" width="498" height="404"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnReordering="NO" multipleSelection="NO" autosaveColumns="NO" rowSizeStyle="automatic" viewBased="YES" id="XzW-r6-qup">
-                                            <rect key="frame" x="0.0" y="0.0" width="498" height="384"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="498" height="404"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <size key="intercellSpacing" width="3" height="2"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -797,7 +796,7 @@
                                                             <rect key="frame" x="26" y="1" width="470" height="17"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
-                                                                <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yWY-uE-fX0">
+                                                                <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="yWY-uE-fX0">
                                                                     <rect key="frame" x="0.0" y="0.0" width="470" height="17"/>
                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                                                     <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="lBs-MU-cVw">
@@ -818,7 +817,7 @@
                                     </subviews>
                                 </clipView>
                                 <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="Ta2-Wx-Ulp">
-                                    <rect key="frame" x="1" y="364" width="498" height="16"/>
+                                    <rect key="frame" x="1" y="373" width="498" height="16"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
                                 <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="ZGZ-L2-1Si">
@@ -826,15 +825,26 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
                             </scrollView>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="OnN-IZ-weL" userLabel="lblStatusBottom">
+                                <rect key="frame" x="233" y="2" width="35" height="16"/>
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Label" id="ukc-Da-Rci">
+                                    <font key="font" metaFont="system" size="12"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
                         </subviews>
                         <constraints>
                             <constraint firstItem="ULl-uZ-358" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" id="Daf-YA-yzY"/>
-                            <constraint firstAttribute="bottom" secondItem="ULl-uZ-358" secondAttribute="bottom" id="Ehx-T0-uLX"/>
+                            <constraint firstAttribute="bottom" secondItem="ULl-uZ-358" secondAttribute="bottom" constant="19" id="Ehx-T0-uLX"/>
                             <constraint firstAttribute="trailing" secondItem="ULl-uZ-358" secondAttribute="trailing" id="XpI-1r-0sg"/>
-                            <constraint firstItem="ULl-uZ-358" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" constant="39" id="n6Y-tj-7Te"/>
+                            <constraint firstAttribute="bottom" secondItem="OnN-IZ-weL" secondAttribute="bottom" constant="2" id="eDd-Hz-uWY"/>
+                            <constraint firstItem="OnN-IZ-weL" firstAttribute="centerX" secondItem="m2S-Jp-Qdl" secondAttribute="centerX" id="lrM-5f-kXa"/>
+                            <constraint firstItem="ULl-uZ-358" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" id="n6Y-tj-7Te"/>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="lblStatusBottom" destination="OnN-IZ-weL" id="NMh-ga-D1c"/>
                         <outlet property="mainTableView" destination="XzW-r6-qup" id="A6z-mM-u73"/>
                     </connections>
                 </viewController>

@@ -13,6 +13,8 @@ import CoreData
 
 protocol MainTableViewDelgate: class {
     func reloadData()
+    func updateStatusBar(numOfItems: Int)
+    func doubleClick(sender: AnyObject)
 }
 
 class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource {
@@ -91,6 +93,7 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource {
             coreDataToDoManagedObjects = fetchManagedObjectsFromCoreData(entityName: entityName)
             mainTableToDoArray.append(createToDoFromManagedObject(obj: toDoEntityRecord))
             mainTableViewDelgate?.reloadData()
+            mainTableViewDelgate?.updateStatusBar(numOfItems: mainTableToDoArray.count)
         } catch let error as NSError {
             print("Could not save. \(error), \(error.userInfo)")
         }
@@ -106,6 +109,7 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource {
             coreDataToDoManagedObjects!.remove(at: atIndex)
             mainTableToDoArray.remove(at: atIndex)
             mainTableViewDelgate?.reloadData()
+            mainTableViewDelgate?.updateStatusBar(numOfItems: mainTableToDoArray.count)
         } catch let error as NSError {
             print("Could not delete. \(error), \(error.userInfo)")
         }
@@ -185,7 +189,9 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource {
     
     func doubleClickMainTVCell(sender: AnyObject) {
         guard let tv = sender as? NSTableView else { return }
-        print(mainTableToDoArray[tv.selectedRow])
+        print(tv.selectedRow)
+        let doubleClickedToDo = mainTableToDoArray[tv.selectedRow]
+        print(doubleClickedToDo)
     }
     
     func tableView(_ tableView: NSTableView, validateDrop info: NSDraggingInfo, proposedRow row: Int, proposedDropOperation dropOperation: NSTableViewDropOperation) -> NSDragOperation {
