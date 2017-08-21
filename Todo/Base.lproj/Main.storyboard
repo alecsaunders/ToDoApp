@@ -707,6 +707,7 @@
                                         </connections>
                                     </button>
                                 </toolbarItem>
+                                <toolbarItem implicitItemIdentifier="5792D83E-6CF6-4359-A484-1699B0873796" label="" paletteLabel="Sidebar" tag="-1" image="NSAdvanced" id="8Ft-t9-fMF"/>
                             </allowedToolbarItems>
                             <defaultToolbarItems>
                                 <toolbarItem reference="wNL-DJ-ncd"/>
@@ -828,7 +829,7 @@
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="OnN-IZ-weL" userLabel="lblStatusBottom">
                                 <rect key="frame" x="233" y="2" width="35" height="16"/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Label" id="ukc-Da-Rci">
-                                    <font key="font" metaFont="system" size="12"/>
+                                    <font key="font" metaFont="cellTitle"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
@@ -853,4 +854,7 @@
             <point key="canvasLocation" x="192" y="929.5"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="NSAdvanced" width="32" height="32"/>
+    </resources>
 </document>
