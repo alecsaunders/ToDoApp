@@ -11,15 +11,18 @@ import Cocoa
 protocol WindowControllerDelegate: class {
     func addToDo(toDoText: String)
     func clearToDoTextField(sender: NSTextField)
+    func animate(hide: Bool)
 }
 
-class WindowController: NSWindowController {
+class WindowController: NSWindowController, NSWindowDelegate {
+    @IBOutlet var mainWindow: NSWindow!
     @IBOutlet var toDoTextField: NSTextField!
     @IBAction func toDoTextFieldAction(_ sender: NSTextField) {
         windowControllerDelegate?.addToDo(toDoText: sender.stringValue)
         windowControllerDelegate?.clearToDoTextField(sender: sender)
     }
     weak var windowControllerDelegate: WindowControllerDelegate?
+    var sidebarShouldHide: Bool = false
 
 //    override func windowWillLoad() {
 //        super.windowWillLoad()
@@ -27,8 +30,28 @@ class WindowController: NSWindowController {
     
     override func windowDidLoad() {
         super.windowDidLoad()
-        window?.titleVisibility = .hidden
-        
+        if mainWindow.frame.width < 375 {
+            sidebarShouldHide = false
+        } else {
+            sidebarShouldHide = true
+        }
+        mainWindow.titleVisibility = .hidden
+        mainWindow.delegate = self
+    }
+    
+    
+    func windowDidResize(_ notification: Notification) {
+        if sidebarShouldHide {
+            if mainWindow.frame.width >= 451 {
+                sidebarShouldHide = false
+                windowControllerDelegate?.animate(hide: false)
+            }
+        } else {
+            if mainWindow.frame.width < 451 {
+                sidebarShouldHide = true
+                windowControllerDelegate?.animate(hide: true)
+            }
+        }
     }
 
 }

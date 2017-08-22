@@ -13,6 +13,7 @@ import CoreData
 class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDelegate {
     @IBOutlet var mainTableView: NSTableView!
     @IBOutlet var lblStatusBottom: NSTextField!
+    @IBOutlet weak var sourceSidebar: NSScrollView!
     @IBAction func btnAddItem(_ sender: NSButton) {
         if let windowConroller = self.view.window?.windowController as? WindowController {
             let txt = windowConroller.toDoTextField.stringValue
@@ -44,7 +45,14 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
         mainTableView.register(forDraggedTypes: cntlr.registeredTypes)
         mainTableView.doubleAction = #selector(self.doubleClick)
         mainTableView.reloadData()
+        
     }
+    
+    func animate(hide: Bool) {
+        sourceSidebar.isHidden = hide
+        return
+    }
+    
     
     // MARK: - Main Table View Delegate Functions
     func doubleClick(sender: AnyObject) {
