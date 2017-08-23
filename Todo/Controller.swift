@@ -17,7 +17,7 @@ protocol MainTableViewDelgate: class {
     func doubleClick(sender: AnyObject)
 }
 
-class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource {
+class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, ToDoCellViewDelegate {
     let registeredTypes:[String] = [NSGeneralPboard]
     let appDelegate = NSApplication.shared().delegate as? AppDelegate
     var managedContext: NSManagedObjectContext? = nil
@@ -115,6 +115,20 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource {
         }
     }
     
+    // MARK: - To Do Table View Delegate Methods
+    func changeText(newToDoTitle: String, atIndex: Int) {
+        guard let mc = managedContext else { return }
+        guard let cdObj = coreDataToDoManagedObjects?[atIndex] else { return }
+        cdObj.setValue(newToDoTitle, forKey: "title")
+        do {
+            try mc.save()
+            mainTableToDoArray[atIndex].title = newToDoTitle
+        } catch let error as NSError {
+            print("Could not delete. \(error), \(error.userInfo)")
+        }
+        
+    }
+    
     
     // MARK: - Update View
     func completedWasChecked(state: Int, btnIndex: Int) {
@@ -179,9 +193,15 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource {
             }
         } else if tableColumn == tableView.tableColumns[1] {
             cellIdentifier = CellIdentifiers.col_toDoText
-            cell = tableView.make(withIdentifier: cellIdentifier, owner: nil) as? NSTableCellView
-            cell?.textField?.stringValue = theToDo.title
-            cell?.textField?.isEditable = true
+            cell = tableView.make(withIdentifier: cellIdentifier, owner: nil) as? ToDoCellView
+            if let cell = cell as? ToDoCellView {
+                cell.toDoCellViewDelegate = self
+                cell.index = row
+                cell.textField?.stringValue = theToDo.title
+                cell.textField?.isEditable = true
+            } else {
+                print("Could not cast cell as ToDoCellView")
+            }
         }
         
         return cell!
@@ -190,8 +210,13 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource {
     func doubleClickMainTVCell(sender: AnyObject) {
         guard let tv = sender as? NSTableView else { return }
         print(tv.selectedRow)
-        let doubleClickedToDo = mainTableToDoArray[tv.selectedRow]
-        print(doubleClickedToDo)
+        if tv.selectedRow  == -1 {
+            print("Double clicked empty cell")
+        } else {
+            let doubleClickedToDo = mainTableToDoArray[tv.selectedRow]
+            print(doubleClickedToDo)
+        }
+        
     }
     
     func tableView(_ tableView: NSTableView, validateDrop info: NSDraggingInfo, proposedRow row: Int, proposedDropOperation dropOperation: NSTableViewDropOperation) -> NSDragOperation {

@@ -10,15 +10,16 @@ import Cocoa
 import CoreData
 
 
-class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDelegate {
+class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDelegate, NSOutlineViewDataSource, NSOutlineViewDelegate {
     @IBOutlet var mainTableView: NSTableView!
     @IBOutlet var lblStatusBottom: NSTextField!
     @IBOutlet weak var sourceSidebar: NSScrollView!
+    @IBOutlet weak var sourceOutlineView: NSOutlineView!
     @IBAction func btnAddItem(_ sender: NSButton) {
         if let windowConroller = self.view.window?.windowController as? WindowController {
-            let txt = windowConroller.toDoTextField.stringValue
+            let txt = windowConroller.toDoCreateTextField.stringValue
             addToDoItemToMainTableView(toDoText: txt)
-            windowConroller.toDoTextField.stringValue = ""
+            windowConroller.toDoCreateTextField.stringValue = ""
         }
     }
     @IBAction func completedCheck(_ sender: NSButton) {
@@ -26,6 +27,8 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
     }
 
     let cntlr = MainController()
+    
+    var outlineGroups = ["group1", "group2"]
     
     override func viewWillAppear() {
         if let windowConroller = self.view.window?.windowController as? WindowController {
@@ -46,11 +49,13 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
         mainTableView.doubleAction = #selector(self.doubleClick)
         mainTableView.reloadData()
         
+        sourceOutlineView.delegate = self
+        sourceOutlineView.dataSource = self
+        
     }
     
     func animate(hide: Bool) {
-        sourceSidebar.isHidden = hide
-        return
+        sourceSidebar.animator().isHidden = hide
     }
     
     
@@ -80,4 +85,28 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
         lblStatusBottom.stringValue = "\(numOfItems) items"
     }
     
+    override func updateViewConstraints() {
+        print("update view contraints")
+        super.updateViewConstraints()
+    }
+    
+    func outlineView(_ outlineView: NSOutlineView, numberOfChildrenOfItem item: Any?) -> Int {
+        return outlineGroups.count
+    }
+    
+    func outlineView(_ outlineView: NSOutlineView, isItemExpandable item: Any) -> Bool {
+        return false
+    }
+    
+    func outlineView(_ outlineView: NSOutlineView, child index: Int, ofItem item: Any?) -> Any {
+        return outlineGroups[index]
+    }
+    
+    func outlineView(_ outlineView: NSOutlineView, viewFor tableColumn: NSTableColumn?, item: Any) -> NSView? {
+        let view = outlineView.make(withIdentifier: "HeaderCell", owner: self) as! NSTableCellView
+        if let textField = view.textField {
+            textField.stringValue = "Header 1"
+        }
+        return view
+    }
 }

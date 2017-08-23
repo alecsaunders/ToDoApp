@@ -16,7 +16,7 @@ protocol WindowControllerDelegate: class {
 
 class WindowController: NSWindowController, NSWindowDelegate {
     @IBOutlet var mainWindow: NSWindow!
-    @IBOutlet var toDoTextField: NSTextField!
+    @IBOutlet weak var toDoCreateTextField: NSTextField!
     @IBAction func toDoTextFieldAction(_ sender: NSTextField) {
         windowControllerDelegate?.addToDo(toDoText: sender.stringValue)
         windowControllerDelegate?.clearToDoTextField(sender: sender)
@@ -35,6 +35,7 @@ class WindowController: NSWindowController, NSWindowDelegate {
         } else {
             sidebarShouldHide = true
         }
+        
         mainWindow.titleVisibility = .hidden
         mainWindow.delegate = self
     }
@@ -44,12 +45,12 @@ class WindowController: NSWindowController, NSWindowDelegate {
         if sidebarShouldHide {
             if mainWindow.frame.width >= 451 {
                 sidebarShouldHide = false
-                windowControllerDelegate?.animate(hide: false)
+                windowControllerDelegate?.animate(hide: sidebarShouldHide)
             }
         } else {
             if mainWindow.frame.width < 451 {
                 sidebarShouldHide = true
-                windowControllerDelegate?.animate(hide: true)
+                windowControllerDelegate?.animate(hide: sidebarShouldHide)
             }
         }
     }
