@@ -28,7 +28,7 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
 
     let cntlr = MainController()
     
-    var outlineGroups = ["group1", "group2"]
+    var outlineGroups = ["All", "Favorites"]
     
     override func viewWillAppear() {
         if let windowConroller = self.view.window?.windowController as? WindowController {
@@ -105,7 +105,7 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
     func outlineView(_ outlineView: NSOutlineView, viewFor tableColumn: NSTableColumn?, item: Any) -> NSView? {
         let view = outlineView.make(withIdentifier: "HeaderCell", owner: self) as! NSTableCellView
         if let textField = view.textField {
-            textField.stringValue = "Header 1"
+            textField.stringValue = item as! String
         }
         return view
     }

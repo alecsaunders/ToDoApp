@@ -88,14 +88,11 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, ToDo
         
         toDoEntityRecord.setValue(ordinalPosition, forKey: "ordinalPosition")
         
-        do {
-            try mc.save()
+        if managedContextDidSave(managedContext: mc) {
             coreDataToDoManagedObjects = fetchManagedObjectsFromCoreData(entityName: entityName)
             mainTableToDoArray.append(createToDoFromManagedObject(obj: toDoEntityRecord))
             mainTableViewDelgate?.reloadData()
             mainTableViewDelgate?.updateStatusBar(numOfItems: mainTableToDoArray.count)
-        } catch let error as NSError {
-            print("Could not save. \(error), \(error.userInfo)")
         }
     }
 
@@ -104,27 +101,32 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, ToDo
         guard let context = self.managedContext else { return }
         guard let toDoMO = coreDataToDoManagedObjects else { return }
         context.delete(toDoMO[atIndex])
-        do {
-            try context.save()
+        if managedContextDidSave(managedContext: context) {
             coreDataToDoManagedObjects!.remove(at: atIndex)
             mainTableToDoArray.remove(at: atIndex)
             mainTableViewDelgate?.reloadData()
             mainTableViewDelgate?.updateStatusBar(numOfItems: mainTableToDoArray.count)
-        } catch let error as NSError {
-            print("Could not delete. \(error), \(error.userInfo)")
         }
     }
+    
+    func managedContextDidSave(managedContext: NSManagedObjectContext) -> Bool {
+        do {
+            try managedContext.save()
+            return true
+        } catch let error as NSError {
+            print("Could not delete. \(error), \(error.userInfo)")
+            return false
+        }
+    }
+    
     
     // MARK: - To Do Table View Delegate Methods
     func changeText(newToDoTitle: String, atIndex: Int) {
         guard let mc = managedContext else { return }
         guard let cdObj = coreDataToDoManagedObjects?[atIndex] else { return }
         cdObj.setValue(newToDoTitle, forKey: "title")
-        do {
-            try mc.save()
+        if managedContextDidSave(managedContext: mc) {
             mainTableToDoArray[atIndex].title = newToDoTitle
-        } catch let error as NSError {
-            print("Could not delete. \(error), \(error.userInfo)")
         }
         
     }
@@ -162,12 +164,9 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, ToDo
             mngdObj.setValue(i, forKey: "ordinalPosition")
         }
 
-        do {
-            try mc.save()
+        if managedContextDidSave(managedContext: mc) {
             coreDataToDoManagedObjects = fetchManagedObjectsFromCoreData(entityName: "ToDo")
             mainTableViewDelgate?.reloadData()
-        } catch let error as NSError {
-            print("Could not save. \(error), \(error.userInfo)")
         }
     }
     
