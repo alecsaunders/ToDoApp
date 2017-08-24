@@ -23,9 +23,10 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, ToDo
     var managedContext: NSManagedObjectContext? = nil
     var coreDataToDoManagedObjects: [NSManagedObject]? = nil
     var mainTableToDoArray: [ToDo] = []
+    var currentSelectionToDoArray: [ToDo] = []
     weak var mainTableViewDelgate: MainTableViewDelgate?
     
-    var outlineGroups = ["All", "Daily", "Domo", "ServiceNow", "Home"]
+    var outlineGroups = ["All", "Daily", "Domo", "Vertica", "ServiceNow", "Data Query", "Home"]
     
     fileprivate enum CellIdentifiers {
         static let col_complete = "col_complete"
@@ -38,6 +39,7 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, ToDo
         managedContext = self.appDelegate?.persistentContainer.viewContext
         coreDataToDoManagedObjects = fetchManagedObjectsFromCoreData(entityName: "ToDo")
         mainTableToDoArray = populateMainTableToDoArray()
+        currentSelectionToDoArray = mainTableToDoArray
     }
     
     // MARK: - Core Data Setup
@@ -184,12 +186,12 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, ToDo
     
     // MARK: - Table View Methods
     func numberOfRows(in tableView: NSTableView) -> Int {
-        return mainTableToDoArray.count
+        return currentSelectionToDoArray.count
     }
     
     
     func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
-        let theToDo = mainTableToDoArray[row]
+        let theToDo = currentSelectionToDoArray[row]
         
         var cellIdentifier: String = ""
         
@@ -234,7 +236,7 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, ToDo
         if dropOperation == .above {
             return .move
         }
-        return .every
+        return NSDragOperation(rawValue: UInt(0))
     }
     
     func tableView(_ tableView: NSTableView, writeRowsWith rowIndexes: IndexSet, to pboard: NSPasteboard) -> Bool {
@@ -246,7 +248,6 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, ToDo
     
     func tableView(_ tableView: NSTableView, acceptDrop info: NSDraggingInfo, row: Int,
                    dropOperation: NSTableViewDropOperation) -> Bool {
-        print("TV accept drop")
         let dragData = info.draggingPasteboard().data(forType: NSGeneralPboard)!
         let rowIndexes: IndexSet? = NSKeyedUnarchiver.unarchiveObject(with: dragData) as? IndexSet
         guard let ri: IndexSet = rowIndexes else { return true }
@@ -259,6 +260,18 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, ToDo
     
     
     // MARK: - OutlineView Methods
+    func outlineViewSelectionDidChange(_ notification: Notification) {
+        guard let object = notification.object as? NSOutlineView else { return }
+        if outlineGroups[object.selectedRow] == "All" {
+            currentSelectionToDoArray = mainTableToDoArray
+        } else {
+            currentSelectionToDoArray = mainTableToDoArray.filter {
+                $0.sidebarGroup == outlineGroups[object.selectedRow]
+            }
+        }
+        mainTableViewDelgate?.reloadData()
+    }
+    
     func outlineView(_ outlineView: NSOutlineView, numberOfChildrenOfItem item: Any?) -> Int {
         return outlineGroups.count
     }
@@ -287,10 +300,6 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, ToDo
             return .move
         }
         return NSDragOperation(rawValue: UInt(0))
-    }
-    
-    func outlineView(_ outlineView: NSOutlineView, rowViewForItem item: Any) -> NSTableRowView? {
-        return nil
     }
     
     func outlineView(_ outlineView: NSOutlineView, writeItems items: [Any], to pasteboard: NSPasteboard) -> Bool {

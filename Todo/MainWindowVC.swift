@@ -86,7 +86,6 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
     }
     
     override func updateViewConstraints() {
-        print("update view contraints")
         super.updateViewConstraints()
     }
 }
