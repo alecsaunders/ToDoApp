@@ -17,13 +17,15 @@ protocol MainTableViewDelgate: class {
     func doubleClick(sender: AnyObject)
 }
 
-class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, ToDoCellViewDelegate {
+class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, ToDoCellViewDelegate, NSOutlineViewDataSource, NSOutlineViewDelegate {
     let registeredTypes:[String] = [NSGeneralPboard]
     let appDelegate = NSApplication.shared().delegate as? AppDelegate
     var managedContext: NSManagedObjectContext? = nil
     var coreDataToDoManagedObjects: [NSManagedObject]? = nil
     var mainTableToDoArray: [ToDo] = []
     weak var mainTableViewDelgate: MainTableViewDelgate?
+    
+    var outlineGroups = ["All", "Daily", "Domo", "ServiceNow", "Home"]
     
     fileprivate enum CellIdentifiers {
         static let col_complete = "col_complete"
@@ -61,11 +63,13 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, ToDo
         let currentTitle = obj.value(forKey: "title") as? String ?? "Unnamed ToDo"
         let currentCompleted = obj.value(forKey: "completed") as? Bool
         let currentOrdinalPosition = obj.value(forKey: "ordinalPosition") as? Int
+        let currentSidebarGroup = obj.value(forKey: "sidebarGroup") as? String
         let currentManagedContextID = obj.objectID
         
         let currentToDo = ToDo(title:           currentTitle,
                                completed:       currentCompleted,
                                ordinalPosition: currentOrdinalPosition,
+                               sidebarGroup:    currentSidebarGroup,
                                managedContextID: currentManagedContextID)
         return currentToDo
     }
@@ -119,6 +123,14 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, ToDo
         }
     }
     
+    func changeSidebarGroup(atIndex: Int, toGroup: String) {
+        guard let mc = self.managedContext else { return }
+        guard let cdObj = coreDataToDoManagedObjects?[atIndex] else { return }
+        cdObj.setValue(toGroup, forKey: "sidebarGroup")
+        if managedContextDidSave(managedContext: mc) {
+            mainTableToDoArray[atIndex].sidebarGroup = toGroup
+        }
+    }
     
     // MARK: - To Do Table View Delegate Methods
     func changeText(newToDoTitle: String, atIndex: Int) {
@@ -208,7 +220,6 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, ToDo
     
     func doubleClickMainTVCell(sender: AnyObject) {
         guard let tv = sender as? NSTableView else { return }
-        print(tv.selectedRow)
         if tv.selectedRow  == -1 {
             print("Double clicked empty cell")
         } else {
@@ -218,7 +229,8 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, ToDo
         
     }
     
-    func tableView(_ tableView: NSTableView, validateDrop info: NSDraggingInfo, proposedRow row: Int, proposedDropOperation dropOperation: NSTableViewDropOperation) -> NSDragOperation {
+    func tableView(_ tableView: NSTableView, validateDrop info: NSDraggingInfo, proposedRow row: Int,
+                   proposedDropOperation dropOperation: NSTableViewDropOperation) -> NSDragOperation {
         if dropOperation == .above {
             return .move
         }
@@ -232,7 +244,9 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, ToDo
         return true
     }
     
-    func tableView(_ tableView: NSTableView, acceptDrop info: NSDraggingInfo, row: Int, dropOperation: NSTableViewDropOperation) -> Bool {
+    func tableView(_ tableView: NSTableView, acceptDrop info: NSDraggingInfo, row: Int,
+                   dropOperation: NSTableViewDropOperation) -> Bool {
+        print("TV accept drop")
         let dragData = info.draggingPasteboard().data(forType: NSGeneralPboard)!
         let rowIndexes: IndexSet? = NSKeyedUnarchiver.unarchiveObject(with: dragData) as? IndexSet
         guard let ri: IndexSet = rowIndexes else { return true }
@@ -240,6 +254,58 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, ToDo
         let dragDest = row
         reorderToDos(dragOrigin: dragOrigin, dragDest: dragDest)
         mainTableViewDelgate?.reloadData()
+        return true
+    }
+    
+    
+    // MARK: - OutlineView Methods
+    func outlineView(_ outlineView: NSOutlineView, numberOfChildrenOfItem item: Any?) -> Int {
+        return outlineGroups.count
+    }
+    
+    func outlineView(_ outlineView: NSOutlineView, isItemExpandable item: Any) -> Bool {
+        return false
+    }
+    
+    func outlineView(_ outlineView: NSOutlineView, child index: Int, ofItem item: Any?) -> Any {
+        return outlineGroups[index]
+    }
+    
+    func outlineView(_ outlineView: NSOutlineView, viewFor tableColumn: NSTableColumn?, item: Any) -> NSView? {
+        let view = outlineView.make(withIdentifier: "DataCell", owner: self) as! NSTableCellView
+        if let textField = view.textField {
+            textField.stringValue = item as! String
+        }
+        return view
+    }
+    
+    func outlineView(_ outlineView: NSOutlineView, validateDrop info: NSDraggingInfo, proposedItem item: Any?, proposedChildIndex index: Int) -> NSDragOperation {
+        if let item = item as? String {
+            if item == "All" {
+                return NSDragOperation(rawValue: UInt(0))
+            }
+            return .move
+        }
+        return NSDragOperation(rawValue: UInt(0))
+    }
+    
+    func outlineView(_ outlineView: NSOutlineView, rowViewForItem item: Any) -> NSTableRowView? {
+        return nil
+    }
+    
+    func outlineView(_ outlineView: NSOutlineView, writeItems items: [Any], to pasteboard: NSPasteboard) -> Bool {
+        return true
+    }
+    
+    func outlineView(_ outlineView: NSOutlineView, acceptDrop info: NSDraggingInfo, item: Any?, childIndex index: Int) -> Bool {
+        let pboard = info.draggingPasteboard()
+        let dragData = pboard.data(forType: NSGeneralPboard)!
+        let rowIndexes: IndexSet? = NSKeyedUnarchiver.unarchiveObject(with: dragData) as? IndexSet
+        guard let dragOrigin: Int = rowIndexes?.first else { return false }
+        guard let sidebarGroup = item as? String else { return false }
+        
+        changeSidebarGroup(atIndex: dragOrigin, toGroup: sidebarGroup)
+        
         return true
     }
 }

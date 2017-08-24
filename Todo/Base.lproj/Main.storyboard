@@ -791,15 +791,8 @@
                                                                             <rect key="frame" x="1" y="20" width="147" height="17"/>
                                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                             <subviews>
-                                                                                <imageView translatesAutoresizingMaskIntoConstraints="NO" id="zpC-oY-L0u">
-                                                                                    <rect key="frame" x="3" y="0.0" width="17" height="17"/>
-                                                                                    <constraints>
-                                                                                        <constraint firstAttribute="width" constant="17" id="h13-p3-3f2"/>
-                                                                                    </constraints>
-                                                                                    <imageCell key="cell" refusesFirstResponder="YES" imageScaling="proportionallyDown" image="NSActionTemplate" id="GCx-JW-bVk"/>
-                                                                                </imageView>
                                                                                 <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="jhJ-CP-nlo">
-                                                                                    <rect key="frame" x="25" y="0.0" width="122" height="17"/>
+                                                                                    <rect key="frame" x="1" y="0.0" width="146" height="17"/>
                                                                                     <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="EMj-eH-ggf">
                                                                                         <font key="font" metaFont="system"/>
                                                                                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -809,14 +802,10 @@
                                                                             </subviews>
                                                                             <constraints>
                                                                                 <constraint firstAttribute="trailing" secondItem="jhJ-CP-nlo" secondAttribute="trailing" constant="2" id="0nr-2W-0gn"/>
-                                                                                <constraint firstItem="zpC-oY-L0u" firstAttribute="top" secondItem="jhJ-CP-nlo" secondAttribute="top" id="Kwc-rs-FBv"/>
-                                                                                <constraint firstItem="jhJ-CP-nlo" firstAttribute="leading" secondItem="zpC-oY-L0u" secondAttribute="trailing" constant="7" id="NEs-C4-dl5"/>
-                                                                                <constraint firstItem="zpC-oY-L0u" firstAttribute="centerY" secondItem="cdk-CV-ZQM" secondAttribute="centerY" id="aWf-wj-0eY"/>
-                                                                                <constraint firstItem="zpC-oY-L0u" firstAttribute="bottom" secondItem="jhJ-CP-nlo" secondAttribute="bottom" id="f2e-Xb-mCP"/>
-                                                                                <constraint firstItem="zpC-oY-L0u" firstAttribute="leading" secondItem="cdk-CV-ZQM" secondAttribute="leading" constant="3" id="lrW-IW-1eU"/>
+                                                                                <constraint firstItem="jhJ-CP-nlo" firstAttribute="centerY" secondItem="cdk-CV-ZQM" secondAttribute="centerY" id="9js-ZE-Om2"/>
+                                                                                <constraint firstItem="jhJ-CP-nlo" firstAttribute="leading" secondItem="cdk-CV-ZQM" secondAttribute="leading" constant="3" id="iFO-G2-v2i"/>
                                                                             </constraints>
                                                                             <connections>
-                                                                                <outlet property="imageView" destination="zpC-oY-L0u" id="4En-ri-ruc"/>
                                                                                 <outlet property="textField" destination="jhJ-CP-nlo" id="mPM-7e-SF6"/>
                                                                             </connections>
                                                                         </tableCellView>
@@ -1019,7 +1008,4 @@
             <point key="canvasLocation" x="192" y="929.5"/>
         </scene>
     </scenes>
-    <resources>
-        <image name="NSActionTemplate" width="14" height="14"/>
-    </resources>
 </document>

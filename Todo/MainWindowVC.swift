@@ -10,7 +10,8 @@ import Cocoa
 import CoreData
 
 
-class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDelegate, NSOutlineViewDataSource, NSOutlineViewDelegate {
+class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDelegate {
+    let registeredTypes:[String] = [NSGeneralPboard]
     @IBOutlet var mainTableView: NSTableView!
     @IBOutlet var lblStatusBottom: NSTextField!
     @IBOutlet weak var sourceSidebar: NSScrollView!
@@ -27,8 +28,6 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
     }
 
     let cntlr = MainController()
-    
-    var outlineGroups = ["All", "Favorites"]
     
     override func viewWillAppear() {
         if let windowConroller = self.view.window?.windowController as? WindowController {
@@ -49,9 +48,10 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
         mainTableView.doubleAction = #selector(self.doubleClick)
         mainTableView.reloadData()
         
-        sourceOutlineView.delegate = self
-        sourceOutlineView.dataSource = self
-        
+        sourceOutlineView.delegate = cntlr
+        sourceOutlineView.dataSource = cntlr
+        sourceOutlineView.setDraggingSourceOperationMask(NSDragOperation.every, forLocal: true)
+        sourceOutlineView.register(forDraggedTypes: self.registeredTypes)
     }
     
     func animate(hide: Bool) {
@@ -88,25 +88,5 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
     override func updateViewConstraints() {
         print("update view contraints")
         super.updateViewConstraints()
-    }
-    
-    func outlineView(_ outlineView: NSOutlineView, numberOfChildrenOfItem item: Any?) -> Int {
-        return outlineGroups.count
-    }
-    
-    func outlineView(_ outlineView: NSOutlineView, isItemExpandable item: Any) -> Bool {
-        return false
-    }
-    
-    func outlineView(_ outlineView: NSOutlineView, child index: Int, ofItem item: Any?) -> Any {
-        return outlineGroups[index]
-    }
-    
-    func outlineView(_ outlineView: NSOutlineView, viewFor tableColumn: NSTableColumn?, item: Any) -> NSView? {
-        let view = outlineView.make(withIdentifier: "HeaderCell", owner: self) as! NSTableCellView
-        if let textField = view.textField {
-            textField.stringValue = item as! String
-        }
-        return view
     }
 }
