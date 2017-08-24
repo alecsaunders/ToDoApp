@@ -12,7 +12,7 @@ import CoreData
 
 
 protocol MainTableViewDelgate: class {
-    func reloadData()
+    func reloadData(sidebarGroup: String)
     func updateStatusBar(numOfItems: Int)
     func doubleClick(sender: AnyObject)
 }
@@ -24,6 +24,7 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, ToDo
     var coreDataToDoManagedObjects: [NSManagedObject]? = nil
     var mainTableToDoArray: [ToDo] = []
     var currentSelectionToDoArray: [ToDo] = []
+    var currentSource = "All"
     weak var mainTableViewDelgate: MainTableViewDelgate?
     
     var outlineGroups = ["All", "Daily", "Domo", "Vertica", "ServiceNow", "Data Query", "Home"]
@@ -97,7 +98,7 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, ToDo
         if managedContextDidSave(managedContext: mc) {
             coreDataToDoManagedObjects = fetchManagedObjectsFromCoreData(entityName: entityName)
             mainTableToDoArray.append(createToDoFromManagedObject(obj: toDoEntityRecord))
-            mainTableViewDelgate?.reloadData()
+            mainTableViewDelgate?.reloadData(sidebarGroup: "All")
             mainTableViewDelgate?.updateStatusBar(numOfItems: mainTableToDoArray.count)
         }
     }
@@ -106,13 +107,21 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, ToDo
     func removeToDoEntityRecord(atIndex: Int) {
         guard let context = self.managedContext else { return }
         guard let toDoMO = coreDataToDoManagedObjects else { return }
-        context.delete(toDoMO[atIndex])
-        if managedContextDidSave(managedContext: context) {
-            coreDataToDoManagedObjects!.remove(at: atIndex)
-            mainTableToDoArray.remove(at: atIndex)
-            mainTableViewDelgate?.reloadData()
-            mainTableViewDelgate?.updateStatusBar(numOfItems: mainTableToDoArray.count)
+        let theCompletedToDo = currentSelectionToDoArray[atIndex]
+        
+        for cdObj in toDoMO {
+            if cdObj.objectID == theCompletedToDo.managedContextID {
+                context.delete(cdObj)
+                if managedContextDidSave(managedContext: context) {
+                    coreDataToDoManagedObjects!.remove(at: theCompletedToDo.ordinalPosition)
+                    mainTableToDoArray.remove(at: theCompletedToDo.ordinalPosition)
+                    mainTableViewDelgate?.reloadData(sidebarGroup: currentSource)
+                    mainTableViewDelgate?.updateStatusBar(numOfItems: mainTableToDoArray.count)
+                }
+            }
         }
+        
+
     }
     
     func managedContextDidSave(managedContext: NSManagedObjectContext) -> Bool {
@@ -134,6 +143,16 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, ToDo
         }
     }
     
+    func updateCurrentSelectionToDoArray(group: String) {
+        if group == "All" {
+            currentSelectionToDoArray = mainTableToDoArray
+        } else {
+            currentSelectionToDoArray = mainTableToDoArray.filter {
+                $0.sidebarGroup == group
+            }
+        }
+    }
+    
     // MARK: - To Do Table View Delegate Methods
     func changeText(newToDoTitle: String, atIndex: Int) {
         guard let mc = managedContext else { return }
@@ -151,7 +170,6 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, ToDo
         switch state {
         case NSOnState:
             removeToDoEntityRecord(atIndex: btnIndex)
-            mainTableViewDelgate?.reloadData()
         case NSOffState:
             break
         default:
@@ -180,7 +198,7 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, ToDo
 
         if managedContextDidSave(managedContext: mc) {
             coreDataToDoManagedObjects = fetchManagedObjectsFromCoreData(entityName: "ToDo")
-            mainTableViewDelgate?.reloadData()
+            mainTableViewDelgate?.reloadData(sidebarGroup: "All")
         }
     }
     
@@ -254,7 +272,7 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, ToDo
         let dragOrigin = ri.first!
         let dragDest = row
         reorderToDos(dragOrigin: dragOrigin, dragDest: dragDest)
-        mainTableViewDelgate?.reloadData()
+        mainTableViewDelgate?.reloadData(sidebarGroup: "All")
         return true
     }
     
@@ -269,7 +287,9 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, ToDo
                 $0.sidebarGroup == outlineGroups[object.selectedRow]
             }
         }
-        mainTableViewDelgate?.reloadData()
+        currentSource = outlineGroups[object.selectedRow]
+        mainTableViewDelgate?.reloadData(sidebarGroup: currentSource)
+        mainTableViewDelgate?.updateStatusBar(numOfItems: currentSelectionToDoArray.count)
     }
     
     func outlineView(_ outlineView: NSOutlineView, numberOfChildrenOfItem item: Any?) -> Int {

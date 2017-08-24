@@ -64,7 +64,8 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
         cntlr.doubleClickMainTVCell(sender: sender)
     }
     
-    func reloadData() {
+    func reloadData(sidebarGroup: String) {
+        cntlr.updateCurrentSelectionToDoArray(group: sidebarGroup)
         mainTableView.reloadData()
     }
     
