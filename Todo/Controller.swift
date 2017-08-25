@@ -19,6 +19,7 @@ protocol MainTableViewDelgate: class {
 
 class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, ToDoCellViewDelegate, NSOutlineViewDataSource, NSOutlineViewDelegate {
     let registeredTypes:[String] = [NSGeneralPboard]
+    let modelAccessor = ToDoModelAccessor()
     let appDelegate = NSApplication.shared().delegate as? AppDelegate
     var managedContext: NSManagedObjectContext? = nil
     var coreDataToDoManagedObjects: [NSManagedObject]? = nil
@@ -79,49 +80,22 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, ToDo
     
     func save(currentToDoTitle: String) {
         if currentToDoTitle.isEmpty { return }
-        
-        guard let mc = managedContext else { return }
-        
-        let entityName = "ToDo"
-        
-        let entity = NSEntityDescription.entity(forEntityName: entityName, in: mc)
-        let toDoEntityRecord = NSManagedObject(entity: entity!, insertInto: mc)
-        
-        
-        toDoEntityRecord.setValue(currentToDoTitle, forKeyPath: "title")
-        toDoEntityRecord.setValue(false, forKeyPath: "completed")
-        
-        let ordinalPosition = mainTableToDoArray.count
-        
-        toDoEntityRecord.setValue(ordinalPosition, forKey: "ordinalPosition")
-        
-        if managedContextDidSave(managedContext: mc) {
-            coreDataToDoManagedObjects = fetchManagedObjectsFromCoreData(entityName: entityName)
-            mainTableToDoArray.append(createToDoFromManagedObject(obj: toDoEntityRecord))
-            mainTableViewDelgate?.reloadData(sidebarGroup: "All")
+        if let newToDo = modelAccessor.createNewToDo(title: currentToDoTitle, ordinalPosition: mainTableToDoArray.count) {
+            mainTableToDoArray.append(newToDo)
+            mainTableViewDelgate?.reloadData(sidebarGroup: currentSource)
             mainTableViewDelgate?.updateStatusBar(numOfItems: mainTableToDoArray.count)
         }
     }
 
     
     func removeToDoEntityRecord(atIndex: Int) {
-        guard let context = self.managedContext else { return }
-        guard let toDoMO = coreDataToDoManagedObjects else { return }
         let theCompletedToDo = currentSelectionToDoArray[atIndex]
-        
-        for cdObj in toDoMO {
-            if cdObj.objectID == theCompletedToDo.managedContextID {
-                context.delete(cdObj)
-                if managedContextDidSave(managedContext: context) {
-                    coreDataToDoManagedObjects!.remove(at: theCompletedToDo.ordinalPosition)
-                    mainTableToDoArray.remove(at: theCompletedToDo.ordinalPosition)
-                    mainTableViewDelgate?.reloadData(sidebarGroup: currentSource)
-                    mainTableViewDelgate?.updateStatusBar(numOfItems: mainTableToDoArray.count)
-                }
-            }
+        if modelAccessor.deleteManagedObject(moID: theCompletedToDo.managedContextID) {
+            currentSelectionToDoArray.remove(at: atIndex)
+            mainTableToDoArray = mainTableToDoArray.filter { $0.managedContextID != theCompletedToDo.managedContextID }
+            mainTableViewDelgate?.reloadData(sidebarGroup: currentSource)
+            mainTableViewDelgate?.updateStatusBar(numOfItems: mainTableToDoArray.count)
         }
-        
-
     }
     
     func managedContextDidSave(managedContext: NSManagedObjectContext) -> Bool {
@@ -135,11 +109,14 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, ToDo
     }
     
     func changeSidebarGroup(atIndex: Int, toGroup: String) {
-        guard let mc = self.managedContext else { return }
-        guard let cdObj = coreDataToDoManagedObjects?[atIndex] else { return }
-        cdObj.setValue(toGroup, forKey: "sidebarGroup")
-        if managedContextDidSave(managedContext: mc) {
-            mainTableToDoArray[atIndex].sidebarGroup = toGroup
+        let changedToDoId = currentSelectionToDoArray[atIndex].managedContextID
+        if modelAccessor.updateSidebarGroup(moID: changedToDoId, newGroup: toGroup) {
+            currentSelectionToDoArray[atIndex].sidebarGroup = toGroup
+            for i in 0..<mainTableToDoArray.count {
+                if mainTableToDoArray[i].managedContextID == changedToDoId {
+                    mainTableToDoArray[i].sidebarGroup = toGroup
+                }
+            }
         }
     }
     
