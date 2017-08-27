@@ -74,10 +74,12 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, ToDo
     func updateCurrentSelectionToDoArray(group: String) {
         if group == "All" {
             currentSelectionToDoArray = mainTableToDoArray
+            currentSelectionToDoArray = currentSelectionToDoArray.sorted { $0.createdDate < $1.createdDate }
         } else {
             currentSelectionToDoArray = mainTableToDoArray.filter {
                 $0.sidebarGroup == group
             }
+            currentSelectionToDoArray = currentSelectionToDoArray.sorted { $0.ordinalPosition < $1.ordinalPosition }
         }
     }
     
@@ -120,7 +122,11 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, ToDo
         
         for i in 0..<currentSelectionToDoArray.count {
             currentSelectionToDoArray[i].ordinalPosition = i
-            // add code to update ordinal position of item in main table to do array
+            for j in 0..<mainTableToDoArray.count {
+                if mainTableToDoArray[j].managedContextID == currentSelectionToDoArray[i].managedContextID {
+                    mainTableToDoArray[j].ordinalPosition = i
+                }
+            }
         }
         for i in 0..<currentSelectionToDoArray.count {
             let moID = currentSelectionToDoArray[i].managedContextID
