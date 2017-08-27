@@ -17,14 +17,35 @@ class ToDoModelAccessor {
         managedContext = appDelegate?.persistentContainer.viewContext
     }
     
+    func populateMainTableToDoArray() -> [ToDo] {
+        guard let managedObjects = fetchManagedObjectsFromCoreData(entityName: "ToDo") else { return [] }
+        var toDoArray = managedObjects.map{mngObj in createToDoFromManagedObject(obj: mngObj)}
+        toDoArray = toDoArray.sorted { $0.createdDate < $1.createdDate }
+        return toDoArray
+    }
+    
+    func fetchManagedObjectsFromCoreData(entityName: String) -> [NSManagedObject]? {
+        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: entityName)
+        
+        do {
+            return try self.managedContext!.fetch(fetchRequest)
+        } catch let error as NSError {
+            print("Could not fetch. \(error), \(error.userInfo)")
+        }
+        
+        return nil
+    }
+    
     func createToDoFromManagedObject(obj: NSManagedObject) -> ToDo {
         let currentTitle = obj.value(forKey: "title") as? String ?? "Unnamed ToDo"
+        let currentDate = obj.value(forKey: "createdDate") as? Date ?? Date()
         let currentCompleted = obj.value(forKey: "completed") as? Bool
         let currentOrdinalPosition = obj.value(forKey: "ordinalPosition") as? Int
         let currentSidebarGroup = obj.value(forKey: "sidebarGroup") as? String
         let currentManagedContextID = obj.objectID
         
         let currentToDo = ToDo(title:           currentTitle,
+                               createdDate:     currentDate,
                                completed:       currentCompleted,
                                ordinalPosition: currentOrdinalPosition,
                                sidebarGroup:    currentSidebarGroup,
@@ -63,6 +84,15 @@ class ToDoModelAccessor {
             return true
         }
         return false
+    }
+    
+    func updatePosition(moID: NSManagedObjectID, newPosition: Int) {
+        guard let mc = managedContext else { return }
+        let changedManagedObject = mc.object(with: moID)
+        changedManagedObject.setValue(newPosition, forKey: "ordinalPosition")
+        if !managedContextDidSave(managedContext: mc) {
+            print("failed to update ordinal position")
+        }
     }
     
     func deleteManagedObject(moID: NSManagedObjectID) -> Bool {

@@ -20,9 +20,6 @@ protocol MainTableViewDelgate: class {
 class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, ToDoCellViewDelegate, NSOutlineViewDataSource, NSOutlineViewDelegate {
     let registeredTypes:[String] = [NSGeneralPboard]
     let modelAccessor = ToDoModelAccessor()
-    let appDelegate = NSApplication.shared().delegate as? AppDelegate
-    var managedContext: NSManagedObjectContext? = nil
-    var coreDataToDoManagedObjects: [NSManagedObject]? = nil
     var mainTableToDoArray: [ToDo] = []
     var currentSelectionToDoArray: [ToDo] = []
     var currentSource = "All"
@@ -38,44 +35,8 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, ToDo
     override init() {
         super.init()
         
-        managedContext = self.appDelegate?.persistentContainer.viewContext
-        coreDataToDoManagedObjects = fetchManagedObjectsFromCoreData(entityName: "ToDo")
-        mainTableToDoArray = populateMainTableToDoArray()
+        mainTableToDoArray = modelAccessor.populateMainTableToDoArray()
         currentSelectionToDoArray = mainTableToDoArray
-    }
-    
-    // MARK: - Core Data Setup
-    func fetchManagedObjectsFromCoreData(entityName: String) -> [NSManagedObject]? {
-        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: entityName)
-        
-        do {
-            return try self.managedContext!.fetch(fetchRequest)
-        } catch let error as NSError {
-            print("Could not fetch. \(error), \(error.userInfo)")
-        }
-        
-        return nil
-    }
-    
-    func populateMainTableToDoArray() -> [ToDo] {
-        guard let managedObjects = self.coreDataToDoManagedObjects else { return [] }
-        let tmpToDoArray = managedObjects.map{mngObj in createToDoFromManagedObject(obj: mngObj)}
-        return tmpToDoArray.sorted{ $0.ordinalPosition < $1.ordinalPosition }
-    }
-    
-    func createToDoFromManagedObject(obj: NSManagedObject) -> ToDo {
-        let currentTitle = obj.value(forKey: "title") as? String ?? "Unnamed ToDo"
-        let currentCompleted = obj.value(forKey: "completed") as? Bool
-        let currentOrdinalPosition = obj.value(forKey: "ordinalPosition") as? Int
-        let currentSidebarGroup = obj.value(forKey: "sidebarGroup") as? String
-        let currentManagedContextID = obj.objectID
-        
-        let currentToDo = ToDo(title:           currentTitle,
-                               completed:       currentCompleted,
-                               ordinalPosition: currentOrdinalPosition,
-                               sidebarGroup:    currentSidebarGroup,
-                               managedContextID: currentManagedContextID)
-        return currentToDo
     }
     
     func save(currentToDoTitle: String) {
@@ -95,16 +56,6 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, ToDo
             mainTableToDoArray = mainTableToDoArray.filter { $0.managedContextID != theCompletedToDo.managedContextID }
             mainTableViewDelgate?.reloadData(sidebarGroup: currentSource)
             mainTableViewDelgate?.updateStatusBar(numOfItems: mainTableToDoArray.count)
-        }
-    }
-    
-    func managedContextDidSave(managedContext: NSManagedObjectContext) -> Bool {
-        do {
-            try managedContext.save()
-            return true
-        } catch let error as NSError {
-            print("Could not delete. \(error), \(error.userInfo)")
-            return false
         }
     }
     
@@ -157,27 +108,23 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, ToDo
     }
     
     func reorderToDos(dragOrigin: Int, dragDest: Int) {
-        guard let mc = managedContext else { return }
         var alteredDragDest = dragDest
         if dragOrigin == dragDest - 1 { return }
         if dragOrigin < dragDest {
             alteredDragDest = dragDest - 1
         }
         
-        let draggedItem = mainTableToDoArray[dragOrigin]
-        mainTableToDoArray.remove(at: dragOrigin)
-        mainTableToDoArray.insert(draggedItem, at: alteredDragDest)
+        let draggedItem = currentSelectionToDoArray[dragOrigin]
+        currentSelectionToDoArray.remove(at: dragOrigin)
+        currentSelectionToDoArray.insert(draggedItem, at: alteredDragDest)
         
-        
-        for i in 0..<mainTableToDoArray.count {
-            mainTableToDoArray[i].ordinalPosition = i
-            let mngdObj = mc.object(with: mainTableToDoArray[i].managedContextID)
-            mngdObj.setValue(i, forKey: "ordinalPosition")
+        for i in 0..<currentSelectionToDoArray.count {
+            currentSelectionToDoArray[i].ordinalPosition = i
+            // add code to update ordinal position of item in main table to do array
         }
-
-        if managedContextDidSave(managedContext: mc) {
-            coreDataToDoManagedObjects = fetchManagedObjectsFromCoreData(entityName: "ToDo")
-            mainTableViewDelgate?.reloadData(sidebarGroup: "All")
+        for i in 0..<currentSelectionToDoArray.count {
+            let moID = currentSelectionToDoArray[i].managedContextID
+            modelAccessor.updatePosition(moID: moID, newPosition: i)
         }
     }
     
@@ -222,7 +169,7 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, ToDo
         if tv.selectedRow  == -1 {
             print("Double clicked empty cell")
         } else {
-            let doubleClickedToDo = mainTableToDoArray[tv.selectedRow]
+            let doubleClickedToDo = currentSelectionToDoArray[tv.selectedRow]
             print(doubleClickedToDo)
         }
         
@@ -230,6 +177,9 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, ToDo
     
     func tableView(_ tableView: NSTableView, validateDrop info: NSDraggingInfo, proposedRow row: Int,
                    proposedDropOperation dropOperation: NSTableViewDropOperation) -> NSDragOperation {
+        if currentSource == "All" {
+            return NSDragOperation(rawValue: UInt(0))
+        }
         if dropOperation == .above {
             return .move
         }
@@ -245,14 +195,18 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, ToDo
     
     func tableView(_ tableView: NSTableView, acceptDrop info: NSDraggingInfo, row: Int,
                    dropOperation: NSTableViewDropOperation) -> Bool {
-        let dragData = info.draggingPasteboard().data(forType: NSGeneralPboard)!
-        let rowIndexes: IndexSet? = NSKeyedUnarchiver.unarchiveObject(with: dragData) as? IndexSet
-        guard let ri: IndexSet = rowIndexes else { return true }
-        let dragOrigin = ri.first!
-        let dragDest = row
-        reorderToDos(dragOrigin: dragOrigin, dragDest: dragDest)
-        mainTableViewDelgate?.reloadData(sidebarGroup: "All")
-        return true
+        if currentSource != "All" {
+            let dragData = info.draggingPasteboard().data(forType: NSGeneralPboard)!
+            let rowIndexes: IndexSet? = NSKeyedUnarchiver.unarchiveObject(with: dragData) as? IndexSet
+            guard let ri: IndexSet = rowIndexes else { return true }
+            let dragOrigin = ri.first!
+            let dragDest = row
+            reorderToDos(dragOrigin: dragOrigin, dragDest: dragDest)
+            mainTableViewDelgate?.reloadData(sidebarGroup: currentSource)
+            return true
+        }
+        return false
+
     }
     
     
