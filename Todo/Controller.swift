@@ -132,13 +132,15 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, ToDo
     
     // MARK: - To Do Table View Delegate Methods
     func changeText(newToDoTitle: String, atIndex: Int) {
-        guard let mc = managedContext else { return }
-        guard let cdObj = coreDataToDoManagedObjects?[atIndex] else { return }
-        cdObj.setValue(newToDoTitle, forKey: "title")
-        if managedContextDidSave(managedContext: mc) {
-            mainTableToDoArray[atIndex].title = newToDoTitle
+        let changedToDoId = currentSelectionToDoArray[atIndex].managedContextID
+        if modelAccessor.updateTitle(moID: changedToDoId, newTitle: newToDoTitle) {
+            currentSelectionToDoArray[atIndex].title = newToDoTitle
+            for i in 0..<mainTableToDoArray.count {
+                if mainTableToDoArray[i].managedContextID == changedToDoId {
+                    mainTableToDoArray[i].title = newToDoTitle
+                }
+            }
         }
-        
     }
     
     

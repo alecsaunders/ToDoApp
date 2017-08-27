@@ -55,6 +55,16 @@ class ToDoModelAccessor {
         return false
     }
     
+    func updateTitle(moID: NSManagedObjectID, newTitle: String) -> Bool {
+        guard let mc = managedContext else { return false }
+        let changedManagedObject = mc.object(with: moID)
+        changedManagedObject.setValue(newTitle, forKey: "title")
+        if managedContextDidSave(managedContext: mc) {
+            return true
+        }
+        return false
+    }
+    
     func deleteManagedObject(moID: NSManagedObjectID) -> Bool {
         guard let mc = managedContext else { return false }
         mc.delete(mc.object(with: moID))
