@@ -15,6 +15,7 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
     @IBOutlet var mainTableView: NSTableView!
     @IBOutlet var lblStatusBottom: NSTextField!
     @IBOutlet weak var sourceSidebar: NSScrollView!
+    @IBOutlet var sidebarView: NSView!
     @IBOutlet weak var sourceOutlineView: NSOutlineView!
     @IBAction func btnAddItem(_ sender: NSButton) {
         if let windowConroller = self.view.window?.windowController as? WindowController {
@@ -56,6 +57,7 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
     
     func animate(hide: Bool) {
         sourceSidebar.animator().isHidden = hide
+        sidebarView.animator().isHidden = hide
     }
     
     
