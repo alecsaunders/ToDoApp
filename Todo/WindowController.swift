@@ -24,12 +24,13 @@ class WindowController: NSWindowController, NSWindowDelegate {
     weak var windowControllerDelegate: WindowControllerDelegate?
     var sidebarShouldHide: Bool = false
 
-//    override func windowWillLoad() {
-//        super.windowWillLoad()
-//    }
+    override func windowWillLoad() {
+        super.windowWillLoad()
+    }
     
     override func windowDidLoad() {
         super.windowDidLoad()
+        
         if mainWindow.frame.width < 375 {
             sidebarShouldHide = false
         } else {
@@ -54,5 +55,4 @@ class WindowController: NSWindowController, NSWindowDelegate {
             }
         }
     }
-
 }

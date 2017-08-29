@@ -260,8 +260,9 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, ToDo
         }
         return NSDragOperation(rawValue: UInt(0))
     }
-    
+
     func outlineView(_ outlineView: NSOutlineView, writeItems items: [Any], to pasteboard: NSPasteboard) -> Bool {
+        print(items)
         return true
     }
     
