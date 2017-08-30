@@ -31,7 +31,9 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
         cntlr.completedWasChecked(state: 1, btnIndex: mainTableView.clickedRow)
     }
     @IBAction func menuGetInfo(_ sender: NSMenuItem) {
-        performSegue(withIdentifier: "infoSegue", sender: self)
+        if mainTableView.clickedRow >= 0 {
+            performSegue(withIdentifier: "infoSegue", sender: self)
+        }
     }
 
     let cntlr = MainController()
@@ -62,10 +64,17 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
     }
     
     override func prepare(for segue: NSStoryboardSegue, sender: Any?) {
-        if segue.identifier == "infoSegue" {
-            guard let dest = segue.destinationController as? InfoViewController else { return }
-            dest.infoTitleString = cntlr.currentSelectionToDoArray[mainTableView.clickedRow].title
-        }
+        guard let dest = segue.destinationController as? InfoViewController else { return }
+        let theClickedToDo = cntlr.currentSelectionToDoArray[mainTableView.clickedRow]
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        let clickedCreateDate = theClickedToDo.createdDate
+        let clickedCreateDateString = dateFormatter.string(from: clickedCreateDate)
+        dest.infoTitleString = theClickedToDo.title
+        dest.intoCreatedDateString = clickedCreateDateString
+        dest.note = theClickedToDo.note
+        dest.managedContextId = theClickedToDo.managedContextID
+        dest.infoControllerDelegate = cntlr.modelAccessor
     }
     
     

@@ -13,14 +13,16 @@ struct ToDo {
     var title: String
     var createdDate: Date
     var completed: Bool
+    var note: String
     var ordinalPosition: Int
     var sidebarGroup: String
     var managedContextID: NSManagedObjectID
     
-    init(title: String, createdDate: Date?, completed: Bool?, ordinalPosition: Int?, sidebarGroup: String?, managedContextID: NSManagedObjectID) {
+    init(title: String, createdDate: Date?, completed: Bool?, note: String?, ordinalPosition: Int?, sidebarGroup: String?, managedContextID: NSManagedObjectID) {
         self.title = title
         self.createdDate = createdDate ?? Date()
         self.completed = completed ?? false
+        self.note = note ?? ""
         self.ordinalPosition = ordinalPosition ?? 100
         self.sidebarGroup = sidebarGroup ?? "All"
         self.managedContextID = managedContextID

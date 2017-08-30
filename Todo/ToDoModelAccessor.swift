@@ -9,12 +9,14 @@
 import Cocoa
 
 
-class ToDoModelAccessor {
+class ToDoModelAccessor: NSObject, InfoControllerDelegate {
     let appDelegate = NSApplication.shared().delegate as? AppDelegate
     var managedContext: NSManagedObjectContext? = nil
     
-    init() {
+    override init() {
+        super.init()
         managedContext = appDelegate?.persistentContainer.viewContext
+        
     }
     
     func populateMainTableToDoArray() -> [ToDo] {
@@ -40,6 +42,7 @@ class ToDoModelAccessor {
         let currentTitle = obj.value(forKey: "title") as? String ?? "Unnamed ToDo"
         let currentDate = obj.value(forKey: "createdDate") as? Date ?? Date()
         let currentCompleted = obj.value(forKey: "completed") as? Bool
+        let currentNote = obj.value(forKey: "note") as? String
         let currentOrdinalPosition = obj.value(forKey: "ordinalPosition") as? Int
         let currentSidebarGroup = obj.value(forKey: "sidebarGroup") as? String
         let currentManagedContextID = obj.objectID
@@ -47,6 +50,7 @@ class ToDoModelAccessor {
         let currentToDo = ToDo(title:           currentTitle,
                                createdDate:     currentDate,
                                completed:       currentCompleted,
+                               note:            currentNote,
                                ordinalPosition: currentOrdinalPosition,
                                sidebarGroup:    currentSidebarGroup,
                                managedContextID: currentManagedContextID)
@@ -93,6 +97,16 @@ class ToDoModelAccessor {
         if !managedContextDidSave(managedContext: mc) {
             print("failed to update ordinal position")
         }
+    }
+    
+    func updateNote(newNote: String, moID: NSManagedObjectID) {
+        guard let mc = managedContext else { return }
+        let changedManagedObject = mc.object(with: moID)
+        changedManagedObject.setValue(newNote, forKey: "note")
+        if !managedContextDidSave(managedContext: mc) {
+            print("failed to update note")
+        }
+        
     }
     
     func deleteManagedObject(moID: NSManagedObjectID) -> Bool {

@@ -8,15 +8,33 @@
 
 import Cocoa
 
+protocol InfoControllerDelegate: class {
+    func updateNote(newNote: String, moID: NSManagedObjectID)
+}
+
 class InfoViewController: NSViewController {
+    var managedContextId: NSManagedObjectID?
     var infoTitleString: String?
-    @IBOutlet var infoTitle: NSTextField!
+    var intoCreatedDateString: String?
+    var note: String?
+    weak var infoControllerDelegate: InfoControllerDelegate?
     
+    @IBOutlet var infoTitleTextField: NSTextField!
+    @IBOutlet var infoCreatedDate: NSTextField!
+    @IBOutlet weak var infoNote: NSTextField!
 
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do view setup here.
-        infoTitle.stringValue = infoTitleString ?? "some label"
+        infoTitleTextField.stringValue = infoTitleString ?? "title"
+        infoCreatedDate.stringValue = intoCreatedDateString ?? "createDate"
+        infoNote.stringValue = note ?? ""
+    }
+    
+    
+    override func viewDidDisappear() {
+        guard let moID = managedContextId else { return }
+        infoControllerDelegate?.updateNote(newNote: infoNote.stringValue, moID: moID)
     }
     
 }
