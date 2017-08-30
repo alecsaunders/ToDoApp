@@ -30,6 +30,9 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
     @IBAction func markComplete(_ sender: NSMenuItem) {
         cntlr.completedWasChecked(state: 1, btnIndex: mainTableView.clickedRow)
     }
+    @IBAction func menuGetInfo(_ sender: NSMenuItem) {
+        performSegue(withIdentifier: "infoSegue", sender: self)
+    }
 
     let cntlr = MainController()
     
@@ -57,6 +60,14 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
         sourceOutlineView.setDraggingSourceOperationMask(NSDragOperation.every, forLocal: true)
         sourceOutlineView.register(forDraggedTypes: self.registeredTypes)
     }
+    
+    override func prepare(for segue: NSStoryboardSegue, sender: Any?) {
+        if segue.identifier == "infoSegue" {
+            guard let dest = segue.destinationController as? InfoViewController else { return }
+            dest.infoTitleString = cntlr.currentSelectionToDoArray[mainTableView.clickedRow].title
+        }
+    }
+    
     
     func animate(hide: Bool) {
         sourceSidebar.animator().isHidden = hide

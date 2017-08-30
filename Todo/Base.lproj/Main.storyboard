@@ -1035,6 +1035,7 @@
                         <outlet property="sidebarView" destination="ktf-uG-V40" id="WUj-dI-xib"/>
                         <outlet property="sourceOutlineView" destination="zLj-AB-Mq7" id="v5q-3A-gaa"/>
                         <outlet property="sourceSidebar" destination="Ewb-OW-ylW" id="jZe-mR-LnJ"/>
+                        <segue destination="KUD-Z6-EEq" kind="popover" identifier="infoSegue" popoverBehavior="t" preferredEdge="maxY" id="e1n-un-Twi"/>
                     </connections>
                 </viewController>
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
@@ -1042,6 +1043,9 @@
                     <items>
                         <menuItem title="Get Info" id="itS-vf-S1W" userLabel="Get Info">
                             <modifierMask key="keyEquivalentModifierMask"/>
+                            <connections>
+                                <action selector="menuGetInfo:" target="XfG-lQ-9wD" id="tqY-ea-8HT"/>
+                            </connections>
                         </menuItem>
                         <menuItem isSeparatorItem="YES" id="NuI-zo-NPa"/>
                         <menuItem title="Mark Completed" id="Ubp-7r-MRM">
@@ -1057,6 +1061,46 @@
                 </menu>
             </objects>
             <point key="canvasLocation" x="74" y="940.5"/>
+        </scene>
+        <!--InfoViewController-->
+        <scene sceneID="XDU-kf-n3w">
+            <objects>
+                <viewController title="InfoViewController" id="KUD-Z6-EEq" customClass="InfoViewController" customModule="Todo" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" id="72o-gb-3Sh">
+                        <rect key="frame" x="0.0" y="0.0" width="450" height="300"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <subviews>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="o12-F5-IgU">
+                                <rect key="frame" x="18" y="263" width="41" height="17"/>
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Label:" id="Sqr-uv-N2C">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Y0Z-PM-sf6">
+                                <rect key="frame" x="65" y="263" width="37" height="17"/>
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Label" id="tR8-Pd-wKZ">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                        </subviews>
+                        <constraints>
+                            <constraint firstItem="o12-F5-IgU" firstAttribute="top" secondItem="72o-gb-3Sh" secondAttribute="top" constant="20" id="Rmd-pG-M8M"/>
+                            <constraint firstItem="o12-F5-IgU" firstAttribute="leading" secondItem="72o-gb-3Sh" secondAttribute="leading" constant="20" id="VwW-us-QBR"/>
+                            <constraint firstItem="Y0Z-PM-sf6" firstAttribute="top" secondItem="o12-F5-IgU" secondAttribute="top" id="gqr-ky-hEI"/>
+                            <constraint firstItem="Y0Z-PM-sf6" firstAttribute="leading" secondItem="o12-F5-IgU" secondAttribute="trailing" constant="10" id="xI4-7Y-fQu"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="infoTitle" destination="Y0Z-PM-sf6" id="4bP-nr-7TW"/>
+                    </connections>
+                </viewController>
+                <customObject id="HFa-mr-Z5i" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="751" y="940"/>
         </scene>
     </scenes>
     <resources>

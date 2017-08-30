@@ -15,6 +15,7 @@
 		F2C8A26F1F41428500E246F7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F2C8A26E1F41428500E246F7 /* Assets.xcassets */; };
 		F2C8A2721F41428500E246F7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F2C8A2701F41428500E246F7 /* Main.storyboard */; };
 		F2C8A27D1F41428500E246F7 /* TodoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2C8A27C1F41428500E246F7 /* TodoTests.swift */; };
+		F2CAAD931F563DFB007DECD6 /* InfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2CAAD921F563DFB007DECD6 /* InfoViewController.swift */; };
 		F2E293991F50D191008F4213 /* ToDoModelAccessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2E293981F50D191008F4213 /* ToDoModelAccessor.swift */; };
 		F2E8228D1F4890E300EEEA07 /* ToDoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2E8228C1F4890E300EEEA07 /* ToDoModel.swift */; };
 		F2E822911F4895B100EEEA07 /* Controller.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2E822901F4895B100EEEA07 /* Controller.swift */; };
@@ -43,6 +44,7 @@
 		F2C8A2781F41428500E246F7 /* TodoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TodoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F2C8A27C1F41428500E246F7 /* TodoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoTests.swift; sourceTree = "<group>"; };
 		F2C8A27E1F41428500E246F7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F2CAAD921F563DFB007DECD6 /* InfoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InfoViewController.swift; sourceTree = "<group>"; };
 		F2E293981F50D191008F4213 /* ToDoModelAccessor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ToDoModelAccessor.swift; sourceTree = "<group>"; };
 		F2E8228C1F4890E300EEEA07 /* ToDoModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ToDoModel.swift; sourceTree = "<group>"; };
 		F2E822901F4895B100EEEA07 /* Controller.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Controller.swift; sourceTree = "<group>"; };
@@ -130,6 +132,7 @@
 			children = (
 				F255491E1F493A2300AE360B /* WindowController.swift */,
 				F2C8A2691F41428500E246F7 /* MainWindowVC.swift */,
+				F2CAAD921F563DFB007DECD6 /* InfoViewController.swift */,
 			);
 			name = "View Controllers";
 			sourceTree = "<group>";
@@ -249,6 +252,7 @@
 				F255491F1F493A2300AE360B /* WindowController.swift in Sources */,
 				F2603DFB1F4DDC0700A57AE0 /* ToDoCellView.swift in Sources */,
 				F2C8A26A1F41428500E246F7 /* MainWindowVC.swift in Sources */,
+				F2CAAD931F563DFB007DECD6 /* InfoViewController.swift in Sources */,
 				F2E293991F50D191008F4213 /* ToDoModelAccessor.swift in Sources */,
 				F2E8228D1F4890E300EEEA07 /* ToDoModel.swift in Sources */,
 				F2C8A26D1F41428500E246F7 /* Todo.xcdatamodeld in Sources */,
