@@ -9,14 +9,12 @@
 import Cocoa
 
 
-class ToDoModelAccessor: NSObject, InfoControllerDelegate {
+class ToDoModelAccessor {
     let appDelegate = NSApplication.shared().delegate as? AppDelegate
     var managedContext: NSManagedObjectContext? = nil
     
-    override init() {
-        super.init()
+    init() {
         managedContext = appDelegate?.persistentContainer.viewContext
-        
     }
     
     func populateMainTableToDoArray() -> [ToDo] {
@@ -99,13 +97,14 @@ class ToDoModelAccessor: NSObject, InfoControllerDelegate {
         }
     }
     
-    func updateNote(newNote: String, moID: NSManagedObjectID) {
-        guard let mc = managedContext else { return }
+    func updateNote(newNote: String, moID: NSManagedObjectID) -> Bool {
+        guard let mc = managedContext else { return false }
         let changedManagedObject = mc.object(with: moID)
         changedManagedObject.setValue(newNote, forKey: "note")
-        if !managedContextDidSave(managedContext: mc) {
-            print("failed to update note")
+        if managedContextDidSave(managedContext: mc) {
+            return true
         }
+        return false
         
     }
     

@@ -17,7 +17,7 @@ protocol MainTableViewDelgate: class {
     func doubleClick(sender: AnyObject)
 }
 
-class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, ToDoCellViewDelegate, NSOutlineViewDataSource, NSOutlineViewDelegate {
+class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, ToDoCellViewDelegate, NSOutlineViewDataSource, NSOutlineViewDelegate, InfoControllerDelegate {
     let registeredTypes:[String] = [NSGeneralPboard]
     let modelAccessor = ToDoModelAccessor()
     var mainTableToDoArray: [ToDo] = []
@@ -80,6 +80,21 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, ToDo
                 $0.sidebarGroup == group
             }
             currentSelectionToDoArray = currentSelectionToDoArray.sorted { $0.ordinalPosition < $1.ordinalPosition }
+        }
+    }
+    
+    func updateNote(newNote: String, moID: NSManagedObjectID) {
+        if modelAccessor.updateNote(newNote: newNote, moID: moID) {
+            for i in 0..<currentSelectionToDoArray.count {
+                if currentSelectionToDoArray[i].managedContextID == moID {
+                    currentSelectionToDoArray[i].note = newNote
+                }
+            }
+            for i in 0..<mainTableToDoArray.count {
+                if mainTableToDoArray[i].managedContextID == moID {
+                    mainTableToDoArray[i].note = newNote
+                }
+            }
         }
     }
     

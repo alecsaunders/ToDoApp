@@ -74,7 +74,7 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
         dest.intoCreatedDateString = clickedCreateDateString
         dest.note = theClickedToDo.note
         dest.managedContextId = theClickedToDo.managedContextID
-        dest.infoControllerDelegate = cntlr.modelAccessor
+        dest.infoControllerDelegate = cntlr
     }
     
     
