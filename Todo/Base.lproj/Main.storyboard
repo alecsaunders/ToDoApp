@@ -744,20 +744,39 @@
                                                 <rect key="frame" x="0.0" y="0.0" width="131" height="405"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                                 <subviews>
+                                                    <visualEffectView blendingMode="behindWindow" material="sidebar" state="followsWindowActiveState" translatesAutoresizingMaskIntoConstraints="NO" id="Kdx-m9-dov" userLabel="New Group Effect View">
+                                                        <rect key="frame" x="0.0" y="0.0" width="131" height="30"/>
+                                                        <subviews>
+                                                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="7vr-vI-czD">
+                                                                <rect key="frame" x="5" y="5" width="121" height="20"/>
+                                                                <buttonCell key="cell" type="bevel" title=" New Group" bezelStyle="rounded" image="NSAddTemplate" imagePosition="left" alignment="left" imageScaling="proportionallyDown" inset="2" id="mS1-hC-jUe">
+                                                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                                    <font key="font" metaFont="system"/>
+                                                                </buttonCell>
+                                                            </button>
+                                                        </subviews>
+                                                        <constraints>
+                                                            <constraint firstItem="7vr-vI-czD" firstAttribute="top" secondItem="Kdx-m9-dov" secondAttribute="top" constant="5" id="9YT-sw-zAi"/>
+                                                            <constraint firstItem="7vr-vI-czD" firstAttribute="leading" secondItem="Kdx-m9-dov" secondAttribute="leading" constant="5" id="A5I-dN-DYL"/>
+                                                            <constraint firstAttribute="trailing" secondItem="7vr-vI-czD" secondAttribute="trailing" constant="5" id="Nnz-8C-yFV"/>
+                                                            <constraint firstAttribute="bottom" secondItem="7vr-vI-czD" secondAttribute="bottom" constant="5" id="ZPB-6Y-G5a"/>
+                                                            <constraint firstAttribute="height" constant="30" id="h1f-fP-jBl"/>
+                                                        </constraints>
+                                                    </visualEffectView>
                                                     <scrollView borderType="none" autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ewb-OW-ylW" userLabel="Source">
-                                                        <rect key="frame" x="0.0" y="0.0" width="129" height="405"/>
+                                                        <rect key="frame" x="0.0" y="30" width="131" height="375"/>
                                                         <clipView key="contentView" drawsBackground="NO" id="Kfv-m0-a6n">
-                                                            <rect key="frame" x="0.0" y="0.0" width="129" height="405"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="131" height="375"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
                                                                 <outlineView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" selectionHighlightStyle="sourceList" multipleSelection="NO" autosaveColumns="NO" rowSizeStyle="automatic" viewBased="YES" indentationPerLevel="16" outlineTableColumn="GLW-Hw-FLe" id="zLj-AB-Mq7">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="129" height="405"/>
+                                                                    <rect key="frame" x="0.0" y="0.0" width="131" height="375"/>
                                                                     <autoresizingMask key="autoresizingMask"/>
                                                                     <size key="intercellSpacing" width="3" height="2"/>
                                                                     <color key="backgroundColor" name="_sourceListBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                                     <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                                                     <tableColumns>
-                                                                        <tableColumn width="125.5" minWidth="16" maxWidth="1000" id="GLW-Hw-FLe">
+                                                                        <tableColumn width="127.5" minWidth="16" maxWidth="1000" id="GLW-Hw-FLe">
                                                                             <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border">
                                                                                 <font key="font" metaFont="smallSystem"/>
                                                                                 <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -771,11 +790,11 @@
                                                                             <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                                             <prototypeCellViews>
                                                                                 <tableCellView identifier="HeaderCell" id="X9g-Pl-mQr">
-                                                                                    <rect key="frame" x="1" y="1" width="126" height="17"/>
+                                                                                    <rect key="frame" x="1" y="1" width="128" height="17"/>
                                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                                     <subviews>
                                                                                         <textField verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Kgr-rX-xLH">
-                                                                                            <rect key="frame" x="0.0" y="1" width="126" height="14"/>
+                                                                                            <rect key="frame" x="0.0" y="1" width="128" height="14"/>
                                                                                             <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="HEADER CELL" id="eRO-bW-XTU">
                                                                                                 <font key="font" metaFont="smallSystemBold"/>
                                                                                                 <color key="textColor" name="headerColor" catalog="System" colorSpace="catalog"/>
@@ -793,11 +812,11 @@
                                                                                     </connections>
                                                                                 </tableCellView>
                                                                                 <tableCellView identifier="DataCell" id="cdk-CV-ZQM">
-                                                                                    <rect key="frame" x="1" y="20" width="126" height="17"/>
+                                                                                    <rect key="frame" x="1" y="20" width="128" height="17"/>
                                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                                     <subviews>
                                                                                         <textField verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jhJ-CP-nlo">
-                                                                                            <rect key="frame" x="1" y="0.0" width="125" height="17"/>
+                                                                                            <rect key="frame" x="1" y="0.0" width="127" height="17"/>
                                                                                             <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="EMj-eH-ggf">
                                                                                                 <font key="font" metaFont="system"/>
                                                                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -833,10 +852,13 @@
                                                 </subviews>
                                                 <constraints>
                                                     <constraint firstItem="Ewb-OW-ylW" firstAttribute="top" secondItem="ktf-uG-V40" secondAttribute="top" id="GBy-7f-OFu"/>
-                                                    <constraint firstAttribute="bottom" secondItem="Ewb-OW-ylW" secondAttribute="bottom" id="Rk3-PV-ekJ"/>
-                                                    <constraint firstAttribute="trailing" secondItem="Ewb-OW-ylW" secondAttribute="trailing" constant="2" id="av3-1b-mB1"/>
+                                                    <constraint firstItem="Kdx-m9-dov" firstAttribute="leading" secondItem="ktf-uG-V40" secondAttribute="leading" id="Iey-Nd-yaa"/>
+                                                    <constraint firstAttribute="bottom" secondItem="Ewb-OW-ylW" secondAttribute="bottom" constant="30" id="Rk3-PV-ekJ"/>
+                                                    <constraint firstAttribute="bottom" secondItem="Kdx-m9-dov" secondAttribute="bottom" id="ZqP-8p-CKA"/>
+                                                    <constraint firstAttribute="trailing" secondItem="Ewb-OW-ylW" secondAttribute="trailing" id="av3-1b-mB1"/>
                                                     <constraint firstAttribute="width" relation="lessThanOrEqual" constant="350" id="bhS-sp-o5e"/>
                                                     <constraint firstItem="Ewb-OW-ylW" firstAttribute="leading" secondItem="ktf-uG-V40" secondAttribute="leading" id="kmb-28-rWN"/>
+                                                    <constraint firstAttribute="trailing" secondItem="Kdx-m9-dov" secondAttribute="trailing" id="yMF-Ks-won"/>
                                                 </constraints>
                                             </customView>
                                             <customView id="TMr-Cu-O58" userLabel="Main View">
@@ -1014,7 +1036,10 @@
                 </viewController>
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="74" y="941"/>
+            <point key="canvasLocation" x="74" y="940.5"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="NSAddTemplate" width="11" height="11"/>
+    </resources>
 </document>

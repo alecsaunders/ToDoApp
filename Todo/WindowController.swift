@@ -31,7 +31,7 @@ class WindowController: NSWindowController, NSWindowDelegate {
     override func windowDidLoad() {
         super.windowDidLoad()
         
-        if mainWindow.frame.width < 375 {
+        if mainWindow.frame.width < 400 {
             sidebarShouldHide = false
         } else {
             sidebarShouldHide = true
@@ -44,12 +44,12 @@ class WindowController: NSWindowController, NSWindowDelegate {
     
     func windowDidResize(_ notification: Notification) {
         if sidebarShouldHide {
-            if mainWindow.frame.width >= 451 {
+            if mainWindow.frame.width >= 400 {
                 sidebarShouldHide = false
                 windowControllerDelegate?.animate(hide: sidebarShouldHide)
             }
         } else {
-            if mainWindow.frame.width < 451 {
+            if mainWindow.frame.width < 400 {
                 sidebarShouldHide = true
                 windowControllerDelegate?.animate(hide: sidebarShouldHide)
             }
