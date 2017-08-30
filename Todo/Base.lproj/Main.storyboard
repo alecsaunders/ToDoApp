@@ -955,6 +955,9 @@
                                                                             </prototypeCellViews>
                                                                         </tableColumn>
                                                                     </tableColumns>
+                                                                    <connections>
+                                                                        <outlet property="menu" destination="ZoB-XI-zlI" id="ddS-WK-Tdh"/>
+                                                                    </connections>
                                                                 </tableView>
                                                             </subviews>
                                                         </clipView>
@@ -1035,6 +1038,23 @@
                     </connections>
                 </viewController>
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+                <menu id="ZoB-XI-zlI">
+                    <items>
+                        <menuItem title="Get Info" id="itS-vf-S1W" userLabel="Get Info">
+                            <modifierMask key="keyEquivalentModifierMask"/>
+                        </menuItem>
+                        <menuItem isSeparatorItem="YES" id="NuI-zo-NPa"/>
+                        <menuItem title="Mark Completed" id="Ubp-7r-MRM">
+                            <modifierMask key="keyEquivalentModifierMask"/>
+                            <connections>
+                                <action selector="markComplete:" target="XfG-lQ-9wD" id="0Ix-ah-v4W"/>
+                            </connections>
+                        </menuItem>
+                        <menuItem title="Share" id="fma-S7-oF1">
+                            <modifierMask key="keyEquivalentModifierMask"/>
+                        </menuItem>
+                    </items>
+                </menu>
             </objects>
             <point key="canvasLocation" x="74" y="940.5"/>
         </scene>
