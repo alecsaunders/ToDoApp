@@ -748,7 +748,7 @@
                                                         <rect key="frame" x="0.0" y="0.0" width="131" height="30"/>
                                                         <subviews>
                                                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="7vr-vI-czD">
-                                                                <rect key="frame" x="5" y="5" width="121" height="20"/>
+                                                                <rect key="frame" x="10" y="5" width="111" height="20"/>
                                                                 <buttonCell key="cell" type="bevel" title=" New Group" bezelStyle="rounded" image="NSAddTemplate" imagePosition="left" alignment="left" imageScaling="proportionallyDown" inset="2" id="mS1-hC-jUe">
                                                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                                     <font key="font" metaFont="system"/>
@@ -757,8 +757,8 @@
                                                         </subviews>
                                                         <constraints>
                                                             <constraint firstItem="7vr-vI-czD" firstAttribute="top" secondItem="Kdx-m9-dov" secondAttribute="top" constant="5" id="9YT-sw-zAi"/>
-                                                            <constraint firstItem="7vr-vI-czD" firstAttribute="leading" secondItem="Kdx-m9-dov" secondAttribute="leading" constant="5" id="A5I-dN-DYL"/>
-                                                            <constraint firstAttribute="trailing" secondItem="7vr-vI-czD" secondAttribute="trailing" constant="5" id="Nnz-8C-yFV"/>
+                                                            <constraint firstItem="7vr-vI-czD" firstAttribute="leading" secondItem="Kdx-m9-dov" secondAttribute="leading" constant="10" id="A5I-dN-DYL"/>
+                                                            <constraint firstAttribute="trailing" secondItem="7vr-vI-czD" secondAttribute="trailing" constant="10" id="Nnz-8C-yFV"/>
                                                             <constraint firstAttribute="bottom" secondItem="7vr-vI-czD" secondAttribute="bottom" constant="5" id="ZPB-6Y-G5a"/>
                                                             <constraint firstAttribute="height" constant="30" id="h1f-fP-jBl"/>
                                                         </constraints>
