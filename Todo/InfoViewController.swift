@@ -28,7 +28,7 @@ class InfoViewController: NSViewController {
         infoTitleTextField.stringValue = infoTitleString ?? "title"
         infoCreatedDate.stringValue = intoCreatedDateString ?? "createDate"
         infoNote.stringValue = note ?? ""
-        // nstextfield nsfocusringtypenone to get rid of blue ring.
+        infoNote.focusRingType = NSFocusRingType.none
     }
     
     
