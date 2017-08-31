@@ -86,7 +86,9 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
     
     // MARK: - Main Table View Delegate Functions
     func doubleClick(sender: AnyObject) {
-        cntlr.doubleClickMainTVCell(sender: sender)
+        if mainTableView.clickedRow >= 0 {
+            performSegue(withIdentifier: "infoSegue", sender: self)
+        }
     }
     
     func reloadData(sidebarGroup: String) {

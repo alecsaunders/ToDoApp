@@ -185,17 +185,6 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, ToDo
         return cell!
     }
     
-    func doubleClickMainTVCell(sender: AnyObject) {
-        guard let tv = sender as? NSTableView else { return }
-        if tv.selectedRow  == -1 {
-            print("Double clicked empty cell")
-        } else {
-            let doubleClickedToDo = currentSelectionToDoArray[tv.selectedRow]
-            print(doubleClickedToDo)
-        }
-        
-    }
-    
     func tableView(_ tableView: NSTableView, validateDrop info: NSDraggingInfo, proposedRow row: Int,
                    proposedDropOperation dropOperation: NSTableViewDropOperation) -> NSDragOperation {
         if currentSource == "All" {

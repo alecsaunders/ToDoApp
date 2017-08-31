@@ -25,10 +25,10 @@ class InfoViewController: NSViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do view setup here.
         infoTitleTextField.stringValue = infoTitleString ?? "title"
         infoCreatedDate.stringValue = intoCreatedDateString ?? "createDate"
         infoNote.stringValue = note ?? ""
+        // nstextfield nsfocusringtypenone to get rid of blue ring.
     }
     
     
