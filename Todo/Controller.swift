@@ -37,6 +37,8 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, ToDo
         super.init()
         
         sidebarGroups = modelAccessor.populateSidebarGroupsArray()
+        let allSidebarGroup = Group(groupName: "All", parentGroupID: nil, groupType: .system, managedContextID: nil)
+        sidebarGroups.append(allSidebarGroup)
         mainTableToDoArray = modelAccessor.populateMainTableToDoArray()
         currentSelectionToDoArray = mainTableToDoArray
     }
@@ -225,20 +227,20 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, ToDo
     // MARK: - OutlineView Methods
     func outlineViewSelectionDidChange(_ notification: Notification) {
         guard let object = notification.object as? NSOutlineView else { return }
-        if outlineGroups[object.selectedRow] == "All" {
+        if sidebarGroups[object.selectedRow].groupName == "All" {
             currentSelectionToDoArray = mainTableToDoArray
         } else {
             currentSelectionToDoArray = mainTableToDoArray.filter {
-                $0.sidebarGroup == outlineGroups[object.selectedRow]
+                $0.sidebarGroup == sidebarGroups[object.selectedRow].groupName
             }
         }
-        currentSource = outlineGroups[object.selectedRow]
+        currentSource = sidebarGroups[object.selectedRow].groupName
         mainTableViewDelgate?.reloadData(sidebarGroup: currentSource)
         mainTableViewDelgate?.updateStatusBar(numOfItems: currentSelectionToDoArray.count)
     }
     
     func outlineView(_ outlineView: NSOutlineView, numberOfChildrenOfItem item: Any?) -> Int {
-        return outlineGroups.count
+        return sidebarGroups.count
     }
     
     func outlineView(_ outlineView: NSOutlineView, isItemExpandable item: Any) -> Bool {
@@ -246,13 +248,18 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, ToDo
     }
     
     func outlineView(_ outlineView: NSOutlineView, child index: Int, ofItem item: Any?) -> Any {
-        return outlineGroups[index]
+        return sidebarGroups[index]
     }
     
     func outlineView(_ outlineView: NSOutlineView, viewFor tableColumn: NSTableColumn?, item: Any) -> NSView? {
+        let groupItem = item as! Group
         let view = outlineView.make(withIdentifier: "DataCell", owner: self) as! NSTableCellView
+        
         if let textField = view.textField {
-            textField.stringValue = item as! String
+            if groupItem.type == .custom {
+                textField.isEditable = true
+            }
+            textField.stringValue = groupItem.groupName
         }
         return view
     }

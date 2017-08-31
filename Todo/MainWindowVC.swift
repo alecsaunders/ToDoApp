@@ -24,6 +24,11 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
             windowConroller.toDoCreateTextField.stringValue = ""
         }
     }
+    @IBAction func btnAddGroup(_ sender: NSButton) {
+        let newGroup = Group(groupName: "New Group", parentGroupID: nil, groupType: .custom, managedContextID: nil)
+        cntlr.sidebarGroups.append(newGroup)
+        sourceOutlineView.reloadData()
+    }
     @IBAction func completedCheck(_ sender: NSButton) {
         cntlr.completedWasChecked(state: sender.state, btnIndex: sender.tag)
     }

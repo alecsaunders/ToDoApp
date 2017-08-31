@@ -8,14 +8,21 @@
 
 import Cocoa
 
+enum GroupType: Int {
+    case system
+    case custom
+}
+
 struct Group {
     var groupName: String
     var parentGroupID: Int?
-    var managedContextID: NSManagedObjectID
+    var type: GroupType
+    var managedContextID: NSManagedObjectID?
     
-    init(groupName: String, parentGroupID: Int?, managedContextID: NSManagedObjectID) {
+    init(groupName: String, parentGroupID: Int?, groupType: GroupType, managedContextID: NSManagedObjectID?) {
         self.groupName = groupName
         self.parentGroupID = parentGroupID
+        self.type = groupType
         self.managedContextID = managedContextID
     }
 }

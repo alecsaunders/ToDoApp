@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="12141" systemVersion="16G29" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="11232" systemVersion="16G29" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="Group" representedClassName="Group" syncable="YES">
         <attribute name="groupName" attributeType="String" syncable="YES"/>
+        <attribute name="groupType" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="parentGroupID" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
     </entity>
     <entity name="ToDo" syncable="YES">
@@ -13,7 +14,7 @@
         <attribute name="title" optional="YES" attributeType="String" maxValueString="1024" spotlightIndexingEnabled="YES" syncable="YES"/>
     </entity>
     <elements>
+        <element name="Group" positionX="-63" positionY="27" width="128" height="90"/>
         <element name="ToDo" positionX="-63" positionY="-18" width="128" height="135"/>
-        <element name="Group" positionX="-63" positionY="27" width="128" height="75"/>
     </elements>
 </model>
