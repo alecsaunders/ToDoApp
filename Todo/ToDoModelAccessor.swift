@@ -43,12 +43,17 @@ class ToDoModelAccessor {
     
     func createToDoFromManagedObject(obj: NSManagedObject) -> ToDo {
         let currentTitle = obj.value(forKey: "title") as? String ?? "Unnamed ToDo"
-        let currentDate = obj.value(forKey: "createdDate") as? Date ?? Date()
+        let currentDate = obj.value(forKey: "createdDate") as? Date
         let currentCompleted = obj.value(forKey: "completed") as? Bool
         let currentNote = obj.value(forKey: "note") as? String
         let currentOrdinalPosition = obj.value(forKey: "ordinalPosition") as? Int
         let currentSidebarGroup = obj.value(forKey: "sidebarGroup") as? String
         let currentManagedContextID = obj.objectID
+        
+        if currentDate == nil {
+            let currentDate = Date()
+            obj.setValue(currentDate, forKey: "createdDate")
+        }
         
         let currentToDo = ToDo(title:           currentTitle,
                                createdDate:     currentDate,
@@ -66,6 +71,7 @@ class ToDoModelAccessor {
         let toDoEntityRecord = NSManagedObject(entity: entity!, insertInto: mc)
         toDoEntityRecord.setValue(title, forKeyPath: "title")
         toDoEntityRecord.setValue(false, forKeyPath: "completed")
+        toDoEntityRecord.setValue(Date(), forKeyPath: "createdDate")
         if managedContextDidSave(managedContext: mc) {
             let newToDo = createToDoFromManagedObject(obj: toDoEntityRecord)
             return newToDo
