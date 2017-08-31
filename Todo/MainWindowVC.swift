@@ -25,8 +25,7 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
         }
     }
     @IBAction func btnAddGroup(_ sender: NSButton) {
-        let newGroup = Group(groupName: "New Group", parentGroupID: nil, groupType: .custom, managedContextID: nil)
-        cntlr.sidebarGroups.append(newGroup)
+        cntlr.outlineGroups.append("New Group")
         sourceOutlineView.reloadData()
     }
     @IBAction func completedCheck(_ sender: NSButton) {
@@ -38,6 +37,13 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
     @IBAction func menuGetInfo(_ sender: NSMenuItem) {
         if mainTableView.clickedRow >= 0 {
             performSegue(withIdentifier: "infoSegue", sender: self)
+        }
+    }
+    @IBAction func sidebarMenuDelete(_ sender: NSMenuItem) {
+        let clickedIndex = sourceOutlineView.clickedRow
+        if clickedIndex >= 0 {
+            cntlr.deleteSidebarGroup(atIndex: sourceOutlineView.clickedRow)
+            sourceOutlineView.reloadData()
         }
     }
 
