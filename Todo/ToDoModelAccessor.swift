@@ -23,6 +23,11 @@ class ToDoModelAccessor {
         toDoArray = toDoArray.sorted { $0.createdDate < $1.createdDate }
         return toDoArray
     }
+    func populateSidebarGroupsArray() -> [Group] {
+        guard let managedObjects = fetchManagedObjectsFromCoreData(entityName: "Group") else { return [] }
+        var groupArray = managedObjects.map{mngObj in createGroupFromManagedObject(obj: mngObj)}
+        return groupArray
+    }
     
     func fetchManagedObjectsFromCoreData(entityName: String) -> [NSManagedObject]? {
         let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: entityName)
@@ -66,6 +71,28 @@ class ToDoModelAccessor {
             return newToDo
         }
         return nil
+    }
+    
+    func createNewGroup(groupName: String, parentGroupID: Int) -> Group? {
+        guard let mc = managedContext else { return nil }
+        let entity = NSEntityDescription.entity(forEntityName: "Group", in: mc)
+        let groupRecord = NSManagedObject(entity: entity!, insertInto: mc)
+        groupRecord.setValue(groupName, forKeyPath: "groupName")
+        groupRecord.setValue(parentGroupID, forKeyPath: "parentGroupID")
+        if managedContextDidSave(managedContext: mc) {
+            let newGroup = createGroupFromManagedObject(obj: groupRecord)
+            return newGroup
+        }
+        return nil
+    }
+    
+    func createGroupFromManagedObject(obj: NSManagedObject) -> Group {
+        let currentGroupName = obj.value(forKey: "groupName") as? String ?? "New Group"
+        let currentParentGroupID = obj.value(forKey: "parentGroupID") as? Int
+        let currentManagedContextID = obj.objectID
+        
+        let currentGroup = Group(groupName: currentGroupName, parentGroupID: currentParentGroupID, managedContextID: currentManagedContextID)
+        return currentGroup
     }
     
     func updateSidebarGroup(moID: NSManagedObjectID, newGroup: String) -> Bool {

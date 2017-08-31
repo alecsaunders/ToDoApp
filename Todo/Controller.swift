@@ -26,6 +26,7 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, ToDo
     weak var mainTableViewDelgate: MainTableViewDelgate?
     
     var outlineGroups = ["All", "Daily", "Domo", "Vertica", "ServiceNow", "Data Query", "Home"]
+    var sidebarGroups: [Group] = []
     
     fileprivate enum CellIdentifiers {
         static let col_complete = "col_complete"
@@ -35,6 +36,7 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, ToDo
     override init() {
         super.init()
         
+        sidebarGroups = modelAccessor.populateSidebarGroupsArray()
         mainTableToDoArray = modelAccessor.populateMainTableToDoArray()
         currentSelectionToDoArray = mainTableToDoArray
     }

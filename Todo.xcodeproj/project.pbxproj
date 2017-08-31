@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		F255491F1F493A2300AE360B /* WindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F255491E1F493A2300AE360B /* WindowController.swift */; };
 		F2603DFB1F4DDC0700A57AE0 /* ToDoCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2603DFA1F4DDC0700A57AE0 /* ToDoCellView.swift */; };
+		F27818A51F58518800BA51B0 /* Group.swift in Sources */ = {isa = PBXBuildFile; fileRef = F27818A41F58518800BA51B0 /* Group.swift */; };
 		F2C8A2681F41428500E246F7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2C8A2671F41428500E246F7 /* AppDelegate.swift */; };
 		F2C8A26A1F41428500E246F7 /* MainWindowVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2C8A2691F41428500E246F7 /* MainWindowVC.swift */; };
 		F2C8A26D1F41428500E246F7 /* Todo.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F2C8A26B1F41428500E246F7 /* Todo.xcdatamodeld */; };
@@ -34,6 +35,7 @@
 /* Begin PBXFileReference section */
 		F255491E1F493A2300AE360B /* WindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WindowController.swift; sourceTree = "<group>"; };
 		F2603DFA1F4DDC0700A57AE0 /* ToDoCellView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ToDoCellView.swift; sourceTree = "<group>"; };
+		F27818A41F58518800BA51B0 /* Group.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Group.swift; sourceTree = "<group>"; };
 		F2C8A2641F41428500E246F7 /* Todo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Todo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F2C8A2671F41428500E246F7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F2C8A2691F41428500E246F7 /* MainWindowVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainWindowVC.swift; sourceTree = "<group>"; };
@@ -123,6 +125,7 @@
 			isa = PBXGroup;
 			children = (
 				F2E8228C1F4890E300EEEA07 /* ToDoModel.swift */,
+				F27818A41F58518800BA51B0 /* Group.swift */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -251,6 +254,7 @@
 				F2E822911F4895B100EEEA07 /* Controller.swift in Sources */,
 				F255491F1F493A2300AE360B /* WindowController.swift in Sources */,
 				F2603DFB1F4DDC0700A57AE0 /* ToDoCellView.swift in Sources */,
+				F27818A51F58518800BA51B0 /* Group.swift in Sources */,
 				F2C8A26A1F41428500E246F7 /* MainWindowVC.swift in Sources */,
 				F2CAAD931F563DFB007DECD6 /* InfoViewController.swift in Sources */,
 				F2E293991F50D191008F4213 /* ToDoModelAccessor.swift in Sources */,
