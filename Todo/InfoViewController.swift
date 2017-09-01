@@ -29,7 +29,6 @@ class InfoViewController: NSViewController, NSTextViewDelegate {
         infoCreatedDate.stringValue = intoCreatedDateString ?? "createDate"
         infoNote.delegate = self
         infoNote.string = note ?? ""
-        infoNote.focusRingType = NSFocusRingType.none
     }
     
     
