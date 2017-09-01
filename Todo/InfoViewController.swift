@@ -12,7 +12,7 @@ protocol InfoControllerDelegate: class {
     func updateNote(newNote: String, moID: NSManagedObjectID)
 }
 
-class InfoViewController: NSViewController, NSTextFieldDelegate {
+class InfoViewController: NSViewController, NSTextViewDelegate {
     var managedContextId: NSManagedObjectID?
     var infoTitleString: String?
     var intoCreatedDateString: String?
@@ -21,29 +21,30 @@ class InfoViewController: NSViewController, NSTextFieldDelegate {
     
     @IBOutlet var infoTitleTextField: NSTextField!
     @IBOutlet var infoCreatedDate: NSTextField!
-    @IBOutlet weak var infoNote: NSTextField!
+    @IBOutlet var infoNote: NSTextView!
 
     override func viewDidLoad() {
         super.viewDidLoad()
         infoTitleTextField.stringValue = infoTitleString ?? "title"
         infoCreatedDate.stringValue = intoCreatedDateString ?? "createDate"
         infoNote.delegate = self
-        infoNote.stringValue = note ?? ""
+        infoNote.string = note ?? ""
         infoNote.focusRingType = NSFocusRingType.none
     }
     
     
     override func viewDidDisappear() {
         guard let moID = managedContextId else { return }
-        infoControllerDelegate?.updateNote(newNote: infoNote.stringValue, moID: moID)
+        infoControllerDelegate?.updateNote(newNote: infoNote.string!, moID: moID)
     }
     
     func control(_ control: NSControl, textShouldEndEditing fieldEditor: NSText) -> Bool {
-        let event = NSApplication.shared().currentEvent
-        if event?.type == NSEventType.keyDown && event?.keyCode == 36 {
-            infoNote.stringValue = infoNote.stringValue.appending("\n")
-            return false
-        }
+//        let event = NSApplication.shared().currentEvent
+//        if event?.type == NSEventType.keyDown && event?.keyCode == 36 {
+//            infoNote.string = infoNote.string.appending("\n")
+//            return false
+//        }
+//        return true
         return true
     }
     

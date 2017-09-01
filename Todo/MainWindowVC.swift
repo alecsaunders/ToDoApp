@@ -25,7 +25,7 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
         }
     }
     @IBAction func btnAddGroup(_ sender: NSButton) {
-        cntlr.outlineGroups.append("New Group")
+        cntlr.addSidebarGroup(groupName: "New Group")
         sourceOutlineView.reloadData()
     }
     @IBAction func completedCheck(_ sender: NSButton) {
@@ -40,11 +40,9 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
         }
     }
     @IBAction func sidebarMenuDelete(_ sender: NSMenuItem) {
-        let clickedIndex = sourceOutlineView.clickedRow
-        if clickedIndex >= 0 {
-            cntlr.deleteSidebarGroup(atIndex: sourceOutlineView.clickedRow)
-            sourceOutlineView.reloadData()
-        }
+        guard let item = sourceOutlineView.item(atRow: sourceOutlineView.clickedRow) as? Group else { return }
+        cntlr.deleteSidebarGroup(group: item)
+        sourceOutlineView.reloadData()
     }
 
     let cntlr = MainController()
@@ -72,6 +70,14 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
         sourceOutlineView.dataSource = cntlr
         sourceOutlineView.setDraggingSourceOperationMask(NSDragOperation.every, forLocal: true)
         sourceOutlineView.register(forDraggedTypes: self.registeredTypes)
+        for i in 0...sourceOutlineView.numberOfRows {
+            let child = sourceOutlineView.item(atRow: i)
+            sourceOutlineView.expandItem(child)
+        }
+        for i in 0...sourceOutlineView.numberOfRows {
+            let child = sourceOutlineView.item(atRow: i)
+            sourceOutlineView.expandItem(child)
+        }
     }
     
     override func prepare(for segue: NSStoryboardSegue, sender: Any?) {
@@ -93,7 +99,6 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
         sourceSidebar.animator().isHidden = hide
         sidebarView.animator().isHidden = hide
     }
-    
     
     // MARK: - Main Table View Delegate Functions
     func doubleClick(sender: AnyObject) {

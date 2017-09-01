@@ -8,21 +8,30 @@
 
 import Cocoa
 
-enum GroupType: Int {
-    case system
-    case custom
+struct Department {
+    let name:String
+    var accounts: [Group] = []
+    
+    init (name:String){
+        self.name = name
+    }
+}
+
+struct MainCategory {
+    var groupName: String
 }
 
 struct Group {
     var groupName: String
-    var parentGroupID: Int?
-    var type: GroupType
-    var managedContextID: NSManagedObjectID?
+    var groupID: NSManagedObjectID?
+    var system: Bool = false
     
-    init(groupName: String, parentGroupID: Int?, groupType: GroupType, managedContextID: NSManagedObjectID?) {
+    init(groupName: String) {
         self.groupName = groupName
-        self.parentGroupID = parentGroupID
-        self.type = groupType
-        self.managedContextID = managedContextID
+    }
+    
+    init(groupName: String, groupID: NSManagedObjectID) {
+        self.groupName = groupName
+        self.groupID = groupID
     }
 }

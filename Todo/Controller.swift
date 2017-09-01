@@ -25,8 +25,10 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, ToDo
     var currentSource = "All"
     weak var mainTableViewDelgate: MainTableViewDelgate?
     
+    var department1 = Department (name:"Categories")
+    var department2 = Department (name:"Favorites")
+    
     var outlineGroups = ["All", "Daily", "Domo", "Vertica", "ServiceNow", "Data Query", "Home"]
-    var sidebarHeaders: [GroupType] = [.system, .custom]
     var sidebarGroups: [Group] = []
     
     fileprivate enum CellIdentifiers {
@@ -38,10 +40,20 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, ToDo
         super.init()
         
         sidebarGroups = modelAccessor.populateSidebarGroupsArray()
-        let allSidebarGroup = Group(groupName: "All", parentGroupID: nil, groupType: .system, managedContextID: nil)
-        sidebarGroups.append(allSidebarGroup)
         mainTableToDoArray = modelAccessor.populateMainTableToDoArray()
         currentSelectionToDoArray = mainTableToDoArray
+        
+        var allGroup = Group(groupName: "All")
+        allGroup.system = true
+        var dailyGroup = Group(groupName: "Daily")
+        dailyGroup.system = true
+        var completedGroup = Group(groupName: "Completed")
+        completedGroup.system = true
+        
+        department1.accounts.append(allGroup)
+        department1.accounts.append(dailyGroup)
+        department1.accounts.append(completedGroup)
+        department2.accounts = sidebarGroups
     }
     
     func save(currentToDoTitle: String) {
@@ -228,42 +240,84 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, ToDo
     // MARK: - OutlineView Methods
     func outlineViewSelectionDidChange(_ notification: Notification) {
         guard let object = notification.object as? NSOutlineView else { return }
-        if outlineGroups[object.selectedRow] == "All" {
-            currentSelectionToDoArray = mainTableToDoArray
-        } else {
-            currentSelectionToDoArray = mainTableToDoArray.filter {
-                $0.sidebarGroup == outlineGroups[object.selectedRow]
-            }
-        }
-        currentSource = outlineGroups[object.selectedRow]
-        mainTableViewDelgate?.reloadData(sidebarGroup: currentSource)
-        mainTableViewDelgate?.updateStatusBar(numOfItems: currentSelectionToDoArray.count)
+        print(object.selectedRow)
+//        if sidebarGroups[object.selectedRow].groupName == "All" {
+//            currentSelectionToDoArray = mainTableToDoArray
+//        } else {
+//            currentSelectionToDoArray = mainTableToDoArray.filter {
+//                $0.sidebarGroup == sidebarGroups[object.selectedRow].groupName
+//            }
+//        }
+//        currentSource = sidebarGroups[object.selectedRow].groupName
+//        mainTableViewDelgate?.reloadData(sidebarGroup: currentSource)
+//        mainTableViewDelgate?.updateStatusBar(numOfItems: currentSelectionToDoArray.count)
     }
     
     func outlineView(_ outlineView: NSOutlineView, numberOfChildrenOfItem item: Any?) -> Int {
-        return outlineGroups.count
+        if let item = item {
+            switch item {
+            case let department as Department:
+                return department.accounts.count
+            default:
+                return 0
+            }
+        } else {
+            return 2 //Department1 , Department 2
+        }
     }
     
     func outlineView(_ outlineView: NSOutlineView, isItemExpandable item: Any) -> Bool {
-        return false
+        switch item {
+        case let department as Department:
+            return (department.accounts.count > 0) ? true : false
+        default:
+            return false
+        }
     }
     
     func outlineView(_ outlineView: NSOutlineView, child index: Int, ofItem item: Any?) -> Any {
-        return outlineGroups[index]
+        if let item = item {
+            switch item {
+            case let department as Department:
+                return department.accounts[index]
+            default:
+                return self
+            }
+        } else {
+            switch index {
+            case 0:
+                return department1
+            default:
+                return department2
+            }
+        }
+    }
+    
+    func outlineView(_ outlineView: NSOutlineView, shouldExpandItem item: Any) -> Bool {
+        return true
     }
     
     func outlineView(_ outlineView: NSOutlineView, viewFor tableColumn: NSTableColumn?, item: Any) -> NSView? {
-        if let groupIName = item as? String {
-            let view = outlineView.make(withIdentifier: "DataCell", owner: self) as! NSTableCellView
-            
+        switch item {
+        case let department as Department:
+            let view = outlineView.make(withIdentifier: "HeaderCell", owner: self) as! NSTableCellView
             if let textField = view.textField {
-                textField.isEditable = true
-                textField.stringValue = groupIName
+                textField.stringValue = department.name
             }
             return view
+        case let account as Group:
+            let view = outlineView.make(withIdentifier: "DataCell", owner: self) as! GroupCellView
+            view.groupID = account.groupID
+            if let textField = view.txtGroup {
+                if !account.system {
+                    textField.isEditable = true
+                }
+                textField.stringValue = account.groupName
+            }
+            return view
+        default:
+            return nil
         }
-
-        return nil
     }
     
     func outlineView(_ outlineView: NSOutlineView, validateDrop info: NSDraggingInfo, proposedItem item: Any?, proposedChildIndex index: Int) -> NSDragOperation {
@@ -277,7 +331,6 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, ToDo
     }
 
     func outlineView(_ outlineView: NSOutlineView, writeItems items: [Any], to pasteboard: NSPasteboard) -> Bool {
-        print(items)
         return true
     }
     
@@ -293,7 +346,21 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, ToDo
         return true
     }
     
-    func deleteSidebarGroup(atIndex: Int) {
-        outlineGroups.remove(at: atIndex)
+    func addSidebarGroup(groupName: String) {
+        if let newGroup = modelAccessor.createNewGroup(groupName: groupName) {
+            department2.accounts.append(newGroup)
+        }
+    }
+    
+    func deleteSidebarGroup(group: Group) {
+        guard let moID = group.groupID else { return }
+        for i in 0..<sidebarGroups.count {
+            if sidebarGroups[i].groupID == moID {
+                if modelAccessor.deleteManagedObject(moID: moID) {
+                    sidebarGroups = modelAccessor.populateSidebarGroupsArray()
+                    department2.accounts = sidebarGroups
+                }
+            }
+        }
     }
 }

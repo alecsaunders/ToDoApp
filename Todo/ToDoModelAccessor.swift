@@ -25,7 +25,7 @@ class ToDoModelAccessor {
     }
     func populateSidebarGroupsArray() -> [Group] {
         guard let managedObjects = fetchManagedObjectsFromCoreData(entityName: "Group") else { return [] }
-        var groupArray = managedObjects.map{mngObj in createGroupFromManagedObject(obj: mngObj)}
+        let groupArray = managedObjects.map{mngObj in createGroupFromManagedObject(obj: mngObj)}
         return groupArray
     }
     
@@ -79,13 +79,11 @@ class ToDoModelAccessor {
         return nil
     }
     
-    func createNewGroup(groupName: String, parentGroupID: Int?) -> Group? {
+    func createNewGroup(groupName: String) -> Group? {
         guard let mc = managedContext else { return nil }
         let entity = NSEntityDescription.entity(forEntityName: "Group", in: mc)
         let groupRecord = NSManagedObject(entity: entity!, insertInto: mc)
         groupRecord.setValue(groupName, forKeyPath: "groupName")
-        groupRecord.setValue(parentGroupID, forKeyPath: "parentGroupID")
-        groupRecord.setValue(1, forKeyPath: "groupType")
         if managedContextDidSave(managedContext: mc) {
             let newGroup = createGroupFromManagedObject(obj: groupRecord)
             return newGroup
@@ -95,20 +93,8 @@ class ToDoModelAccessor {
     
     func createGroupFromManagedObject(obj: NSManagedObject) -> Group {
         let currentGroupName = obj.value(forKey: "groupName") as? String ?? "New Group"
-        let currentParentGroupID = obj.value(forKey: "parentGroupID") as? Int
-        let currentGroupTypeValue = obj.value(forKey: "groupType") as? Int ?? 1
-        
-        var currentGroupType = GroupType.system
-        switch currentGroupTypeValue {
-        case 0:
-            currentGroupType = GroupType.system
-        default:
-            currentGroupType = GroupType.custom
-        }
-        
         let currentManagedContextID = obj.objectID
-        
-        let currentGroup = Group(groupName: currentGroupName, parentGroupID: currentParentGroupID, groupType: currentGroupType, managedContextID: currentManagedContextID)
+        let currentGroup = Group(groupName: currentGroupName, groupID: currentManagedContextID)
         return currentGroup
     }
     
