@@ -348,7 +348,8 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, ToDo
     
     func addSidebarGroup(groupName: String) {
         if let newGroup = modelAccessor.createNewGroup(groupName: groupName) {
-            department2.accounts.append(newGroup)
+            sidebarGroups.append(newGroup)
+            department2.accounts = sidebarGroups
         }
     }
     
