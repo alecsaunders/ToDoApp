@@ -27,6 +27,7 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
     @IBAction func btnAddGroup(_ sender: NSButton) {
         cntlr.addSidebarGroup(groupName: "New Group")
         sourceOutlineView.reloadData()
+        sourceOutlineView?.expandItem(nil, expandChildren: true)
     }
     @IBAction func completedCheck(_ sender: NSButton) {
         cntlr.completedWasChecked(state: sender.state, btnIndex: sender.tag)
@@ -43,6 +44,7 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
         guard let item = sourceOutlineView.item(atRow: sourceOutlineView.clickedRow) as? Group else { return }
         cntlr.deleteSidebarGroup(group: item)
         sourceOutlineView.reloadData()
+        sourceOutlineView?.expandItem(nil, expandChildren: true)
     }
 
     let cntlr = MainController()
@@ -70,19 +72,12 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
         sourceOutlineView.dataSource = cntlr
         sourceOutlineView.setDraggingSourceOperationMask(NSDragOperation.every, forLocal: true)
         sourceOutlineView.register(forDraggedTypes: self.registeredTypes)
-        for i in 0...sourceOutlineView.numberOfRows {
-            let child = sourceOutlineView.item(atRow: i)
-            sourceOutlineView.expandItem(child)
-        }
-        for i in 0...sourceOutlineView.numberOfRows {
-            let child = sourceOutlineView.item(atRow: i)
-            sourceOutlineView.expandItem(child)
-        }
+        sourceOutlineView?.expandItem(nil, expandChildren: true)
     }
     
     override func prepare(for segue: NSStoryboardSegue, sender: Any?) {
         guard let dest = segue.destinationController as? InfoViewController else { return }
-        let theClickedToDo = cntlr.currentSelectionToDoArray[mainTableView.clickedRow]
+        let theClickedToDo = cntlr.mainTableToDoArray[mainTableView.clickedRow]
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
         let clickedCreateDate = theClickedToDo.createdDate
@@ -110,6 +105,11 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
     func reloadData(sidebarGroup: String) {
         cntlr.updateCurrentSelectionToDoArray(group: sidebarGroup)
         mainTableView.reloadData()
+    }
+    
+    func reloadSidebar() {
+        sourceOutlineView.reloadData()
+        sourceOutlineView?.expandItem(nil, expandChildren: true)
     }
     
     // MARK: - Window Controller Delegate

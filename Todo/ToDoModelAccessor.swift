@@ -47,7 +47,6 @@ class ToDoModelAccessor {
         let currentCompleted = obj.value(forKey: "completed") as? Bool
         let currentNote = obj.value(forKey: "note") as? String
         let currentOrdinalPosition = obj.value(forKey: "ordinalPosition") as? Int
-        let currentSidebarGroup = obj.value(forKey: "sidebarGroup") as? String
         let currentManagedContextID = obj.objectID
         
         if currentDate == nil {
@@ -60,7 +59,6 @@ class ToDoModelAccessor {
                                completed:       currentCompleted,
                                note:            currentNote,
                                ordinalPosition: currentOrdinalPosition,
-                               sidebarGroup:    currentSidebarGroup,
                                managedContextID: currentManagedContextID)
         return currentToDo
     }
