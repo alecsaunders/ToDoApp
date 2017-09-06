@@ -13,7 +13,7 @@ protocol InfoControllerDelegate: class {
 }
 
 class InfoViewController: NSViewController {
-    var managedContextId: NSManagedObjectID?
+    var managedObjecttId: NSManagedObjectID?
     var infoTitleString: String?
     var intoCreatedDateString: String?
     var note: String?
@@ -35,7 +35,7 @@ class InfoViewController: NSViewController {
     
     
     override func viewDidDisappear() {
-        guard let moID = managedContextId else { return }
+        guard let moID = managedObjecttId else { return }
         infoControllerDelegate?.updateNote(newNote: infoNote.string!, moID: moID)
     }
     

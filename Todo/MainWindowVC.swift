@@ -30,7 +30,9 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
         sourceOutlineView?.expandItem(nil, expandChildren: true)
     }
     @IBAction func completedCheck(_ sender: NSButton) {
+        let index = mainTableView.selectedRowIndexes
         cntlr.completedWasChecked(state: sender.state, btnIndex: sender.tag)
+        mainTableView.removeRows(at: index, withAnimation: NSTableViewAnimationOptions.effectFade)
     }
     @IBAction func markComplete(_ sender: NSMenuItem) {
         cntlr.completedWasChecked(state: 1, btnIndex: mainTableView.clickedRow)
@@ -59,7 +61,6 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
         super.viewDidLoad()
         cntlr.mainTableViewDelgate = self
         lblStatusBottom.textColor = NSColor.darkGray
-        updateStatusBar(numOfItems: cntlr.mainTableToDoArray.count)
         mainTableView.delegate = cntlr
         mainTableView.dataSource = cntlr
         mainTableView.usesAlternatingRowBackgroundColors = true
@@ -76,17 +77,17 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
     }
     
     override func prepare(for segue: NSStoryboardSegue, sender: Any?) {
-        guard let dest = segue.destinationController as? InfoViewController else { return }
-        let theClickedToDo = cntlr.mainTableToDoArray[mainTableView.clickedRow]
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd"
-        let clickedCreateDate = theClickedToDo.createdDate
-        let clickedCreateDateString = dateFormatter.string(from: clickedCreateDate)
-        dest.infoTitleString = theClickedToDo.title
-        dest.intoCreatedDateString = clickedCreateDateString
-        dest.note = theClickedToDo.note
-        dest.managedContextId = theClickedToDo.managedContextID
-        dest.infoControllerDelegate = cntlr
+//        guard let dest = segue.destinationController as? InfoViewController else { return }
+//        let theClickedToDo = cntlr.mainTableToDoArray[mainTableView.clickedRow]
+//        let dateFormatter = DateFormatter()
+//        dateFormatter.dateFormat = "yyyy-MM-dd"
+//        let clickedCreateDate = theClickedToDo.createdDate
+//        let clickedCreateDateString = dateFormatter.string(from: clickedCreateDate)
+//        dest.infoTitleString = theClickedToDo.title
+//        dest.intoCreatedDateString = clickedCreateDateString
+//        dest.note = theClickedToDo.note
+//        dest.managedContextId = theClickedToDo.managedContextID
+//        dest.infoControllerDelegate = cntlr
     }
     
     
@@ -102,8 +103,7 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
         }
     }
     
-    func reloadData(sidebarGroup: String) {
-        cntlr.updateCurrentSelectionToDoArray(group: sidebarGroup)
+    func reloadData() {
         mainTableView.reloadData()
     }
     
@@ -122,7 +122,7 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
     
     // MARK: - Controller functions
     func addToDoItemToMainTableView(toDoText: String) {
-        cntlr.save(currentToDoTitle: toDoText)
+        cntlr.save(addedToDoTitle: toDoText)
     }
     
     func updateStatusBar(numOfItems: Int) {

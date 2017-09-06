@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="12141" systemVersion="16G29" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
-    <entity name="Group" representedClassName="" syncable="YES">
+    <entity name="Group" representedClassName=".Group" syncable="YES">
         <attribute name="groupName" attributeType="String" syncable="YES"/>
         <relationship name="toDo" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="ToDo" inverseName="group" inverseEntity="ToDo" syncable="YES"/>
     </entity>
-    <entity name="ToDo" syncable="YES">
+    <entity name="ToDo" representedClassName=".ToDo" syncable="YES">
         <attribute name="completed" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="createdDate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="note" optional="YES" attributeType="String" syncable="YES"/>

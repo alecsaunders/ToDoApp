@@ -1038,7 +1038,7 @@
                     </view>
                     <connections>
                         <outlet property="lblStatusBottom" destination="Iil-A5-4c9" id="tSK-ll-osh"/>
-                        <outlet property="mainTableView" destination="XzW-r6-qup" id="A6z-mM-u73"/>
+                        <outlet property="mainTableView" destination="XzW-r6-qup" id="wZz-I5-3mz"/>
                         <outlet property="sidebarView" destination="ktf-uG-V40" id="WUj-dI-xib"/>
                         <outlet property="sourceOutlineView" destination="zLj-AB-Mq7" id="v5q-3A-gaa"/>
                         <outlet property="sourceSidebar" destination="Ewb-OW-ylW" id="jZe-mR-LnJ"/>

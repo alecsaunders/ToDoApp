@@ -7,9 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F22601901F5DA0A00087D2FB /* ToDo+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = F226018C1F5DA0A00087D2FB /* ToDo+CoreDataClass.swift */; };
+		F22601911F5DA0A00087D2FB /* ToDo+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = F226018D1F5DA0A00087D2FB /* ToDo+CoreDataProperties.swift */; };
+		F22601921F5DA0A00087D2FB /* Group+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = F226018E1F5DA0A00087D2FB /* Group+CoreDataClass.swift */; };
+		F22601931F5DA0A00087D2FB /* Group+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = F226018F1F5DA0A00087D2FB /* Group+CoreDataProperties.swift */; };
+		F22601951F5DA1120087D2FB /* Department.swift in Sources */ = {isa = PBXBuildFile; fileRef = F22601941F5DA1120087D2FB /* Department.swift */; };
+		F226019F1F5DD5F30087D2FB /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F226019E1F5DD5F30087D2FB /* DataController.swift */; };
 		F255491F1F493A2300AE360B /* WindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F255491E1F493A2300AE360B /* WindowController.swift */; };
 		F2603DFB1F4DDC0700A57AE0 /* ToDoCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2603DFA1F4DDC0700A57AE0 /* ToDoCellView.swift */; };
-		F27818A51F58518800BA51B0 /* Group.swift in Sources */ = {isa = PBXBuildFile; fileRef = F27818A41F58518800BA51B0 /* Group.swift */; };
 		F2C462A11F58E8860014E5F4 /* GroupCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2C462A01F58E8860014E5F4 /* GroupCellView.swift */; };
 		F2C8A2681F41428500E246F7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2C8A2671F41428500E246F7 /* AppDelegate.swift */; };
 		F2C8A26A1F41428500E246F7 /* MainWindowVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2C8A2691F41428500E246F7 /* MainWindowVC.swift */; };
@@ -19,7 +24,6 @@
 		F2C8A27D1F41428500E246F7 /* TodoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2C8A27C1F41428500E246F7 /* TodoTests.swift */; };
 		F2CAAD931F563DFB007DECD6 /* InfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2CAAD921F563DFB007DECD6 /* InfoViewController.swift */; };
 		F2E293991F50D191008F4213 /* ToDoModelAccessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2E293981F50D191008F4213 /* ToDoModelAccessor.swift */; };
-		F2E8228D1F4890E300EEEA07 /* ToDoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2E8228C1F4890E300EEEA07 /* ToDoModel.swift */; };
 		F2E822911F4895B100EEEA07 /* Controller.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2E822901F4895B100EEEA07 /* Controller.swift */; };
 /* End PBXBuildFile section */
 
@@ -34,9 +38,14 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		F226018C1F5DA0A00087D2FB /* ToDo+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ToDo+CoreDataClass.swift"; sourceTree = "<group>"; };
+		F226018D1F5DA0A00087D2FB /* ToDo+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ToDo+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		F226018E1F5DA0A00087D2FB /* Group+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Group+CoreDataClass.swift"; sourceTree = "<group>"; };
+		F226018F1F5DA0A00087D2FB /* Group+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Group+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		F22601941F5DA1120087D2FB /* Department.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Department.swift; sourceTree = "<group>"; };
+		F226019E1F5DD5F30087D2FB /* DataController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
 		F255491E1F493A2300AE360B /* WindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WindowController.swift; sourceTree = "<group>"; };
 		F2603DFA1F4DDC0700A57AE0 /* ToDoCellView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ToDoCellView.swift; sourceTree = "<group>"; };
-		F27818A41F58518800BA51B0 /* Group.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Group.swift; sourceTree = "<group>"; };
 		F2C462A01F58E8860014E5F4 /* GroupCellView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GroupCellView.swift; sourceTree = "<group>"; };
 		F2C8A2641F41428500E246F7 /* Todo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Todo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F2C8A2671F41428500E246F7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -50,7 +59,6 @@
 		F2C8A27E1F41428500E246F7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F2CAAD921F563DFB007DECD6 /* InfoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InfoViewController.swift; sourceTree = "<group>"; };
 		F2E293981F50D191008F4213 /* ToDoModelAccessor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ToDoModelAccessor.swift; sourceTree = "<group>"; };
-		F2E8228C1F4890E300EEEA07 /* ToDoModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ToDoModel.swift; sourceTree = "<group>"; };
 		F2E822901F4895B100EEEA07 /* Controller.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Controller.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -127,8 +135,11 @@
 		F2E8228E1F48916F00EEEA07 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				F2E8228C1F4890E300EEEA07 /* ToDoModel.swift */,
-				F27818A41F58518800BA51B0 /* Group.swift */,
+				F22601941F5DA1120087D2FB /* Department.swift */,
+				F226018C1F5DA0A00087D2FB /* ToDo+CoreDataClass.swift */,
+				F226018D1F5DA0A00087D2FB /* ToDo+CoreDataProperties.swift */,
+				F226018E1F5DA0A00087D2FB /* Group+CoreDataClass.swift */,
+				F226018F1F5DA0A00087D2FB /* Group+CoreDataProperties.swift */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -147,6 +158,7 @@
 			isa = PBXGroup;
 			children = (
 				F2E822901F4895B100EEEA07 /* Controller.swift */,
+				F226019E1F5DD5F30087D2FB /* DataController.swift */,
 				F2E293981F50D191008F4213 /* ToDoModelAccessor.swift */,
 			);
 			name = Controllers;
@@ -255,14 +267,18 @@
 			buildActionMask = 2147483647;
 			files = (
 				F2E822911F4895B100EEEA07 /* Controller.swift in Sources */,
+				F22601931F5DA0A00087D2FB /* Group+CoreDataProperties.swift in Sources */,
+				F22601921F5DA0A00087D2FB /* Group+CoreDataClass.swift in Sources */,
 				F255491F1F493A2300AE360B /* WindowController.swift in Sources */,
 				F2603DFB1F4DDC0700A57AE0 /* ToDoCellView.swift in Sources */,
-				F27818A51F58518800BA51B0 /* Group.swift in Sources */,
+				F22601951F5DA1120087D2FB /* Department.swift in Sources */,
+				F22601901F5DA0A00087D2FB /* ToDo+CoreDataClass.swift in Sources */,
 				F2C8A26A1F41428500E246F7 /* MainWindowVC.swift in Sources */,
 				F2CAAD931F563DFB007DECD6 /* InfoViewController.swift in Sources */,
 				F2E293991F50D191008F4213 /* ToDoModelAccessor.swift in Sources */,
-				F2E8228D1F4890E300EEEA07 /* ToDoModel.swift in Sources */,
+				F226019F1F5DD5F30087D2FB /* DataController.swift in Sources */,
 				F2C8A26D1F41428500E246F7 /* Todo.xcdatamodeld in Sources */,
+				F22601911F5DA0A00087D2FB /* ToDo+CoreDataProperties.swift in Sources */,
 				F2C8A2681F41428500E246F7 /* AppDelegate.swift in Sources */,
 				F2C462A11F58E8860014E5F4 /* GroupCellView.swift in Sources */,
 			);

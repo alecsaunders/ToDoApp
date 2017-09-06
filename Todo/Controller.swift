@@ -12,64 +12,82 @@ import CoreData
 
 
 protocol MainTableViewDelgate: class {
-    func reloadData(sidebarGroup: String)
+    func reloadData()
     func updateStatusBar(numOfItems: Int)
     func doubleClick(sender: AnyObject)
 }
 
-class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, ToDoCellViewDelegate, NSOutlineViewDataSource, NSOutlineViewDelegate, InfoControllerDelegate {
+class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFetchedResultsControllerDelegate, ToDoCellViewDelegate, NSOutlineViewDataSource, NSOutlineViewDelegate, InfoControllerDelegate {
     let registeredTypes:[String] = [NSGeneralPboard]
-    let modelAccessor = ToDoModelAccessor()
-    var mainTableToDoArray: [ToDo] = []
-    var currentSource = "All"
+    let dataController = DataController()
+    var fetchedResultsController: NSFetchedResultsController<NSFetchRequestResult>!
     weak var mainTableViewDelgate: MainTableViewDelgate?
     
-    var department1 = Department (name:"Categories")
-    var department2 = Department (name:"Favorites")
+    var department1 = Department(name: "Categories", groups: [])
+    var department2 = Department(name: "Favorites", groups: [])
     
-    var outlineGroups = ["All", "Daily", "Domo", "Vertica", "ServiceNow", "Data Query", "Home"]
+    //var outlineGroups = ["All", "Daily", "Domo", "Vertica", "ServiceNow", "Data Query", "Home"]
     var sidebarGroups: [Group] = []
-    
-    fileprivate enum CellIdentifiers {
-        static let col_complete = "col_complete"
-        static let col_toDoText = "col_toDoText"
-    }
     
     override init() {
         super.init()
+        initializeFetchedResultsController()
         
-        sidebarGroups = modelAccessor.populateSidebarGroupsArray()
-        mainTableToDoArray = modelAccessor.populateMainTableToDoArray()
         
-        var allGroup = Group(groupName: "All")
-        allGroup.system = true
-        var dailyGroup = Group(groupName: "Daily")
-        dailyGroup.system = true
-        var completedGroup = Group(groupName: "Completed")
-        completedGroup.system = true
+//        var allGroup = Group(groupName: "All")
+//        allGroup.system = true
+//        var dailyGroup = Group(groupName: "Daily")
+//        dailyGroup.system = true
+//        var completedGroup = Group(groupName: "Completed")
+//        completedGroup.system = true
         
-        department1.accounts.append(allGroup)
-        department1.accounts.append(dailyGroup)
-        department1.accounts.append(completedGroup)
-        department2.accounts = sidebarGroups
+//        department1.groups.append(allGroup)
+//        department1.groups.append(dailyGroup)
+//        department1.groups.append(completedGroup)
+        department2.groups = sidebarGroups
     }
     
-    func save(currentToDoTitle: String) {
-        if currentToDoTitle.isEmpty { return }
-        if let newToDo = modelAccessor.createNewToDo(title: currentToDoTitle, ordinalPosition: mainTableToDoArray.count) {
-            mainTableToDoArray.append(newToDo)
-            mainTableViewDelgate?.reloadData(sidebarGroup: currentSource)
-            mainTableViewDelgate?.updateStatusBar(numOfItems: mainTableToDoArray.count)
+    func initializeFetchedResultsController() {
+        let request = NSFetchRequest<NSFetchRequestResult>(entityName: "ToDo")
+        let sort = NSSortDescriptor(key: "createdDate", ascending: false)
+        request.sortDescriptors = [sort]
+        let moc = dataController.managedObjectContext
+        fetchedResultsController = NSFetchedResultsController(fetchRequest: request, managedObjectContext: moc, sectionNameKeyPath: nil, cacheName: nil)
+        fetchedResultsController.delegate = self
+        
+        do {
+            try fetchedResultsController.performFetch()
+            mainTableViewDelgate?.reloadData()
+        } catch {
+            fatalError("Failed to initialize fetch")
         }
     }
-
     
+    func save(addedToDoTitle: String) {
+        if addedToDoTitle.isEmpty {
+            print("do not add a new to do item")
+        } else {
+            guard let theToDo = NSEntityDescription.insertNewObject(forEntityName: "ToDo", into: dataController.managedObjectContext) as? ToDo else { return }
+            theToDo.title = addedToDoTitle
+            saveMoc()
+            initializeFetchedResultsController()
+        }
+
+    }
+
     func removeToDoEntityRecord(atIndex: Int) {
-        let theCompletedToDo = mainTableToDoArray[atIndex]
-        if modelAccessor.deleteManagedObject(moID: theCompletedToDo.managedContextID) {
-            mainTableToDoArray.remove(at: atIndex)
-            mainTableViewDelgate?.reloadData(sidebarGroup: currentSource)
-            mainTableViewDelgate?.updateStatusBar(numOfItems: mainTableToDoArray.count)
+        guard let fetchedObjs = fetchedResultsController.fetchedObjects else { return }
+        guard let object = fetchedObjs[atIndex] as? NSManagedObject else { return }
+        dataController.managedObjectContext.delete(object)
+        saveMoc()
+        initializeFetchedResultsController()
+    }
+    
+    func saveMoc() {
+        do {
+            try dataController.managedObjectContext.save()
+        } catch {
+            print("failed to save new to do")
         }
     }
     
@@ -82,21 +100,55 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, ToDo
     }
     
     func updateNote(newNote: String, moID: NSManagedObjectID) {
-        if modelAccessor.updateNote(newNote: newNote, moID: moID) {
-            for i in 0..<mainTableToDoArray.count {
-                if mainTableToDoArray[i].managedContextID == moID {
-                    mainTableToDoArray[i].note = newNote
-                }
+        print("update")
+//        if modelAccessor.updateNote(newNote: newNote, moID: moID) {
+//            for i in 0..<mainTableToDoArray.count {
+//                if mainTableToDoArray[i].managedContextID == moID {
+//                    mainTableToDoArray[i].note = newNote
+//                }
+//            }
+//        }
+    }
+    
+    //MARK: - TableView Delegate Methods
+    func numberOfRows(in tableView: NSTableView) -> Int {
+        guard let fetchedObjs = fetchedResultsController.fetchedObjects as? [ToDo] else { return 0 }
+        return fetchedObjs.count
+    }
+    
+    
+    func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
+        guard let fetchedObjs = fetchedResultsController.fetchedObjects as? [ToDo] else { return nil }
+        let theToDo = fetchedObjs[row]
+        
+        if tableColumn == tableView.tableColumns[0] {
+            guard let cell = tableView.make(withIdentifier: "col_complete", owner: nil) as? NSTableCellView else { return nil }
+            if let completeBtn = cell.subviews[0] as? NSButton {
+                completeBtn.state = theToDo.completed.hashValue
+                completeBtn.tag = row
             }
+            return cell
         }
+        if tableColumn == tableView.tableColumns[1] {
+            guard let cell = tableView.make(withIdentifier: "col_toDoText", owner: nil) as? ToDoCellView else { return nil }
+            if let theTitle = theToDo.title {
+                cell.textField?.stringValue = theTitle
+            }
+            cell.toDoCellViewDelegate = self
+            cell.index = row
+            cell.managedObjectID = theToDo.objectID
+            
+            return cell
+        }
+        
+        return nil
     }
     
     // MARK: - To Do Table View Delegate Methods
-    func changeText(newToDoTitle: String, atIndex: Int) {
-        let changedToDoId = mainTableToDoArray[atIndex].managedContextID
-        if modelAccessor.updateTitle(moID: changedToDoId, newTitle: newToDoTitle) {
-            mainTableToDoArray[atIndex].title = newToDoTitle
-        }
+    func changeText(newToDoTitle: String, moID: NSManagedObjectID) {
+        let toDoObj = dataController.managedObjectContext.object(with: moID)
+        toDoObj.setValue(newToDoTitle, forKey: "title")
+        saveMoc()
     }
     
     
@@ -112,116 +164,28 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, ToDo
         }
     }
     
-    func reorderToDos(dragOrigin: Int, dragDest: Int) {
-        var alteredDragDest = dragDest
-        if dragOrigin == dragDest - 1 { return }
-        if dragOrigin < dragDest {
-            alteredDragDest = dragDest - 1
-        }
-        
-        let draggedItem = mainTableToDoArray[dragOrigin]
-        mainTableToDoArray.remove(at: dragOrigin)
-        mainTableToDoArray.insert(draggedItem, at: alteredDragDest)
-        
-        for i in 0..<mainTableToDoArray.count {
-            let moID = mainTableToDoArray[i].managedContextID
-            modelAccessor.updatePosition(moID: moID, newPosition: i)
-        }
-    }
-    
-    // MARK: - Table View Methods
-    func numberOfRows(in tableView: NSTableView) -> Int {
-        return mainTableToDoArray.count
-    }
-    
-    
-    func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
-        let theToDo = mainTableToDoArray[row]
-        
-        var cellIdentifier: String = ""
-        
-        var cell: NSTableCellView? = nil
-        
-        if tableColumn == tableView.tableColumns[0] {
-            cellIdentifier = CellIdentifiers.col_complete
-            cell = tableView.make(withIdentifier: cellIdentifier, owner: nil) as? NSTableCellView
-            if let completedCheck = cell?.subviews[0] as? NSButton {
-                completedCheck.tag = row
-                completedCheck.state = theToDo.completed ? 1 : 0
-            }
-        } else if tableColumn == tableView.tableColumns[1] {
-            cellIdentifier = CellIdentifiers.col_toDoText
-            cell = tableView.make(withIdentifier: cellIdentifier, owner: nil) as? ToDoCellView
-            if let cell = cell as? ToDoCellView {
-                cell.toDoCellViewDelegate = self
-                cell.index = row
-                cell.textField?.stringValue = theToDo.title
-                cell.textField?.isEditable = true
-            } else {
-                print("Could not cast cell as ToDoCellView")
-            }
-        }
-        
-        return cell!
-    }
-    
-    func tableView(_ tableView: NSTableView, validateDrop info: NSDraggingInfo, proposedRow row: Int,
-                   proposedDropOperation dropOperation: NSTableViewDropOperation) -> NSDragOperation {
-        if currentSource == "All" {
-            return NSDragOperation(rawValue: UInt(0))
-        }
-        if dropOperation == .above {
-            return .move
-        }
-        return NSDragOperation(rawValue: UInt(0))
-    }
-    
-    func tableView(_ tableView: NSTableView, writeRowsWith rowIndexes: IndexSet, to pboard: NSPasteboard) -> Bool {
-        let data = NSKeyedArchiver.archivedData(withRootObject: rowIndexes)
-        pboard.declareTypes(registeredTypes, owner: self)
-        pboard.setData(data, forType: NSGeneralPboard)
-        return true
-    }
-    
-    func tableView(_ tableView: NSTableView, acceptDrop info: NSDraggingInfo, row: Int,
-                   dropOperation: NSTableViewDropOperation) -> Bool {
-        if currentSource != "All" {
-            let dragData = info.draggingPasteboard().data(forType: NSGeneralPboard)!
-            let rowIndexes: IndexSet? = NSKeyedUnarchiver.unarchiveObject(with: dragData) as? IndexSet
-            guard let ri: IndexSet = rowIndexes else { return true }
-            let dragOrigin = ri.first!
-            let dragDest = row
-            reorderToDos(dragOrigin: dragOrigin, dragDest: dragDest)
-            mainTableViewDelgate?.reloadData(sidebarGroup: currentSource)
-            return true
-        }
-        return false
-
-    }
-    
+//    func reorderToDos(dragOrigin: Int, dragDest: Int) {
+//        var alteredDragDest = dragDest
+//        if dragOrigin == dragDest - 1 { return }
+//        if dragOrigin < dragDest {
+//            alteredDragDest = dragDest - 1
+//        }
+//        
+//        let draggedItem = mainTableToDoArray[dragOrigin]
+//        mainTableToDoArray.remove(at: dragOrigin)
+//        mainTableToDoArray.insert(draggedItem, at: alteredDragDest)
+//        
+//        for i in 0..<mainTableToDoArray.count {
+//            let moID = mainTableToDoArray[i].managedContextID
+//            modelAccessor.updatePosition(moID: moID, newPosition: i)
+//        }
+//    }
     
     // MARK: - OutlineView Methods
     func outlineViewSelectionDidChange(_ notification: Notification) {
-        guard let sidebarView = notification.object as? NSOutlineView else {
-            print("could not cast as outline view")
-            return
-        }
-        guard let item = sidebarView.item(atRow: sidebarView.selectedRow) as? Group else {
-            print("could not cast as group")
-            return
-        }
-        guard let itemID = item.groupID else { return }
-        print(itemID)
-//        if sidebarGroups[object.selectedRow].groupName == "All" {
-//            currentSelectionToDoArray = mainTableToDoArray
-//        } else {
-//            currentSelectionToDoArray = mainTableToDoArray.filter {
-//                $0.sidebarGroup == sidebarGroups[object.selectedRow].groupName
-//            }
-//        }
-//        currentSource = sidebarGroups[object.selectedRow].groupName
-//        mainTableViewDelgate?.reloadData(sidebarGroup: currentSource)
-//        mainTableViewDelgate?.updateStatusBar(numOfItems: currentSelectionToDoArray.count)
+        guard let sidebarView = notification.object as? NSOutlineView else { return }
+        guard let item = sidebarView.item(atRow: sidebarView.selectedRow) as? Group else { return }
+
     }
     
     
@@ -229,7 +193,7 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, ToDo
         if let item = item {
             switch item {
             case let department as Department:
-                return department.accounts.count
+                return department.groups.count
             default:
                 return 0
             }
@@ -241,7 +205,7 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, ToDo
     func outlineView(_ outlineView: NSOutlineView, isItemExpandable item: Any) -> Bool {
         switch item {
         case let department as Department:
-            return (department.accounts.count > 0) ? true : false
+            return (department.groups.count > 0) ? true : false
         default:
             return false
         }
@@ -251,7 +215,7 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, ToDo
         if let item = item {
             switch item {
             case let department as Department:
-                return department.accounts[index]
+                return department.groups[index]
             default:
                 return self
             }
@@ -277,14 +241,11 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, ToDo
                 textField.stringValue = department.name
             }
             return view
-        case let account as Group:
+        case let group as Group:
             let view = outlineView.make(withIdentifier: "DataCell", owner: self) as! GroupCellView
-            view.groupID = account.groupID
+//            view.groupID = group.groupID
             if let textField = view.txtGroup {
-                if !account.system {
-                    textField.isEditable = true
-                }
-                textField.stringValue = account.groupName
+                textField.stringValue = group.groupName!
             }
             return view
         default:
@@ -330,14 +291,12 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, ToDo
     }
     
     func addSidebarGroup(groupName: String) {
-        if let newGroup = modelAccessor.createNewGroup(groupName: groupName) {
-            sidebarGroups.append(newGroup)
-            department2.accounts = sidebarGroups
-        }
+        print("Add sidebar group")
     }
     
     func deleteSidebarGroup(group: Group) {
-        guard let moID = group.groupID else { return }
+        print("Delete sidebar group")
+//        guard let moID = group.groupID else { return }
 //        for i in 0..<sidebarGroups.count {
 //            if sidebarGroups[i].groupID == moID {
 //                if modelAccessor.deleteManagedObject(moID: moID) {
