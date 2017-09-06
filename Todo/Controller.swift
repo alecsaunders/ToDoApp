@@ -57,7 +57,6 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
         
         do {
             try fetchedResultsController.performFetch()
-            mainTableViewDelgate?.reloadData()
         } catch {
             fatalError("Failed to initialize fetch")
         }
@@ -71,6 +70,7 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
             theToDo.title = addedToDoTitle
             saveMoc()
             initializeFetchedResultsController()
+            mainTableViewDelgate?.reloadData()
         }
 
     }
@@ -81,6 +81,7 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
         dataController.managedObjectContext.delete(object)
         saveMoc()
         initializeFetchedResultsController()
+        mainTableViewDelgate?.reloadData()
     }
     
     func saveMoc() {
@@ -143,6 +144,7 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
         
         return nil
     }
+        
     
     // MARK: - To Do Table View Delegate Methods
     func changeText(newToDoTitle: String, moID: NSManagedObjectID) {

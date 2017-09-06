@@ -20,7 +20,7 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
     @IBAction func btnAddItem(_ sender: NSButton) {
         if let windowConroller = self.view.window?.windowController as? WindowController {
             let txt = windowConroller.toDoCreateTextField.stringValue
-            addToDoItemToMainTableView(toDoText: txt)
+            cntlr.save(addedToDoTitle: txt)
             windowConroller.toDoCreateTextField.stringValue = ""
         }
     }
@@ -31,8 +31,10 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
     }
     @IBAction func completedCheck(_ sender: NSButton) {
         let index = mainTableView.selectedRowIndexes
+        mainTableView.beginUpdates()
         cntlr.completedWasChecked(state: sender.state, btnIndex: sender.tag)
         mainTableView.removeRows(at: index, withAnimation: NSTableViewAnimationOptions.effectFade)
+        mainTableView.endUpdates()
     }
     @IBAction func markComplete(_ sender: NSMenuItem) {
         cntlr.completedWasChecked(state: 1, btnIndex: mainTableView.clickedRow)
