@@ -9,7 +9,7 @@
 import Foundation
 
 
-struct Department {
+struct Department<T> {
     var name: String
-    var groups: [Group]
+    var groups: [T]
 }

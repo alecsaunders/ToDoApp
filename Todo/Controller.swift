@@ -21,10 +21,11 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
     let registeredTypes:[String] = [NSGeneralPboard]
     let dataController = DataController()
     var fetchedResultsController: NSFetchedResultsController<NSFetchRequestResult>!
+    var fetchedGroupsController: NSFetchedResultsController<NSFetchRequestResult>!
     weak var mainTableViewDelgate: MainTableViewDelgate?
     
-    var department1 = Department(name: "Categories", groups: [])
-    var department2 = Department(name: "Favorites", groups: [])
+    var department1: Department<String> = Department(name: "Categories", groups: SidebarCategory().groups)
+    var department2: Department<Group> = Department(name: "Favorites", groups: [])
     
     //var outlineGroups = ["All", "Daily", "Domo", "Vertica", "ServiceNow", "Data Query", "Home"]
     var sidebarGroups: [Group] = []
@@ -32,24 +33,21 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
     override init() {
         super.init()
         initializeFetchedResultsController()
+        initializeFetchedGroupsController()
         
+        guard let fetchedGroups = fetchedGroupsController.fetchedObjects as? [Group] else { return }
         
-//        var allGroup = Group(groupName: "All")
-//        allGroup.system = true
-//        var dailyGroup = Group(groupName: "Daily")
-//        dailyGroup.system = true
-//        var completedGroup = Group(groupName: "Completed")
-//        completedGroup.system = true
-        
-//        department1.groups.append(allGroup)
-//        department1.groups.append(dailyGroup)
-//        department1.groups.append(completedGroup)
-        department2.groups = sidebarGroups
+        department2.groups = fetchedGroups
+    }
+    
+    func getToDo(moID: NSManagedObjectID) -> ToDo? {
+        guard let theToDo = dataController.managedObjectContext.object(with: moID) as? ToDo else { return nil }
+        return theToDo
     }
     
     func initializeFetchedResultsController() {
         let request = NSFetchRequest<NSFetchRequestResult>(entityName: "ToDo")
-        let sort = NSSortDescriptor(key: "createdDate", ascending: false)
+        let sort = NSSortDescriptor(key: "createdDate", ascending: true)
         request.sortDescriptors = [sort]
         let moc = dataController.managedObjectContext
         fetchedResultsController = NSFetchedResultsController(fetchRequest: request, managedObjectContext: moc, sectionNameKeyPath: nil, cacheName: nil)
@@ -62,12 +60,28 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
         }
     }
     
+    func initializeFetchedGroupsController() {
+        let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Group")
+        let sort = NSSortDescriptor(key: "groupName", ascending: true)
+        request.sortDescriptors = [sort]
+        let moc = dataController.managedObjectContext
+        fetchedGroupsController = NSFetchedResultsController(fetchRequest: request, managedObjectContext: moc, sectionNameKeyPath: nil, cacheName: nil)
+        fetchedGroupsController.delegate = self
+        
+        do {
+            try fetchedGroupsController.performFetch()
+        } catch {
+            fatalError("Failed to initialize fetch")
+        }
+    }
+    
     func save(addedToDoTitle: String) {
         if addedToDoTitle.isEmpty {
             print("do not add a new to do item")
         } else {
             guard let theToDo = NSEntityDescription.insertNewObject(forEntityName: "ToDo", into: dataController.managedObjectContext) as? ToDo else { return }
             theToDo.title = addedToDoTitle
+            theToDo.createdDate = NSDate()
             saveMoc()
             initializeFetchedResultsController()
             mainTableViewDelgate?.reloadData()
@@ -101,14 +115,9 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
     }
     
     func updateNote(newNote: String, moID: NSManagedObjectID) {
-        print("update")
-//        if modelAccessor.updateNote(newNote: newNote, moID: moID) {
-//            for i in 0..<mainTableToDoArray.count {
-//                if mainTableToDoArray[i].managedContextID == moID {
-//                    mainTableToDoArray[i].note = newNote
-//                }
-//            }
-//        }
+        guard let theToDo = dataController.managedObjectContext.object(with: moID) as? ToDo else { return }
+        theToDo.note = newNote
+        saveMoc()
     }
     
     //MARK: - TableView Delegate Methods
@@ -136,13 +145,39 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
                 cell.textField?.stringValue = theTitle
             }
             cell.toDoCellViewDelegate = self
-            cell.index = row
             cell.managedObjectID = theToDo.objectID
             
             return cell
         }
         
         return nil
+    }
+    
+    func tableView(_ tableView: NSTableView, validateDrop info: NSDraggingInfo, proposedRow row: Int, proposedDropOperation dropOperation: NSTableViewDropOperation) -> NSDragOperation {
+        print(info)
+        if dropOperation == .above {
+            return .move
+        }
+        return NSDragOperation(rawValue: UInt(0))
+    }
+    
+    func tableView(_ tableView: NSTableView, writeRowsWith rowIndexes: IndexSet, to pboard: NSPasteboard) -> Bool {
+        let data = NSKeyedArchiver.archivedData(withRootObject: rowIndexes)
+        pboard.declareTypes(registeredTypes, owner: self)
+        pboard.setData(data, forType: NSGeneralPboard)
+        return true
+    }
+    
+    func tableView(_ tableView: NSTableView, acceptDrop info: NSDraggingInfo, row: Int, dropOperation: NSTableViewDropOperation) -> Bool {
+        let dragData = info.draggingPasteboard().data(forType: NSGeneralPboard)!
+        let rowIndexes: IndexSet? = NSKeyedUnarchiver.unarchiveObject(with: dragData) as? IndexSet
+        guard let ri: IndexSet = rowIndexes else { return true }
+        let dragOrigin = ri.first!
+        let dragDest = row
+        print(dragOrigin)
+        print(dragDest)
+        return false
+        
     }
         
     
@@ -165,36 +200,22 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
             break
         }
     }
-    
-//    func reorderToDos(dragOrigin: Int, dragDest: Int) {
-//        var alteredDragDest = dragDest
-//        if dragOrigin == dragDest - 1 { return }
-//        if dragOrigin < dragDest {
-//            alteredDragDest = dragDest - 1
-//        }
-//        
-//        let draggedItem = mainTableToDoArray[dragOrigin]
-//        mainTableToDoArray.remove(at: dragOrigin)
-//        mainTableToDoArray.insert(draggedItem, at: alteredDragDest)
-//        
-//        for i in 0..<mainTableToDoArray.count {
-//            let moID = mainTableToDoArray[i].managedContextID
-//            modelAccessor.updatePosition(moID: moID, newPosition: i)
-//        }
-//    }
+
     
     // MARK: - OutlineView Methods
     func outlineViewSelectionDidChange(_ notification: Notification) {
         guard let sidebarView = notification.object as? NSOutlineView else { return }
         guard let item = sidebarView.item(atRow: sidebarView.selectedRow) as? Group else { return }
-
+        print(item)
     }
     
     
     func outlineView(_ outlineView: NSOutlineView, numberOfChildrenOfItem item: Any?) -> Int {
         if let item = item {
             switch item {
-            case let department as Department:
+            case let department as Department<String>:
+                return department.groups.count
+            case let department as Department<Group>:
                 return department.groups.count
             default:
                 return 0
@@ -206,7 +227,9 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
     
     func outlineView(_ outlineView: NSOutlineView, isItemExpandable item: Any) -> Bool {
         switch item {
-        case let department as Department:
+        case _ as Department<String>:
+            return true
+        case let department as Department<Group>:
             return (department.groups.count > 0) ? true : false
         default:
             return false
@@ -216,7 +239,9 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
     func outlineView(_ outlineView: NSOutlineView, child index: Int, ofItem item: Any?) -> Any {
         if let item = item {
             switch item {
-            case let department as Department:
+            case let department as Department<String>:
+                return department.groups[index]
+            case let department as Department<Group>:
                 return department.groups[index]
             default:
                 return self
@@ -237,15 +262,24 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
     
     func outlineView(_ outlineView: NSOutlineView, viewFor tableColumn: NSTableColumn?, item: Any) -> NSView? {
         switch item {
-        case let department as Department:
+        case _ as Department<String>:
+            let view = outlineView.make(withIdentifier: "HeaderCell", owner: self) as! NSTableCellView
+            if let textField = view.textField {
+                textField.stringValue = "Categories"
+            }
+            return view
+        case let department as Department<Group>:
             let view = outlineView.make(withIdentifier: "HeaderCell", owner: self) as! NSTableCellView
             if let textField = view.textField {
                 textField.stringValue = department.name
             }
             return view
+        case let group as String:
+            let view = outlineView.make(withIdentifier: "DataCell", owner: self) as! NSTableCellView
+            view.textField?.stringValue = group
+            return view
         case let group as Group:
             let view = outlineView.make(withIdentifier: "DataCell", owner: self) as! GroupCellView
-//            view.groupID = group.groupID
             if let textField = view.txtGroup {
                 textField.stringValue = group.groupName!
             }

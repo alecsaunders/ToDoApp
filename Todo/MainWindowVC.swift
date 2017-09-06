@@ -30,11 +30,7 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
         sourceOutlineView?.expandItem(nil, expandChildren: true)
     }
     @IBAction func completedCheck(_ sender: NSButton) {
-        let index = mainTableView.selectedRowIndexes
-        mainTableView.beginUpdates()
         cntlr.completedWasChecked(state: sender.state, btnIndex: sender.tag)
-        mainTableView.removeRows(at: index, withAnimation: NSTableViewAnimationOptions.effectFade)
-        mainTableView.endUpdates()
     }
     @IBAction func markComplete(_ sender: NSMenuItem) {
         cntlr.completedWasChecked(state: 1, btnIndex: mainTableView.clickedRow)
@@ -79,17 +75,19 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
     }
     
     override func prepare(for segue: NSStoryboardSegue, sender: Any?) {
-//        guard let dest = segue.destinationController as? InfoViewController else { return }
-//        let theClickedToDo = cntlr.mainTableToDoArray[mainTableView.clickedRow]
-//        let dateFormatter = DateFormatter()
-//        dateFormatter.dateFormat = "yyyy-MM-dd"
-//        let clickedCreateDate = theClickedToDo.createdDate
-//        let clickedCreateDateString = dateFormatter.string(from: clickedCreateDate)
-//        dest.infoTitleString = theClickedToDo.title
-//        dest.intoCreatedDateString = clickedCreateDateString
-//        dest.note = theClickedToDo.note
-//        dest.managedContextId = theClickedToDo.managedContextID
-//        dest.infoControllerDelegate = cntlr
+        guard let dest = segue.destinationController as? InfoViewController else { return }
+        guard let moID = (mainTableView.view(atColumn: 1, row: mainTableView.clickedRow, makeIfNecessary: false) as? ToDoCellView)?.managedObjectID else { return }
+        guard let theToDo = cntlr.getToDo(moID: moID) else { return }
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        let clickedCreateDate = theToDo.createdDate as! Date
+        let clickedCreateDateString = dateFormatter.string(from: clickedCreateDate)
+        dest.infoTitleString = theToDo.title
+        dest.intoCreatedDateString = clickedCreateDateString
+        dest.note = theToDo.note
+        dest.managedObjectID = theToDo.objectID
+        dest.infoControllerDelegate = cntlr
     }
     
     

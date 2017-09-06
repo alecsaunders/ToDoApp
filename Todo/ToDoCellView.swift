@@ -14,7 +14,6 @@ protocol ToDoCellViewDelegate: class {
 
 class ToDoCellView: NSTableCellView, NSTextFieldDelegate {
     weak var toDoCellViewDelegate: ToDoCellViewDelegate?
-    var index: Int?
     var managedObjectID: NSManagedObjectID?
     @IBOutlet weak var toDoItemText: NSTextField!
     @IBAction func toDoItemTextAction(_ sender: NSTextField) {
