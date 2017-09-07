@@ -13,22 +13,22 @@ import CoreData
 
 protocol MainTableViewDelgate: class {
     func reloadData()
+    func reloadSidebar()
+    func addToDoToGroup(toDoRowIndex: Int, group: Group)
     func updateStatusBar(numOfItems: Int)
     func doubleClick(sender: AnyObject)
 }
 
-class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFetchedResultsControllerDelegate, ToDoCellViewDelegate, NSOutlineViewDataSource, NSOutlineViewDelegate, InfoControllerDelegate {
+class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFetchedResultsControllerDelegate, NSOutlineViewDataSource, NSOutlineViewDelegate, InfoControllerDelegate, ToDoCellViewDelegate, GroupCellViewDelegate {
     let registeredTypes:[String] = [NSGeneralPboard]
     let dataController = DataController()
     var fetchedResultsController: NSFetchedResultsController<NSFetchRequestResult>!
     var fetchedGroupsController: NSFetchedResultsController<NSFetchRequestResult>!
     weak var mainTableViewDelgate: MainTableViewDelgate?
+    var selectedSidebarGroup: Group? = nil
     
     var department1: Department<String> = Department(name: "Categories", groups: SidebarCategory().groups)
     var department2: Department<Group> = Department(name: "Favorites", groups: [])
-    
-    //var outlineGroups = ["All", "Daily", "Domo", "Vertica", "ServiceNow", "Data Query", "Home"]
-    var sidebarGroups: [Group] = []
     
     override init() {
         super.init()
@@ -46,10 +46,16 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
     }
     
     func initializeFetchedResultsController() {
+        let moc = dataController.managedObjectContext
         let request = NSFetchRequest<NSFetchRequestResult>(entityName: "ToDo")
         let sort = NSSortDescriptor(key: "createdDate", ascending: true)
         request.sortDescriptors = [sort]
-        let moc = dataController.managedObjectContext
+        
+        if let selectedGroup = selectedSidebarGroup {
+            let pred = NSPredicate(format: "group = %@", selectedGroup)
+            request.predicate = pred
+        }
+        
         fetchedResultsController = NSFetchedResultsController(fetchRequest: request, managedObjectContext: moc, sectionNameKeyPath: nil, cacheName: nil)
         fetchedResultsController.delegate = self
         
@@ -205,8 +211,14 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
     // MARK: - OutlineView Methods
     func outlineViewSelectionDidChange(_ notification: Notification) {
         guard let sidebarView = notification.object as? NSOutlineView else { return }
-        guard let item = sidebarView.item(atRow: sidebarView.selectedRow) as? Group else { return }
-        print(item)
+        if let selectedGroup = sidebarView.item(atRow: sidebarView.selectedRow) as? Group {
+            selectedSidebarGroup = selectedGroup
+        } else {
+            selectedSidebarGroup = nil
+        }
+
+        initializeFetchedResultsController()
+        mainTableViewDelgate?.reloadData()
     }
     
     
@@ -261,6 +273,7 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
     }
     
     func outlineView(_ outlineView: NSOutlineView, viewFor tableColumn: NSTableColumn?, item: Any) -> NSView? {
+        
         switch item {
         case _ as Department<String>:
             let view = outlineView.make(withIdentifier: "HeaderCell", owner: self) as! NSTableCellView
@@ -280,7 +293,10 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
             return view
         case let group as Group:
             let view = outlineView.make(withIdentifier: "DataCell", owner: self) as! GroupCellView
+            view.groupID = group.objectID
+            view.groupCellViewDelegate = self
             if let textField = view.txtGroup {
+                textField.isEditable = true
                 textField.stringValue = group.groupName!
             }
             return view
@@ -290,10 +306,7 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
     }
     
     func outlineView(_ outlineView: NSOutlineView, validateDrop info: NSDraggingInfo, proposedItem item: Any?, proposedChildIndex index: Int) -> NSDragOperation {
-        if let item = item as? String {
-            if item == "All" {
-                return NSDragOperation(rawValue: UInt(0))
-            }
+        if let _ = item as? Group {
             return .move
         }
         return NSDragOperation(rawValue: UInt(0))
@@ -308,11 +321,17 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
         let dragData = pboard.data(forType: NSGeneralPboard)!
         let rowIndexes: IndexSet? = NSKeyedUnarchiver.unarchiveObject(with: dragData) as? IndexSet
         guard let dragOrigin: Int = rowIndexes?.first else { return false }
-        guard let sidebarGroup = item as? String else { return false }
+        guard let sidebarGroup = item as? Group else { return false }
         
-        changeSidebarGroup(atIndex: dragOrigin, toGroup: sidebarGroup)
+        mainTableViewDelgate?.addToDoToGroup(toDoRowIndex: dragOrigin, group: sidebarGroup)
         
         return true
+    }
+    
+    func assigneToDoToGroup(moID: NSManagedObjectID, group: Group) {
+        guard let theToDo = dataController.managedObjectContext.object(with: moID) as? ToDo else { return }
+        theToDo.group = group
+        saveMoc()
     }
     
     func expandOutlineViewNodes(outlineView: NSOutlineView) {
@@ -327,19 +346,28 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
     }
     
     func addSidebarGroup(groupName: String) {
-        print("Add sidebar group")
+        guard let newGroup = NSEntityDescription.insertNewObject(forEntityName: "Group", into: dataController.managedObjectContext) as? Group else { return }
+        newGroup.groupName = groupName
+        saveMoc()
+        initializeFetchedGroupsController()
+        guard let fetchedGroups = fetchedGroupsController.fetchedObjects as? [Group] else { return }
+        department2.groups = fetchedGroups
+        mainTableViewDelgate?.reloadSidebar()
     }
     
     func deleteSidebarGroup(group: Group) {
-        print("Delete sidebar group")
-//        guard let moID = group.groupID else { return }
-//        for i in 0..<sidebarGroups.count {
-//            if sidebarGroups[i].groupID == moID {
-//                if modelAccessor.deleteManagedObject(moID: moID) {
-//                    sidebarGroups = modelAccessor.populateSidebarGroupsArray()
-//                    department2.accounts = sidebarGroups
-//                }
-//            }
-//        }
+        dataController.managedObjectContext.delete(group)
+        saveMoc()
+        initializeFetchedGroupsController()
+        guard let fetchedGroups = fetchedGroupsController.fetchedObjects as? [Group] else { return }
+        department2.groups = fetchedGroups
+        mainTableViewDelgate?.reloadSidebar()
     }
+    
+    func changeSidebarTitle(newTitle: String, moID: NSManagedObjectID) {
+        let groupObj = dataController.managedObjectContext.object(with: moID)
+        groupObj.setValue(newTitle, forKey: "groupName")
+        saveMoc()
+    }
+    
 }

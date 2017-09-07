@@ -26,8 +26,6 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
     }
     @IBAction func btnAddGroup(_ sender: NSButton) {
         cntlr.addSidebarGroup(groupName: "New Group")
-        sourceOutlineView.reloadData()
-        sourceOutlineView?.expandItem(nil, expandChildren: true)
     }
     @IBAction func completedCheck(_ sender: NSButton) {
         cntlr.completedWasChecked(state: sender.state, btnIndex: sender.tag)
@@ -81,7 +79,7 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
         
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
-        let clickedCreateDate = theToDo.createdDate as! Date
+        let clickedCreateDate = theToDo.createdDate! as Date
         let clickedCreateDateString = dateFormatter.string(from: clickedCreateDate)
         dest.infoTitleString = theToDo.title
         dest.intoCreatedDateString = clickedCreateDateString
@@ -105,6 +103,11 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
     
     func reloadData() {
         mainTableView.reloadData()
+    }
+    
+    func addToDoToGroup(toDoRowIndex: Int, group: Group) {
+        guard let moID = (mainTableView.view(atColumn: 1, row: toDoRowIndex, makeIfNecessary: false) as? ToDoCellView)?.managedObjectID else { return }
+        cntlr.assigneToDoToGroup(moID: moID, group: group)
     }
     
     func reloadSidebar() {
