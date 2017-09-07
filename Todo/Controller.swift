@@ -112,14 +112,6 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
         }
     }
     
-    func changeSidebarGroup(atIndex: Int, toGroup: String) {
-        print("change sidebar group")
-    }
-    
-    func updateCurrentSelectionToDoArray(group: String) {
-        print("update current selection to do array")
-    }
-    
     func updateNote(newNote: String, moID: NSManagedObjectID) {
         guard let theToDo = dataController.managedObjectContext.object(with: moID) as? ToDo else { return }
         theToDo.note = newNote
@@ -129,6 +121,7 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
     //MARK: - TableView Delegate Methods
     func numberOfRows(in tableView: NSTableView) -> Int {
         guard let fetchedObjs = fetchedResultsController.fetchedObjects as? [ToDo] else { return 0 }
+        mainTableViewDelgate?.updateStatusBar(numOfItems: fetchedObjs.count)
         return fetchedObjs.count
     }
     
