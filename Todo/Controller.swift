@@ -191,9 +191,9 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
     // MARK: - Update View
     func completedWasChecked(state: Int, btnIndex: Int) {
         switch state {
-        case NSOnState:
+        case 1:
             removeToDoEntityRecord(atIndex: btnIndex)
-        case NSOffState:
+        case 0:
             break
         default:
             break
