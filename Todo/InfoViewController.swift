@@ -36,7 +36,7 @@ class InfoViewController: NSViewController {
     
     override func viewDidDisappear() {
         guard let moID = managedObjectID else { return }
-        infoControllerDelegate?.updateNote(newNote: infoNote.string!, moID: moID)
+        infoControllerDelegate?.updateNote(newNote: infoNote.string, moID: moID)
     }
     
 }

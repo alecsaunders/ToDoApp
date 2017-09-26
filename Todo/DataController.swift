@@ -14,7 +14,7 @@ class DataController: NSObject {
     var managedObjectContext: NSManagedObjectContext
     
     override init() {
-        let appDel = NSApplication.shared().delegate as! AppDelegate
+        let appDel = NSApplication.shared.delegate as! AppDelegate
         managedObjectContext = appDel.persistentContainer.viewContext
     }
 }

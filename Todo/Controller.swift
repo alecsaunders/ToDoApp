@@ -20,7 +20,7 @@ protocol MainTableViewDelgate: class {
 }
 
 class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFetchedResultsControllerDelegate, NSOutlineViewDataSource, NSOutlineViewDelegate, InfoControllerDelegate, ToDoCellViewDelegate, GroupCellViewDelegate {
-    let registeredTypes:[String] = [NSGeneralPboard]
+    let registeredTypes:[String] = [NSPasteboard.Name.generalPboard.rawValue]
     let dataController = DataController()
     var fetchedResultsController: NSFetchedResultsController<NSFetchRequestResult>!
     var fetchedGroupsController: NSFetchedResultsController<NSFetchRequestResult>!
@@ -131,15 +131,15 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
         let theToDo = fetchedObjs[row]
         
         if tableColumn == tableView.tableColumns[0] {
-            guard let cell = tableView.make(withIdentifier: "col_complete", owner: nil) as? NSTableCellView else { return nil }
+            guard let cell = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "col_complete"), owner: nil) as? NSTableCellView else { return nil }
             if let completeBtn = cell.subviews[0] as? NSButton {
-                completeBtn.state = theToDo.completed.hashValue
+                completeBtn.state = NSControl.StateValue(rawValue: theToDo.completed.hashValue)
                 completeBtn.tag = row
             }
             return cell
         }
         if tableColumn == tableView.tableColumns[1] {
-            guard let cell = tableView.make(withIdentifier: "col_toDoText", owner: nil) as? ToDoCellView else { return nil }
+            guard let cell = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "col_toDoText"), owner: nil) as? ToDoCellView else { return nil }
             if let theTitle = theToDo.title {
                 cell.textField?.stringValue = theTitle
             }
@@ -152,7 +152,7 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
         return nil
     }
     
-    func tableView(_ tableView: NSTableView, validateDrop info: NSDraggingInfo, proposedRow row: Int, proposedDropOperation dropOperation: NSTableViewDropOperation) -> NSDragOperation {
+    func tableView(_ tableView: NSTableView, validateDrop info: NSDraggingInfo, proposedRow row: Int, proposedDropOperation dropOperation: NSTableView.DropOperation) -> NSDragOperation {
         print(info)
         if dropOperation == .above {
             return .move
@@ -163,12 +163,12 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
     func tableView(_ tableView: NSTableView, writeRowsWith rowIndexes: IndexSet, to pboard: NSPasteboard) -> Bool {
         let data = NSKeyedArchiver.archivedData(withRootObject: rowIndexes)
         pboard.declareTypes(registeredTypes, owner: self)
-        pboard.setData(data, forType: NSGeneralPboard)
+        pboard.setData(data, forType: NSPasteboard.Name.generalPboard)
         return true
     }
     
-    func tableView(_ tableView: NSTableView, acceptDrop info: NSDraggingInfo, row: Int, dropOperation: NSTableViewDropOperation) -> Bool {
-        let dragData = info.draggingPasteboard().data(forType: NSGeneralPboard)!
+    func tableView(_ tableView: NSTableView, acceptDrop info: NSDraggingInfo, row: Int, dropOperation: NSTableView.DropOperation) -> Bool {
+        let dragData = info.draggingPasteboard().data(forType: NSPasteboard.Name.generalPboard)!
         let rowIndexes: IndexSet? = NSKeyedUnarchiver.unarchiveObject(with: dragData) as? IndexSet
         guard let ri: IndexSet = rowIndexes else { return true }
         let dragOrigin = ri.first!
@@ -269,23 +269,23 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
         
         switch item {
         case _ as Department<String>:
-            let view = outlineView.make(withIdentifier: "HeaderCell", owner: self) as! NSTableCellView
+            let view = outlineView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "HeaderCell"), owner: self) as! NSTableCellView
             if let textField = view.textField {
                 textField.stringValue = "Categories"
             }
             return view
         case let department as Department<Group>:
-            let view = outlineView.make(withIdentifier: "HeaderCell", owner: self) as! NSTableCellView
+            let view = outlineView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "HeaderCell"), owner: self) as! NSTableCellView
             if let textField = view.textField {
                 textField.stringValue = department.name
             }
             return view
         case let group as String:
-            let view = outlineView.make(withIdentifier: "DataCell", owner: self) as! NSTableCellView
+            let view = outlineView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "DataCell"), owner: self) as! NSTableCellView
             view.textField?.stringValue = group
             return view
         case let group as Group:
-            let view = outlineView.make(withIdentifier: "DataCell", owner: self) as! GroupCellView
+            let view = outlineView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "DataCell"), owner: self) as! GroupCellView
             view.groupID = group.objectID
             view.groupCellViewDelegate = self
             if let textField = view.txtGroup {
@@ -311,7 +311,7 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
     
     func outlineView(_ outlineView: NSOutlineView, acceptDrop info: NSDraggingInfo, item: Any?, childIndex index: Int) -> Bool {
         let pboard = info.draggingPasteboard()
-        let dragData = pboard.data(forType: NSGeneralPboard)!
+        let dragData = pboard.data(forType: NSPasteboard.Name.generalPboard)!
         let rowIndexes: IndexSet? = NSKeyedUnarchiver.unarchiveObject(with: dragData) as? IndexSet
         guard let dragOrigin: Int = rowIndexes?.first else { return false }
         guard let sidebarGroup = item as? Group else { return false }

@@ -11,7 +11,7 @@ import CoreData
 
 
 class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDelegate {
-    let registeredTypes:[String] = [NSGeneralPboard]
+    let registeredTypes:[String] = [NSPasteboard.Name.generalPboard.rawValue]
     @IBOutlet var mainTableView: NSTableView!
     @IBOutlet var lblStatusBottom: NSTextField!
     @IBOutlet weak var sourceSidebar: NSScrollView!
@@ -28,14 +28,14 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
         cntlr.addSidebarGroup(groupName: "New Group")
     }
     @IBAction func completedCheck(_ sender: NSButton) {
-        cntlr.completedWasChecked(state: sender.state, btnIndex: sender.tag)
+        cntlr.completedWasChecked(state: sender.state.rawValue, btnIndex: sender.tag)
     }
     @IBAction func markComplete(_ sender: NSMenuItem) {
         cntlr.completedWasChecked(state: 1, btnIndex: mainTableView.clickedRow)
     }
     @IBAction func menuGetInfo(_ sender: NSMenuItem) {
         if mainTableView.clickedRow >= 0 {
-            performSegue(withIdentifier: "infoSegue", sender: self)
+            performSegue(withIdentifier: NSStoryboardSegue.Identifier(rawValue: "infoSegue"), sender: self)
         }
     }
     @IBAction func sidebarMenuDelete(_ sender: NSMenuItem) {
@@ -61,14 +61,14 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
         mainTableView.dataSource = cntlr
         mainTableView.usesAlternatingRowBackgroundColors = true
         mainTableView.setDraggingSourceOperationMask(NSDragOperation.every, forLocal: false)
-        mainTableView.register(forDraggedTypes: cntlr.registeredTypes)
+        mainTableView.registerForDraggedTypes(cntlr.registeredTypes)
         mainTableView.doubleAction = #selector(self.doubleClick)
         mainTableView.reloadData()
         
         sourceOutlineView.delegate = cntlr
         sourceOutlineView.dataSource = cntlr
         sourceOutlineView.setDraggingSourceOperationMask(NSDragOperation.every, forLocal: true)
-        sourceOutlineView.register(forDraggedTypes: self.registeredTypes)
+        sourceOutlineView.registerForDraggedTypes(self.registeredTypes)
         sourceOutlineView?.expandItem(nil, expandChildren: true)
     }
     
@@ -95,9 +95,9 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
     }
     
     // MARK: - Main Table View Delegate Functions
-    func doubleClick(sender: AnyObject) {
+    @objc func doubleClick(sender: AnyObject) {
         if mainTableView.clickedRow >= 0 {
-            performSegue(withIdentifier: "infoSegue", sender: self)
+            performSegue(withIdentifier: NSStoryboardSegue.Identifier(rawValue: "infoSegue"), sender: self)
         }
     }
     

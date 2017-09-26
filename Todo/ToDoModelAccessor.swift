@@ -10,7 +10,7 @@ import Cocoa
 
 
 class ToDoModelAccessor {
-    let appDelegate = NSApplication.shared().delegate as? AppDelegate
+    let appDelegate = NSApplication.shared.delegate as? AppDelegate
     var managedContext: NSManagedObjectContext? = nil
     
     init() {
