@@ -68,7 +68,7 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
         sourceOutlineView.delegate = cntlr
         sourceOutlineView.dataSource = cntlr
         sourceOutlineView.setDraggingSourceOperationMask(NSDragOperation.every, forLocal: true)
-        sourceOutlineView.registerForDraggedTypes(self.registeredTypes)
+        sourceOutlineView.registerForDraggedTypes([.string])
         sourceOutlineView?.expandItem(nil, expandChildren: true)
     }
     

@@ -20,7 +20,7 @@ protocol MainTableViewDelgate: class {
 }
 
 class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFetchedResultsControllerDelegate, NSOutlineViewDataSource, NSOutlineViewDelegate, InfoControllerDelegate, ToDoCellViewDelegate, GroupCellViewDelegate {
-    let registeredTypes:[String] = [NSPasteboard.Name.generalPboard.rawValue]
+    let registeredTypes = [NSPasteboard.PasteboardType.string]
     let dataController = DataController()
     var fetchedResultsController: NSFetchedResultsController<NSFetchRequestResult>!
     var fetchedGroupsController: NSFetchedResultsController<NSFetchRequestResult>!
@@ -163,12 +163,12 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
     func tableView(_ tableView: NSTableView, writeRowsWith rowIndexes: IndexSet, to pboard: NSPasteboard) -> Bool {
         let data = NSKeyedArchiver.archivedData(withRootObject: rowIndexes)
         pboard.declareTypes(registeredTypes, owner: self)
-        pboard.setData(data, forType: NSPasteboard.Name.generalPboard)
+        pboard.setData(data, forType: NSPasteboard.PasteboardType(rawValue: NSPasteboard.Name.generalPboard.rawValue))
         return true
     }
     
     func tableView(_ tableView: NSTableView, acceptDrop info: NSDraggingInfo, row: Int, dropOperation: NSTableView.DropOperation) -> Bool {
-        let dragData = info.draggingPasteboard().data(forType: NSPasteboard.Name.generalPboard)!
+        let dragData = info.draggingPasteboard().data(forType: .string)!
         let rowIndexes: IndexSet? = NSKeyedUnarchiver.unarchiveObject(with: dragData) as? IndexSet
         guard let ri: IndexSet = rowIndexes else { return true }
         let dragOrigin = ri.first!
@@ -311,7 +311,7 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
     
     func outlineView(_ outlineView: NSOutlineView, acceptDrop info: NSDraggingInfo, item: Any?, childIndex index: Int) -> Bool {
         let pboard = info.draggingPasteboard()
-        let dragData = pboard.data(forType: NSPasteboard.Name.generalPboard)!
+        let dragData = pboard.data(forType: .string)!
         let rowIndexes: IndexSet? = NSKeyedUnarchiver.unarchiveObject(with: dragData) as? IndexSet
         guard let dragOrigin: Int = rowIndexes?.first else { return false }
         guard let sidebarGroup = item as? Group else { return false }
