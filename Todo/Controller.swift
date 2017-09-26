@@ -15,6 +15,7 @@ protocol MainTableViewDelgate: class {
     func reloadData()
     func reloadSidebar()
     func addToDoToGroup(toDoRowIndex: Int, group: Group)
+    func setToDoToDaily(toDoRowIndex: Int)
     func updateStatusBar(numOfItems: Int)
     func doubleClick(sender: AnyObject)
 }
@@ -153,7 +154,6 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
     }
     
     func tableView(_ tableView: NSTableView, validateDrop info: NSDraggingInfo, proposedRow row: Int, proposedDropOperation dropOperation: NSTableView.DropOperation) -> NSDragOperation {
-        print(info)
         if dropOperation == .above {
             return .move
         }
@@ -163,7 +163,7 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
     func tableView(_ tableView: NSTableView, writeRowsWith rowIndexes: IndexSet, to pboard: NSPasteboard) -> Bool {
         let data = NSKeyedArchiver.archivedData(withRootObject: rowIndexes)
         pboard.declareTypes(registeredTypes, owner: self)
-        pboard.setData(data, forType: NSPasteboard.PasteboardType(rawValue: NSPasteboard.Name.generalPboard.rawValue))
+        pboard.setData(data, forType: .string)
         return true
     }
     
@@ -176,9 +176,7 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
         print(dragOrigin)
         print(dragDest)
         return false
-        
     }
-        
     
     // MARK: - To Do Table View Delegate Methods
     func changeText(newToDoTitle: String, moID: NSManagedObjectID) {
@@ -302,6 +300,11 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
         if let _ = item as? Group {
             return .move
         }
+        if let cat = item as? String {
+            if cat == "Daily" {
+                return .move
+            }
+        }
         return NSDragOperation(rawValue: UInt(0))
     }
 
@@ -314,9 +317,14 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
         let dragData = pboard.data(forType: .string)!
         let rowIndexes: IndexSet? = NSKeyedUnarchiver.unarchiveObject(with: dragData) as? IndexSet
         guard let dragOrigin: Int = rowIndexes?.first else { return false }
-        guard let sidebarGroup = item as? Group else { return false }
-        
-        mainTableViewDelgate?.addToDoToGroup(toDoRowIndex: dragOrigin, group: sidebarGroup)
+        if let sidebarGroup = item as? Group {
+            mainTableViewDelgate?.addToDoToGroup(toDoRowIndex: dragOrigin, group: sidebarGroup)
+        }
+        if let cat = item as? String {
+            if cat == "Daily" {
+                mainTableViewDelgate?.setToDoToDaily(toDoRowIndex: dragOrigin)
+            }
+        }
         
         return true
     }
@@ -360,6 +368,13 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
     func changeSidebarTitle(newTitle: String, moID: NSManagedObjectID) {
         let groupObj = dataController.managedObjectContext.object(with: moID)
         groupObj.setValue(newTitle, forKey: "groupName")
+        saveMoc()
+    }
+    
+    func setToDaily(moID: NSManagedObjectID) {
+        if let toDo = getToDo(moID: moID) {
+            toDo.daily = true
+        }
         saveMoc()
     }
     

@@ -99,6 +99,11 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
         if mainTableView.clickedRow >= 0 {
             performSegue(withIdentifier: NSStoryboardSegue.Identifier(rawValue: "infoSegue"), sender: self)
         }
+        if let v = mainTableView.view(atColumn: 1, row: mainTableView.clickedRow, makeIfNecessary: false) as? ToDoCellView {
+            if let toDo = cntlr.dataController.managedObjectContext.object(with: v.managedObjectID!) as? ToDo {
+                print(toDo)
+            }
+        }
     }
     
     func reloadData() {
@@ -108,6 +113,11 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
     func addToDoToGroup(toDoRowIndex: Int, group: Group) {
         guard let moID = (mainTableView.view(atColumn: 1, row: toDoRowIndex, makeIfNecessary: false) as? ToDoCellView)?.managedObjectID else { return }
         cntlr.assigneToDoToGroup(moID: moID, group: group)
+    }
+    
+    func setToDoToDaily(toDoRowIndex: Int) {
+        guard let moID = (mainTableView.view(atColumn: 1, row: toDoRowIndex, makeIfNecessary: false) as? ToDoCellView)?.managedObjectID else { return }
+        cntlr.setToDaily(moID: moID)
     }
     
     func reloadSidebar() {

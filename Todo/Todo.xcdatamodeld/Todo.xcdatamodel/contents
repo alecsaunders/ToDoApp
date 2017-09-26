@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="12141" systemVersion="16G29" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="13240" systemVersion="" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="Group" representedClassName=".Group" syncable="YES">
         <attribute name="groupName" attributeType="String" syncable="YES"/>
         <relationship name="toDo" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="ToDo" inverseName="group" inverseEntity="ToDo" syncable="YES"/>
@@ -7,6 +7,7 @@
     <entity name="ToDo" representedClassName=".ToDo" syncable="YES">
         <attribute name="completed" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="createdDate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="daily" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="note" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="ordinalPosition" optional="YES" attributeType="Integer 16" minValueString="-1" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="title" optional="YES" attributeType="String" maxValueString="1024" spotlightIndexingEnabled="YES" syncable="YES"/>
@@ -14,6 +15,6 @@
     </entity>
     <elements>
         <element name="Group" positionX="169" positionY="-1" width="128" height="73"/>
-        <element name="ToDo" positionX="-63" positionY="-18" width="108" height="133"/>
+        <element name="ToDo" positionX="-63" positionY="-18" width="108" height="148"/>
     </elements>
 </model>
