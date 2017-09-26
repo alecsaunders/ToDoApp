@@ -33,7 +33,7 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
     
     override init() {
         super.init()
-        initializeFetchedResultsController()
+        initializeFetchedResultsController(pred: nil)
         initializeFetchedGroupsController()
         
         guard let fetchedGroups = fetchedGroupsController.fetchedObjects as? [Group] else { return }
@@ -46,15 +46,14 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
         return theToDo
     }
     
-    func initializeFetchedResultsController() {
+    func initializeFetchedResultsController(pred: NSPredicate?) {
         let moc = dataController.managedObjectContext
         let request = NSFetchRequest<NSFetchRequestResult>(entityName: "ToDo")
         let sort = NSSortDescriptor(key: "createdDate", ascending: true)
         request.sortDescriptors = [sort]
         
-        if let selectedGroup = selectedSidebarGroup {
-            let pred = NSPredicate(format: "group = %@", selectedGroup)
-            request.predicate = pred
+        if let predicate = pred {
+            request.predicate = predicate
         }
         
         fetchedResultsController = NSFetchedResultsController(fetchRequest: request, managedObjectContext: moc, sectionNameKeyPath: nil, cacheName: nil)
@@ -90,7 +89,7 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
             theToDo.title = addedToDoTitle
             theToDo.createdDate = NSDate()
             saveMoc()
-            initializeFetchedResultsController()
+            initializeFetchedResultsController(pred: nil)
             mainTableViewDelgate?.reloadData()
         }
 
@@ -101,7 +100,7 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
         guard let object = fetchedObjs[atIndex] as? NSManagedObject else { return }
         dataController.managedObjectContext.delete(object)
         saveMoc()
-        initializeFetchedResultsController()
+        initializeFetchedResultsController(pred: nil)
         mainTableViewDelgate?.reloadData()
     }
     
@@ -202,13 +201,23 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
     // MARK: - OutlineView Methods
     func outlineViewSelectionDidChange(_ notification: Notification) {
         guard let sidebarView = notification.object as? NSOutlineView else { return }
+        var pred: NSPredicate? = nil
         if let selectedGroup = sidebarView.item(atRow: sidebarView.selectedRow) as? Group {
-            selectedSidebarGroup = selectedGroup
-        } else {
-            selectedSidebarGroup = nil
+            pred = NSPredicate(format: "group = %@", selectedGroup)
+        }
+        
+        if let cat = sidebarView.item(atRow: sidebarView.selectedRow) as? String {
+            switch cat {
+            case "Daily":
+                pred = NSPredicate(format: "daily = %@", "1")
+            case "Completed":
+                print("completed cat")
+            default:
+                print("unknown cat")
+            }
         }
 
-        initializeFetchedResultsController()
+        initializeFetchedResultsController(pred: pred)
         mainTableViewDelgate?.reloadData()
     }
     
@@ -374,8 +383,8 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
     func setToDaily(moID: NSManagedObjectID) {
         if let toDo = getToDo(moID: moID) {
             toDo.daily = true
+            saveMoc()
         }
-        saveMoc()
     }
-    
+
 }
