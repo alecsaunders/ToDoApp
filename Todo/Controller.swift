@@ -100,9 +100,13 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
     }
 
     func markCompleted(atIndex: Int, complete: Bool) {
-        print("Mark Completed")
         guard let fetchedObjs = fetchedResultsController.fetchedObjects else { return }
         guard let object = fetchedObjs[atIndex] as? ToDo else { return }
+        if complete {
+            object.completedDate = NSDate()
+        } else {
+            object.completedDate = nil
+        }
         object.completed = complete
         saveMoc()
         initializeFetchedResultsController()

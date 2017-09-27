@@ -18,6 +18,7 @@ extension ToDo {
 
     @NSManaged public var completed: Bool
     @NSManaged public var createdDate: NSDate?
+    @NSManaged public var completedDate: NSDate?
     @NSManaged public var note: String?
     @NSManaged public var daily: Bool
     @NSManaged public var ordinalPosition: Int16
