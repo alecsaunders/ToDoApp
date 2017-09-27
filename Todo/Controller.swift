@@ -27,14 +27,14 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
     var fetchedResultsController: NSFetchedResultsController<NSFetchRequestResult>!
     var fetchedGroupsController: NSFetchedResultsController<NSFetchRequestResult>!
     weak var mainTableViewDelgate: MainTableViewDelgate?
-    var selectedSidebarGroup: Group? = nil
+    var sidebarPredicate: NSPredicate?
     
     var department1: Department<String> = Department(name: "Categories", groups: SidebarCategory().groups)
     var department2: Department<Group> = Department(name: "Favorites", groups: [])
     
     override init() {
         super.init()
-        initializeFetchedResultsController(pred: nil)
+        initializeFetchedResultsController()
         initializeFetchedGroupsController()
         
         guard let fetchedGroups = fetchedGroupsController.fetchedObjects as? [Group] else { return }
@@ -47,13 +47,13 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
         return theToDo
     }
     
-    func initializeFetchedResultsController(pred: NSPredicate?) {
+    func initializeFetchedResultsController() {
         let moc = dataController.managedObjectContext
         let request = NSFetchRequest<NSFetchRequestResult>(entityName: "ToDo")
         let sort = NSSortDescriptor(key: "createdDate", ascending: true)
         request.sortDescriptors = [sort]
         
-        if let predicate = pred {
+        if let predicate = sidebarPredicate {
             request.predicate = predicate
         }
         
@@ -90,7 +90,7 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
             theToDo.title = addedToDoTitle
             theToDo.createdDate = NSDate()
             saveMoc()
-            initializeFetchedResultsController(pred: nil)
+            initializeFetchedResultsController()
             mainTableViewDelgate?.reloadData()
         }
 
@@ -101,7 +101,8 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
         guard let object = fetchedObjs[atIndex] as? NSManagedObject else { return }
         dataController.managedObjectContext.delete(object)
         saveMoc()
-        initializeFetchedResultsController(pred: nil)
+        
+        initializeFetchedResultsController()
         mainTableViewDelgate?.reloadData()
     }
     
@@ -202,23 +203,22 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
     // MARK: - OutlineView Methods
     func outlineViewSelectionDidChange(_ notification: Notification) {
         guard let sidebarView = notification.object as? NSOutlineView else { return }
-        var pred: NSPredicate? = nil
         if let selectedGroup = sidebarView.item(atRow: sidebarView.selectedRow) as? Group {
-            pred = NSPredicate(format: "group = %@", selectedGroup)
+            sidebarPredicate = NSPredicate(format: "group = %@", selectedGroup)
         }
         
         if let cat = sidebarView.item(atRow: sidebarView.selectedRow) as? String {
             switch cat {
             case "Daily":
-                pred = NSPredicate(format: "daily = %@", "1")
+                sidebarPredicate = NSPredicate(format: "daily = %@", "1")
             case "Completed":
-                print("completed cat")
+                sidebarPredicate = nil
             default:
-                print("unknown cat")
+                sidebarPredicate = nil
             }
         }
 
-        initializeFetchedResultsController(pred: pred)
+        initializeFetchedResultsController()
         mainTableViewDelgate?.reloadData()
     }
     
@@ -384,6 +384,13 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
     func setToDaily(moID: NSManagedObjectID) {
         if let toDo = getToDo(moID: moID) {
             toDo.daily = true
+            saveMoc()
+        }
+    }
+    
+    func removeDaily(moID: NSManagedObjectID) {
+        if let toDo = getToDo(moID: moID) {
+            toDo.daily = false
             saveMoc()
         }
     }

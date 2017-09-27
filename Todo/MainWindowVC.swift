@@ -48,8 +48,13 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
         }
     }
     @IBAction func menuDaily(_ sender: NSMenuItem) {
-        print("Daily")
-        print(sender.state)
+        guard let moID = (mainTableView.view(atColumn: 1, row: mainTableView.clickedRow, makeIfNecessary: false) as? ToDoCellView)?.managedObjectID else { return }
+        guard let theToDo = cntlr.getToDo(moID: moID) else { return }
+        if theToDo.daily {
+            cntlr.removeDaily(moID: moID)
+        } else {
+            cntlr.setToDaily(moID: moID)
+        }
     }
     @IBAction func sidebarMenuDelete(_ sender: NSMenuItem) {
         guard let item = sourceOutlineView.item(atRow: sourceOutlineView.clickedRow) as? Group else { return }
