@@ -34,6 +34,9 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
     
     override init() {
         super.init()
+        
+        sidebarPredicate = NSPredicate(format: "completed = %@", "0")
+        
         initializeFetchedResultsController()
         initializeFetchedGroupsController()
         
@@ -96,6 +99,16 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
 
     }
 
+    func markCompleted(atIndex: Int, complete: Bool) {
+        print("Mark Completed")
+        guard let fetchedObjs = fetchedResultsController.fetchedObjects else { return }
+        guard let object = fetchedObjs[atIndex] as? ToDo else { return }
+        object.completed = complete
+        saveMoc()
+        initializeFetchedResultsController()
+        mainTableViewDelgate?.reloadData()
+    }
+    
     func removeToDoEntityRecord(atIndex: Int) {
         guard let fetchedObjs = fetchedResultsController.fetchedObjects else { return }
         guard let object = fetchedObjs[atIndex] as? NSManagedObject else { return }
@@ -191,8 +204,10 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
     func completedWasChecked(state: Int, btnIndex: Int) {
         switch state {
         case 1:
-            removeToDoEntityRecord(atIndex: btnIndex)
+            markCompleted(atIndex: btnIndex, complete: true)
+            //removeToDoEntityRecord(atIndex: btnIndex)
         case 0:
+            markCompleted(atIndex: btnIndex, complete: false)
             break
         default:
             break
@@ -204,17 +219,23 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
     func outlineViewSelectionDidChange(_ notification: Notification) {
         guard let sidebarView = notification.object as? NSOutlineView else { return }
         if let selectedGroup = sidebarView.item(atRow: sidebarView.selectedRow) as? Group {
-            sidebarPredicate = NSPredicate(format: "group = %@", selectedGroup)
+            let groupPred = NSPredicate(format: "group = %@", selectedGroup)
+            let completePred = NSPredicate(format: "completed = %@", "0")
+            let compPred = NSCompoundPredicate(andPredicateWithSubpredicates: [groupPred, completePred])
+            sidebarPredicate = compPred
         }
         
         if let cat = sidebarView.item(atRow: sidebarView.selectedRow) as? String {
             switch cat {
             case "Daily":
-                sidebarPredicate = NSPredicate(format: "daily = %@", "1")
+                let dailyPred = NSPredicate(format: "daily = %@", "1")
+                let completePred = NSPredicate(format: "completed = %@", "0")
+                let compPred = NSCompoundPredicate(andPredicateWithSubpredicates: [dailyPred, completePred])
+                sidebarPredicate = compPred
             case "Completed":
-                sidebarPredicate = nil
+                sidebarPredicate = NSPredicate(format: "completed = %@", "1")
             default:
-                sidebarPredicate = nil
+                sidebarPredicate = NSPredicate(format: "completed = %@", "0")
             }
         }
 
@@ -379,6 +400,8 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
         let groupObj = dataController.managedObjectContext.object(with: moID)
         groupObj.setValue(newTitle, forKey: "groupName")
         saveMoc()
+        initializeFetchedGroupsController()
+        mainTableViewDelgate?.reloadSidebar()
     }
     
     func setToDaily(moID: NSManagedObjectID) {
