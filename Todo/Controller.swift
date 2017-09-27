@@ -18,9 +18,10 @@ protocol MainTableViewDelgate: class {
     func setToDoToDaily(toDoRowIndex: Int)
     func updateStatusBar(numOfItems: Int)
     func doubleClick(sender: AnyObject)
+    var clickedToDo: ToDo? { get }
 }
 
-class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFetchedResultsControllerDelegate, NSOutlineViewDataSource, NSOutlineViewDelegate, InfoControllerDelegate, ToDoCellViewDelegate, GroupCellViewDelegate {
+class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFetchedResultsControllerDelegate, NSOutlineViewDataSource, NSOutlineViewDelegate, InfoControllerDelegate, ToDoCellViewDelegate, GroupCellViewDelegate, TableViewMenuDelegate {
     let registeredTypes = [NSPasteboard.PasteboardType.string]
     let dataController = DataController()
     var fetchedResultsController: NSFetchedResultsController<NSFetchRequestResult>!
@@ -384,6 +385,18 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
         if let toDo = getToDo(moID: moID) {
             toDo.daily = true
             saveMoc()
+        }
+    }
+    
+    //MARK: - Table View Menu Delegate Functions
+    func setMenuDailyState(sender: NSMenuItem) {
+        guard let mTvDel = mainTableViewDelgate else { return }
+        guard let clickedToDo = mTvDel.clickedToDo else { return }
+        
+        if clickedToDo.daily {
+            sender.state = .on
+        } else {
+            sender.state = .off
         }
     }
 

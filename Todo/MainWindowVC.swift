@@ -12,6 +12,14 @@ import CoreData
 
 class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDelegate {
     let registeredTypes:[String] = [NSPasteboard.Name.generalPboard.rawValue]
+    var clickedToDo: ToDo? {
+        get {
+            guard let v = mainTableView.view(atColumn: 1, row: mainTableView.clickedRow, makeIfNecessary: false) as? ToDoCellView else { return nil }
+            guard let moID = v.managedObjectID else { return nil }
+            guard let theToDo = cntlr.getToDo(moID: moID) else { return nil }
+            return theToDo
+        }
+    }
     @IBOutlet var mainTableView: NSTableView!
     @IBOutlet var lblStatusBottom: NSTextField!
     @IBOutlet weak var sourceSidebar: NSScrollView!
@@ -30,6 +38,7 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
     @IBAction func completedCheck(_ sender: NSButton) {
         cntlr.completedWasChecked(state: sender.state.rawValue, btnIndex: sender.tag)
     }
+    @IBOutlet var tvMenu: tvMenu!
     @IBAction func markComplete(_ sender: NSMenuItem) {
         cntlr.completedWasChecked(state: 1, btnIndex: mainTableView.clickedRow)
     }
@@ -37,6 +46,10 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
         if mainTableView.clickedRow >= 0 {
             performSegue(withIdentifier: NSStoryboardSegue.Identifier(rawValue: "infoSegue"), sender: self)
         }
+    }
+    @IBAction func menuDaily(_ sender: NSMenuItem) {
+        print("Daily")
+        print(sender.state)
     }
     @IBAction func sidebarMenuDelete(_ sender: NSMenuItem) {
         guard let item = sourceOutlineView.item(atRow: sourceOutlineView.clickedRow) as? Group else { return }
@@ -70,6 +83,8 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
         sourceOutlineView.setDraggingSourceOperationMask(NSDragOperation.every, forLocal: true)
         sourceOutlineView.registerForDraggedTypes([.string])
         sourceOutlineView?.expandItem(nil, expandChildren: true)
+        
+        tvMenu.tvMenuDelegate = cntlr
     }
     
     override func prepare(for segue: NSStoryboardSegue, sender: Any?) {
