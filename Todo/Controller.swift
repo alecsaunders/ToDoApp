@@ -108,7 +108,6 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
             initializeFetchedResultsController()
             mainTableViewDelgate?.reloadData()
         }
-
     }
 
     func markCompleted(atIndex: Int, complete: Bool) {
@@ -179,7 +178,6 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
             
             return cell
         }
-        
         return nil
     }
     
@@ -254,7 +252,6 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
                 sidebarPredicate = NSPredicate(format: "completed = %@", "0")
             }
         }
-
         initializeFetchedResultsController()
         mainTableViewDelgate?.reloadData()
     }
@@ -372,7 +369,6 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
                 mainTableViewDelgate?.setToDoToDaily(toDoRowIndex: dragOrigin)
             }
         }
-        
         return true
     }
     
