@@ -420,16 +420,9 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
         mainTableViewDelgate?.reloadSidebar()
     }
     
-    func setToDaily(moID: NSManagedObjectID) {
+    func setToDaily(moID: NSManagedObjectID, isDaily: Bool) {
         if let toDo = getToDo(moID: moID) {
-            toDo.daily = true
-            saveMoc()
-        }
-    }
-    
-    func removeDaily(moID: NSManagedObjectID) {
-        if let toDo = getToDo(moID: moID) {
-            toDo.daily = false
+            toDo.daily = isDaily
             saveMoc()
         }
     }

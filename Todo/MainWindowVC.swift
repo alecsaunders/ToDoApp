@@ -51,9 +51,9 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
         guard let moID = (mainTableView.view(atColumn: 1, row: mainTableView.clickedRow, makeIfNecessary: false) as? ToDoCellView)?.managedObjectID else { return }
         guard let theToDo = cntlr.getToDo(moID: moID) else { return }
         if theToDo.daily {
-            cntlr.removeDaily(moID: moID)
+            cntlr.setToDaily(moID: moID, isDaily: false)
         } else {
-            cntlr.setToDaily(moID: moID)
+            cntlr.setToDaily(moID: moID, isDaily: true)
         }
     }
     @IBAction func sidebarMenuDelete(_ sender: NSMenuItem) {
@@ -144,7 +144,7 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
     
     func setToDoToDaily(toDoRowIndex: Int) {
         guard let moID = (mainTableView.view(atColumn: 1, row: toDoRowIndex, makeIfNecessary: false) as? ToDoCellView)?.managedObjectID else { return }
-        cntlr.setToDaily(moID: moID)
+        cntlr.setToDaily(moID: moID, isDaily: true)
     }
     
     func reloadSidebar() {
