@@ -219,7 +219,6 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
         switch state {
         case 1:
             markCompleted(atIndex: btnIndex, complete: true)
-            //removeToDoEntityRecord(atIndex: btnIndex)
         case 0:
             markCompleted(atIndex: btnIndex, complete: false)
             break
@@ -308,7 +307,6 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
     }
     
     func outlineView(_ outlineView: NSOutlineView, viewFor tableColumn: NSTableColumn?, item: Any) -> NSView? {
-        
         switch item {
         case _ as Department<String>:
             let view = outlineView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "HeaderCell"), owner: self) as! NSTableCellView
