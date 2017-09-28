@@ -144,7 +144,7 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
     }
     
     func updateNote(newNote: String, moID: NSManagedObjectID) {
-        guard let theToDo = dataController.managedObjectContext.object(with: moID) as? ToDo else { return }
+        guard let theToDo = getToDo(moID: moID) else { return }
         theToDo.note = newNote
         saveMoc()
     }
@@ -210,7 +210,7 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
     
     // MARK: - To Do Table View Delegate Methods
     func changeText(newToDoTitle: String, moID: NSManagedObjectID) {
-        let toDoObj = dataController.managedObjectContext.object(with: moID)
+        guard let toDoObj = getToDo(moID: moID) else { return }
         toDoObj.setValue(newToDoTitle, forKey: "title")
         saveMoc()
     }
@@ -377,7 +377,7 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
     }
     
     func assigneToDoToGroup(moID: NSManagedObjectID, group: Group) {
-        guard let theToDo = dataController.managedObjectContext.object(with: moID) as? ToDo else { return }
+        guard let theToDo = getToDo(moID: moID) else { return }
         theToDo.group = group
         saveMoc()
     }
