@@ -306,6 +306,10 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
         return true
     }
     
+    func outlineView(_ outlineView: NSOutlineView, shouldCollapseItem item: Any) -> Bool {
+        return false
+    }
+    
     func outlineView(_ outlineView: NSOutlineView, viewFor tableColumn: NSTableColumn?, item: Any) -> NSView? {
         switch item {
         case _ as Department<String>:
@@ -370,21 +374,14 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
         return true
     }
     
+    func outlineView(_ outlineView: NSOutlineView, shouldShowOutlineCellForItem item: Any) -> Bool {
+        return false
+    }
+    
     func assigneToDoToGroup(moID: NSManagedObjectID, group: Group) {
         guard let theToDo = getToDo(moID: moID) else { return }
         theToDo.group = group
         saveMoc()
-    }
-    
-    func expandOutlineViewNodes(outlineView: NSOutlineView) {
-        for i in 0...outlineView.numberOfRows {
-            let child = outlineView.item(atRow: i)
-            outlineView.expandItem(child)
-        }
-        for i in 0...outlineView.numberOfRows {
-            let child = outlineView.item(atRow: i)
-            outlineView.expandItem(child)
-        }
     }
     
     func addSidebarGroup(groupName: String) {
