@@ -52,6 +52,18 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
     
     func initializeFetchedResultsController() {
         let moc = dataController.managedObjectContext
+        
+        let fetch = NSFetchRequest<NSFetchRequestResult>(entityName: "ToDo")
+        let monthAgo = Calendar.current.date(byAdding: .day, value: -31, to: Date())! as NSDate
+        fetch.predicate = NSPredicate(format: "createdDate < %@", monthAgo)
+        let batchDelete = NSBatchDeleteRequest(fetchRequest: fetch)
+        
+        do {
+            try moc.execute(batchDelete)
+        } catch {
+            fatalError("Failed to execute request: \(error)")
+        }
+        
         let request = NSFetchRequest<NSFetchRequestResult>(entityName: "ToDo")
         let sort = NSSortDescriptor(key: "createdDate", ascending: true)
         request.sortDescriptors = [sort]
