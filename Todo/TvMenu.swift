@@ -12,7 +12,7 @@ protocol TableViewMenuDelegate: class {
     func setMenuDailyState(sender: NSMenuItem)
 }
 
-class tvMenu: NSMenu {
+class TvMenu: NSMenu {
     weak var tvMenuDelegate: TableViewMenuDelegate?
     @IBOutlet var menuDaily: NSMenuItem!
 

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="13196" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
     <dependencies>
-        <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="13196"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
         <capability name="stacking Non-gravity area distributions on NSStackView" minToolsVersion="7.0" minSystemVersion="10.11"/>
@@ -773,7 +772,7 @@
                                                         <rect key="frame" x="0.0" y="30" width="131" height="375"/>
                                                         <clipView key="contentView" drawsBackground="NO" id="Kfv-m0-a6n">
                                                             <rect key="frame" x="0.0" y="0.0" width="131" height="375"/>
-                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                            <autoresizingMask key="autoresizingMask"/>
                                                             <subviews>
                                                                 <outlineView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" selectionHighlightStyle="sourceList" multipleSelection="NO" autosaveColumns="NO" rowSizeStyle="automatic" viewBased="YES" indentationPerLevel="8" autosaveExpandedItems="YES" outlineTableColumn="GLW-Hw-FLe" id="zLj-AB-Mq7">
                                                                     <rect key="frame" x="0.0" y="0.0" width="131" height="375"/>
@@ -883,7 +882,7 @@
                                                         <rect key="frame" x="0.0" y="0.0" width="506" height="405"/>
                                                         <clipView key="contentView" id="ij8-Wb-Bj5">
                                                             <rect key="frame" x="0.0" y="0.0" width="506" height="405"/>
-                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                            <autoresizingMask key="autoresizingMask"/>
                                                             <subviews>
                                                                 <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnReordering="NO" multipleSelection="NO" autosaveColumns="NO" rowSizeStyle="automatic" viewBased="YES" id="XzW-r6-qup">
                                                                     <rect key="frame" x="0.0" y="0.0" width="506" height="405"/>
@@ -1054,7 +1053,7 @@
                     </connections>
                 </viewController>
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
-                <menu id="ZoB-XI-zlI" userLabel="TableViewMenu" customClass="tvMenu" customModule="Todo" customModuleProvider="target">
+                <menu id="ZoB-XI-zlI" userLabel="TableViewMenu" customClass="TvMenu" customModule="Todo" customModuleProvider="target">
                     <items>
                         <menuItem title="Get Info" id="itS-vf-S1W" userLabel="Get Info">
                             <modifierMask key="keyEquivalentModifierMask"/>
@@ -1171,7 +1170,7 @@
                                         <rect key="frame" x="0.0" y="0.0" width="300" height="206"/>
                                         <clipView key="contentView" drawsBackground="NO" id="hr0-H0-LZw">
                                             <rect key="frame" x="0.0" y="0.0" width="300" height="206"/>
-                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                            <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <textView importsGraphics="NO" verticallyResizable="YES" usesFontPanel="YES" findStyle="panel" continuousSpellChecking="YES" allowsUndo="YES" usesRuler="YES" allowsNonContiguousLayout="YES" linkDetection="YES" smartInsertDelete="YES" id="mSM-HR-rZP">
                                                     <rect key="frame" x="0.0" y="0.0" width="300" height="206"/>

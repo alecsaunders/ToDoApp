@@ -13,7 +13,7 @@
 		F22601931F5DA0A00087D2FB /* Group+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = F226018F1F5DA0A00087D2FB /* Group+CoreDataProperties.swift */; };
 		F22601951F5DA1120087D2FB /* Department.swift in Sources */ = {isa = PBXBuildFile; fileRef = F22601941F5DA1120087D2FB /* Department.swift */; };
 		F226019F1F5DD5F30087D2FB /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F226019E1F5DD5F30087D2FB /* DataController.swift */; };
-		F243B71E1F7C030B0089764F /* tvMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = F243B71D1F7C030B0089764F /* tvMenu.swift */; };
+		F243B71E1F7C030B0089764F /* TvMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = F243B71D1F7C030B0089764F /* TvMenu.swift */; };
 		F255491F1F493A2300AE360B /* WindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F255491E1F493A2300AE360B /* WindowController.swift */; };
 		F2603DFB1F4DDC0700A57AE0 /* ToDoCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2603DFA1F4DDC0700A57AE0 /* ToDoCellView.swift */; };
 		F2C462A11F58E8860014E5F4 /* GroupCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2C462A01F58E8860014E5F4 /* GroupCellView.swift */; };
@@ -46,7 +46,7 @@
 		F226018F1F5DA0A00087D2FB /* Group+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Group+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		F22601941F5DA1120087D2FB /* Department.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Department.swift; sourceTree = "<group>"; };
 		F226019E1F5DD5F30087D2FB /* DataController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
-		F243B71D1F7C030B0089764F /* tvMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = tvMenu.swift; sourceTree = "<group>"; };
+		F243B71D1F7C030B0089764F /* TvMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TvMenu.swift; sourceTree = "<group>"; };
 		F255491E1F493A2300AE360B /* WindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WindowController.swift; sourceTree = "<group>"; };
 		F2603DFA1F4DDC0700A57AE0 /* ToDoCellView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ToDoCellView.swift; sourceTree = "<group>"; };
 		F2C462A01F58E8860014E5F4 /* GroupCellView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GroupCellView.swift; sourceTree = "<group>"; };
@@ -87,7 +87,7 @@
 		F2603DFC1F4DDC0B00A57AE0 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				F243B71D1F7C030B0089764F /* tvMenu.swift */,
+				F243B71D1F7C030B0089764F /* TvMenu.swift */,
 				F2603DFA1F4DDC0700A57AE0 /* ToDoCellView.swift */,
 				F2C462A01F58E8860014E5F4 /* GroupCellView.swift */,
 			);
@@ -287,7 +287,7 @@
 				F2E293991F50D191008F4213 /* ToDoModelAccessor.swift in Sources */,
 				F226019F1F5DD5F30087D2FB /* DataController.swift in Sources */,
 				F2C8A26D1F41428500E246F7 /* Todo.xcdatamodeld in Sources */,
-				F243B71E1F7C030B0089764F /* tvMenu.swift in Sources */,
+				F243B71E1F7C030B0089764F /* TvMenu.swift in Sources */,
 				F22601911F5DA0A00087D2FB /* ToDo+CoreDataProperties.swift in Sources */,
 				F2C8A2681F41428500E246F7 /* AppDelegate.swift in Sources */,
 				F2C462A11F58E8860014E5F4 /* GroupCellView.swift in Sources */,
