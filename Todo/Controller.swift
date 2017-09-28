@@ -424,6 +424,8 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
         if let toDo = getToDo(moID: moID) {
             toDo.daily = isDaily
             saveMoc()
+            initializeFetchedResultsController()
+            mainTableViewDelgate?.reloadData()
         }
     }
     
