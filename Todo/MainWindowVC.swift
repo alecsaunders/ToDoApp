@@ -121,7 +121,7 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
         }
         if let v = mainTableView.view(atColumn: 1, row: mainTableView.clickedRow, makeIfNecessary: false) as? ToDoCellView {
             if let toDo = cntlr.dataController.managedObjectContext.object(with: v.managedObjectID!) as? ToDo {
-//                let isoDate = "2017-08-27T20:00:00+0000"
+//                let isoDate = "2017-08-25T04:55:00+0000"
 //
 //                let dateFormatter = DateFormatter()
 //                dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"

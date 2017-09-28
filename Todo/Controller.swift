@@ -55,7 +55,8 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
         
         let fetch = NSFetchRequest<NSFetchRequestResult>(entityName: "ToDo")
         let monthAgo = Calendar.current.date(byAdding: .day, value: -31, to: Date())! as NSDate
-        fetch.predicate = NSPredicate(format: "createdDate < %@", monthAgo)
+        fetch.predicate = NSPredicate(format: "completedDate < %@", monthAgo)
+        //fetch.predicate = NSPredicate(format: "title = %@", "delete_me")
         let batchDelete = NSBatchDeleteRequest(fetchRequest: fetch)
         
         do {
