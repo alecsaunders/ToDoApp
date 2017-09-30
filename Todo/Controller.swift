@@ -124,7 +124,6 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
         } else {
             object.completedDate = nil
         }
-        object.completed = complete
         saveMoc()
         initializeFetchedResultsController()
         mainTableViewDelgate?.reloadData()
@@ -169,7 +168,11 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
         if tableColumn == tableView.tableColumns[0] {
             guard let cell = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "col_complete"), owner: nil) as? NSTableCellView else { return nil }
             if let completeBtn = cell.subviews[0] as? NSButton {
-                completeBtn.state = NSControl.StateValue(rawValue: theToDo.completed.hashValue)
+                if let _ = theToDo.completedDate {
+                    completeBtn.state = NSControl.StateValue.on
+                } else {
+                    completeBtn.state = NSControl.StateValue.off
+                }
                 completeBtn.tag = row
             }
             return cell

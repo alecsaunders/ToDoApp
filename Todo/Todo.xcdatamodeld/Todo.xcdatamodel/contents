@@ -5,7 +5,6 @@
         <relationship name="toDo" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="ToDo" inverseName="group" inverseEntity="ToDo" syncable="YES"/>
     </entity>
     <entity name="ToDo" representedClassName=".ToDo" syncable="YES">
-        <attribute name="completed" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="completedDate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="createdDate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="daily" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES" syncable="YES"/>
@@ -16,6 +15,6 @@
     </entity>
     <elements>
         <element name="Group" positionX="169" positionY="-1" width="128" height="73"/>
-        <element name="ToDo" positionX="-63" positionY="-18" width="108" height="165"/>
+        <element name="ToDo" positionX="-63" positionY="-18" width="108" height="150"/>
     </elements>
 </model>

@@ -16,7 +16,6 @@ extension ToDo {
         return NSFetchRequest<ToDo>(entityName: "ToDo")
     }
 
-    @NSManaged public var completed: Bool
     @NSManaged public var createdDate: NSDate?
     @NSManaged public var completedDate: NSDate?
     @NSManaged public var note: String?
