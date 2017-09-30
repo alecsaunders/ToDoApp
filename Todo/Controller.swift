@@ -35,7 +35,7 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
     override init() {
         super.init()
         
-        sidebarPredicate = NSPredicate(format: "completed = %@", "0")
+        sidebarPredicate = NSPredicate(format: "completedDate == nil")
         
         initializeFetchedResultsController()
         initializeFetchedGroupsController()
@@ -54,8 +54,14 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
         let moc = dataController.managedObjectContext
         
         let fetch = NSFetchRequest<NSFetchRequestResult>(entityName: "ToDo")
-        let monthAgo = Calendar.current.date(byAdding: .day, value: -31, to: Date())! as NSDate
-        fetch.predicate = NSPredicate(format: "completedDate < %@", monthAgo)
+        let userDefaults = NSUserDefaultsController().defaults
+        if let retentionValue = userDefaults.value(forKey: "completeRetention") as? Int {
+            let retentionDelta = Calendar.current.date(byAdding: .day, value: retentionValue * -1, to: Date())! as NSDate
+            fetch.predicate = NSPredicate(format: "completedDate < %@", retentionDelta)
+        } else {
+            let retentionDelta = Calendar.current.date(byAdding: .day, value: -30, to: Date())! as NSDate
+            fetch.predicate = NSPredicate(format: "completedDate < %@", retentionDelta)
+        }
         let batchDelete = NSBatchDeleteRequest(fetchRequest: fetch)
         
         do {
@@ -233,7 +239,7 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
         guard let sidebarView = notification.object as? NSOutlineView else { return }
         if let selectedGroup = sidebarView.item(atRow: sidebarView.selectedRow) as? Group {
             let groupPred = NSPredicate(format: "group = %@", selectedGroup)
-            let completePred = NSPredicate(format: "completed = %@", "0")
+            let completePred = NSPredicate(format: "completedDate == nil")
             let compPred = NSCompoundPredicate(andPredicateWithSubpredicates: [groupPred, completePred])
             sidebarPredicate = compPred
         }
@@ -242,13 +248,13 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
             switch cat {
             case "Daily":
                 let dailyPred = NSPredicate(format: "daily = %@", "1")
-                let completePred = NSPredicate(format: "completed = %@", "0")
+                let completePred = NSPredicate(format: "completedDate == nil")
                 let compPred = NSCompoundPredicate(andPredicateWithSubpredicates: [dailyPred, completePred])
                 sidebarPredicate = compPred
             case "Completed":
-                sidebarPredicate = NSPredicate(format: "completed = %@", "1")
+                sidebarPredicate = NSPredicate(format: "completedDate != nil")
             default:
-                sidebarPredicate = NSPredicate(format: "completed = %@", "0")
+                sidebarPredicate = NSPredicate(format: "completedDate == nil")
             }
         }
         initializeFetchedResultsController()

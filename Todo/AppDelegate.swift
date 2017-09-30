@@ -14,6 +14,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTableViewDelegate, NSTable
 
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
+        let userDefaults = NSUserDefaultsController().defaults
+        
+        if userDefaults.value(forKey: "completeRetention") == nil {
+            userDefaults.set(30, forKey: "completeRetention")
+        }
     }
     
     func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
