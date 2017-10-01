@@ -45,8 +45,9 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
         department2.groups = fetchedGroups
     }
     
-    func getToDo(moID: NSManagedObjectID) -> ToDo? {
-        guard let theToDo = dataController.managedObjectContext.object(with: moID) as? ToDo else { return nil }
+    func getToDo(moID: NSManagedObjectID?) -> ToDo? {
+        guard let managedObjectID = moID else { return nil }
+        guard let theToDo = dataController.managedObjectContext.object(with: managedObjectID) as? ToDo else { return nil }
         return theToDo
     }
     
@@ -147,7 +148,7 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
         }
     }
     
-    func updateNote(newNote: String, moID: NSManagedObjectID) {
+    func updateNote(newNote: String, moID: NSManagedObjectID?) {
         guard let theToDo = getToDo(moID: moID) else { return }
         theToDo.note = newNote
         saveMoc()
