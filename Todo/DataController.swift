@@ -10,7 +10,6 @@ import Cocoa
 import CoreData
 
 class DataController: NSObject {
-    
     var managedObjectContext: NSManagedObjectContext
     
     override init() {

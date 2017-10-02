@@ -239,6 +239,16 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
 
     
     // MARK: - OutlineView Methods
+    func outlineView(_ outlineView: NSOutlineView, shouldSelectItem item: Any) -> Bool {
+        if let _ = item as? Department<String> {
+            return false
+        }
+        if let _ = item as? Department<Group> {
+            return false
+        }
+        return true
+    }
+    
     func outlineViewSelectionDidChange(_ notification: Notification) {
         guard let sidebarView = notification.object as? NSOutlineView else { return }
         if let selectedGroup = sidebarView.item(atRow: sidebarView.selectedRow) as? Group {
@@ -277,7 +287,7 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
                 return 0
             }
         } else {
-            return 2 //Department1 , Department 2
+            return 2 //Department1 , Department2
         }
     }
     
