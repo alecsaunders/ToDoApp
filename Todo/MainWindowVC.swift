@@ -165,8 +165,8 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
         cntlr.save(addedToDoTitle: toDoText)
     }
     
-    func updateStatusBar(numOfItems: Int) {
-        lblStatusBottom.stringValue = "\(numOfItems) items"
+    func updateStatusBar(numOfItems: Int, sidebarGroup: String?) {
+        lblStatusBottom.stringValue = "\(sidebarGroup != nil ? "\(sidebarGroup!) - " : "")\(numOfItems) items"
     }
     
     override func updateViewConstraints() {

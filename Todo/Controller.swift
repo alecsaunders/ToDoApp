@@ -16,7 +16,7 @@ protocol MainTableViewDelgate: class {
     func reloadSidebar()
     func addToDoToGroup(toDoRowIndex: Int, group: Group)
     func setToDoToDaily(toDoRowIndex: Int)
-    func updateStatusBar(numOfItems: Int)
+    func updateStatusBar(numOfItems: Int, sidebarGroup: String?)
     func doubleClick(sender: AnyObject)
     var clickedToDo: ToDo? { get }
 }
@@ -157,7 +157,7 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
     //MARK: - TableView Delegate Methods
     func numberOfRows(in tableView: NSTableView) -> Int {
         guard let fetchedObjs = fetchedResultsController.fetchedObjects as? [ToDo] else { return 0 }
-        mainTableViewDelgate?.updateStatusBar(numOfItems: fetchedObjs.count)
+        mainTableViewDelgate?.updateStatusBar(numOfItems: fetchedObjs.count, sidebarGroup: nil)
         return fetchedObjs.count
     }
     
