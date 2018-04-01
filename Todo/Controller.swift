@@ -29,8 +29,8 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
     weak var mainTableViewDelgate: MainTableViewDelgate?
     var sidebarPredicate: NSPredicate?
     
-    var department1: Department<String> = Department(name: "Categories", groups: SidebarCategory().groups)
-    var department2: Department<Group> = Department(name: "Favorites", groups: [])
+    var sbFilterSection: SidebarSection<String> = SidebarSection(name: "Filters", groups: SidebarFilters().groups)
+    var sbCategorySection: SidebarSection<Group> = SidebarSection(name: "Categories", groups: [])
     
     override init() {
         super.init()
@@ -42,7 +42,7 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
         
         guard let fetchedGroups = fetchedGroupsController.fetchedObjects as? [Group] else { return }
         
-        department2.groups = fetchedGroups
+        sbCategorySection.groups = fetchedGroups
     }
     
     func getToDo(moID: NSManagedObjectID?) -> ToDo? {
@@ -240,10 +240,10 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
     
     // MARK: - OutlineView Methods
     func outlineView(_ outlineView: NSOutlineView, shouldSelectItem item: Any) -> Bool {
-        if let _ = item as? Department<String> {
+        if let _ = item as? SidebarSection<String> {
             return false
         }
-        if let _ = item as? Department<Group> {
+        if let _ = item as? SidebarSection<Group> {
             return false
         }
         return true
@@ -251,6 +251,13 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
     
     func outlineViewSelectionDidChange(_ notification: Notification) {
         guard let sidebarView = notification.object as? NSOutlineView else { return }
+        
+        
+        if let sidebarItem = sidebarView.item(atRow: sidebarView.selectedRow) as? Any {
+            print(sidebarItem)
+        }
+        
+        
         if let selectedGroup = sidebarView.item(atRow: sidebarView.selectedRow) as? Group {
             let groupPred = NSPredicate(format: "group = %@", selectedGroup)
             let completePred = NSPredicate(format: "completedDate == nil")
@@ -271,6 +278,7 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
                 sidebarPredicate = NSPredicate(format: "completedDate == nil")
             }
         }
+        
         initializeFetchedResultsController()
         mainTableViewDelgate?.reloadData()
     }
@@ -279,23 +287,23 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
     func outlineView(_ outlineView: NSOutlineView, numberOfChildrenOfItem item: Any?) -> Int {
         if let item = item {
             switch item {
-            case let department as Department<String>:
+            case let department as SidebarSection<String>:
                 return department.groups.count
-            case let department as Department<Group>:
+            case let department as SidebarSection<Group>:
                 return department.groups.count
             default:
                 return 0
             }
         } else {
-            return 2 //Department1 , Department2
+            return 2 //Filters , Categories
         }
     }
     
     func outlineView(_ outlineView: NSOutlineView, isItemExpandable item: Any) -> Bool {
         switch item {
-        case _ as Department<String>:
+        case _ as SidebarSection<String>:
             return true
-        case let department as Department<Group>:
+        case let department as SidebarSection<Group>:
             return (department.groups.count > 0) ? true : false
         default:
             return false
@@ -305,9 +313,9 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
     func outlineView(_ outlineView: NSOutlineView, child index: Int, ofItem item: Any?) -> Any {
         if let item = item {
             switch item {
-            case let department as Department<String>:
+            case let department as SidebarSection<String>:
                 return department.groups[index]
-            case let department as Department<Group>:
+            case let department as SidebarSection<Group>:
                 return department.groups[index]
             default:
                 return self
@@ -315,9 +323,9 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
         } else {
             switch index {
             case 0:
-                return department1
+                return sbFilterSection
             default:
-                return department2
+                return sbCategorySection
             }
         }
     }
@@ -332,13 +340,13 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
     
     func outlineView(_ outlineView: NSOutlineView, viewFor tableColumn: NSTableColumn?, item: Any) -> NSView? {
         switch item {
-        case _ as Department<String>:
+        case let filter as SidebarSection<String>:
             let view = outlineView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "HeaderCell"), owner: self) as! NSTableCellView
             if let textField = view.textField {
-                textField.stringValue = "Categories"
+                textField.stringValue = filter.name
             }
             return view
-        case let department as Department<Group>:
+        case let department as SidebarSection<Group>:
             let view = outlineView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "HeaderCell"), owner: self) as! NSTableCellView
             if let textField = view.textField {
                 textField.stringValue = department.name
@@ -410,7 +418,7 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
         saveMoc()
         initializeFetchedGroupsController()
         guard let fetchedGroups = fetchedGroupsController.fetchedObjects as? [Group] else { return }
-        department2.groups = fetchedGroups
+        sbCategorySection.groups = fetchedGroups
         mainTableViewDelgate?.reloadSidebar()
     }
     
@@ -419,7 +427,7 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
         saveMoc()
         initializeFetchedGroupsController()
         guard let fetchedGroups = fetchedGroupsController.fetchedObjects as? [Group] else { return }
-        department2.groups = fetchedGroups
+        sbCategorySection.groups = fetchedGroups
         mainTableViewDelgate?.reloadSidebar()
     }
     

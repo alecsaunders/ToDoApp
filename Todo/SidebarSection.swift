@@ -9,7 +9,7 @@
 import Foundation
 
 
-struct Department<T> {
+struct SidebarSection<T> {
     var name: String
     var groups: [T]
 }

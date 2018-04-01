@@ -13,7 +13,7 @@
 		F22601911F5DA0A00087D2FB /* ToDo+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = F226018D1F5DA0A00087D2FB /* ToDo+CoreDataProperties.swift */; };
 		F22601921F5DA0A00087D2FB /* Group+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = F226018E1F5DA0A00087D2FB /* Group+CoreDataClass.swift */; };
 		F22601931F5DA0A00087D2FB /* Group+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = F226018F1F5DA0A00087D2FB /* Group+CoreDataProperties.swift */; };
-		F22601951F5DA1120087D2FB /* Department.swift in Sources */ = {isa = PBXBuildFile; fileRef = F22601941F5DA1120087D2FB /* Department.swift */; };
+		F22601951F5DA1120087D2FB /* SidebarSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = F22601941F5DA1120087D2FB /* SidebarSection.swift */; };
 		F226019F1F5DD5F30087D2FB /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F226019E1F5DD5F30087D2FB /* DataController.swift */; };
 		F243B71E1F7C030B0089764F /* TvMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = F243B71D1F7C030B0089764F /* TvMenu.swift */; };
 		F255491F1F493A2300AE360B /* WindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F255491E1F493A2300AE360B /* WindowController.swift */; };
@@ -26,7 +26,7 @@
 		F2C8A2721F41428500E246F7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F2C8A2701F41428500E246F7 /* Main.storyboard */; };
 		F2C8A27D1F41428500E246F7 /* TodoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2C8A27C1F41428500E246F7 /* TodoTests.swift */; };
 		F2CAAD931F563DFB007DECD6 /* InfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2CAAD921F563DFB007DECD6 /* InfoViewController.swift */; };
-		F2D232101F60778B00C0D3F4 /* SidebarCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2D2320F1F60778B00C0D3F4 /* SidebarCategory.swift */; };
+		F2D232101F60778B00C0D3F4 /* SidebarFilters.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2D2320F1F60778B00C0D3F4 /* SidebarFilters.swift */; };
 		F2E293991F50D191008F4213 /* ToDoModelAccessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2E293981F50D191008F4213 /* ToDoModelAccessor.swift */; };
 		F2E822911F4895B100EEEA07 /* Controller.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2E822901F4895B100EEEA07 /* Controller.swift */; };
 /* End PBXBuildFile section */
@@ -48,7 +48,7 @@
 		F226018D1F5DA0A00087D2FB /* ToDo+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ToDo+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		F226018E1F5DA0A00087D2FB /* Group+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Group+CoreDataClass.swift"; sourceTree = "<group>"; };
 		F226018F1F5DA0A00087D2FB /* Group+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Group+CoreDataProperties.swift"; sourceTree = "<group>"; };
-		F22601941F5DA1120087D2FB /* Department.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Department.swift; sourceTree = "<group>"; };
+		F22601941F5DA1120087D2FB /* SidebarSection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SidebarSection.swift; sourceTree = "<group>"; };
 		F226019E1F5DD5F30087D2FB /* DataController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
 		F243B71D1F7C030B0089764F /* TvMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TvMenu.swift; sourceTree = "<group>"; };
 		F255491E1F493A2300AE360B /* WindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WindowController.swift; sourceTree = "<group>"; };
@@ -65,7 +65,7 @@
 		F2C8A27C1F41428500E246F7 /* TodoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoTests.swift; sourceTree = "<group>"; };
 		F2C8A27E1F41428500E246F7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F2CAAD921F563DFB007DECD6 /* InfoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InfoViewController.swift; sourceTree = "<group>"; };
-		F2D2320F1F60778B00C0D3F4 /* SidebarCategory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SidebarCategory.swift; sourceTree = "<group>"; };
+		F2D2320F1F60778B00C0D3F4 /* SidebarFilters.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SidebarFilters.swift; sourceTree = "<group>"; };
 		F2E293981F50D191008F4213 /* ToDoModelAccessor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ToDoModelAccessor.swift; sourceTree = "<group>"; };
 		F2E822901F4895B100EEEA07 /* Controller.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Controller.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -145,8 +145,8 @@
 		F2E8228E1F48916F00EEEA07 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				F22601941F5DA1120087D2FB /* Department.swift */,
-				F2D2320F1F60778B00C0D3F4 /* SidebarCategory.swift */,
+				F22601941F5DA1120087D2FB /* SidebarSection.swift */,
+				F2D2320F1F60778B00C0D3F4 /* SidebarFilters.swift */,
 				F226018C1F5DA0A00087D2FB /* ToDo+CoreDataClass.swift */,
 				F226018D1F5DA0A00087D2FB /* ToDo+CoreDataProperties.swift */,
 				F226018E1F5DA0A00087D2FB /* Group+CoreDataClass.swift */,
@@ -285,11 +285,11 @@
 				F22601921F5DA0A00087D2FB /* Group+CoreDataClass.swift in Sources */,
 				F255491F1F493A2300AE360B /* WindowController.swift in Sources */,
 				F2603DFB1F4DDC0700A57AE0 /* ToDoCellView.swift in Sources */,
-				F22601951F5DA1120087D2FB /* Department.swift in Sources */,
+				F22601951F5DA1120087D2FB /* SidebarSection.swift in Sources */,
 				F22601901F5DA0A00087D2FB /* ToDo+CoreDataClass.swift in Sources */,
 				F2C8A26A1F41428500E246F7 /* MainWindowVC.swift in Sources */,
 				F20B42DE1F7D661A0088EE33 /* SidebarOutlineView.swift in Sources */,
-				F2D232101F60778B00C0D3F4 /* SidebarCategory.swift in Sources */,
+				F2D232101F60778B00C0D3F4 /* SidebarFilters.swift in Sources */,
 				F2CAAD931F563DFB007DECD6 /* InfoViewController.swift in Sources */,
 				F2E293991F50D191008F4213 /* ToDoModelAccessor.swift in Sources */,
 				F20B42E01F7D9ADE0088EE33 /* PreferencesViewController.swift in Sources */,

@@ -8,6 +8,6 @@
 
 import Foundation
 
-struct SidebarCategory {
+struct SidebarFilters {
     let groups = ["All", "Daily", "Completed"]
 }
