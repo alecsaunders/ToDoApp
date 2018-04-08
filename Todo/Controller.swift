@@ -29,20 +29,43 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
     weak var mainTableViewDelgate: MainTableViewDelgate?
     var sidebarPredicate: NSPredicate?
     
-    var sbFilterSection: SidebarSection<String> = SidebarSection(name: "Filters", groups: SidebarFilters().groups)
-    var sbCategorySection: SidebarSection<Group> = SidebarSection(name: "Categories", groups: [])
+    var sbFilterSection: SidebarSection<SidebarItem>
+    var sbCategorySection: SidebarSection<SidebarItem>
     
     override init() {
+        var filters: [SidebarItem] = []
+        let allFilter = SidebarFilterItem(withTitle: "All")
+        let dailyFilter = SidebarFilterItem(withTitle: "Daily")
+        let completedFilter = SidebarFilterItem(withTitle: "Completed")
+        filters.append(allFilter)
+        filters.append(dailyFilter)
+        filters.append(completedFilter)
+        
+        sbFilterSection = SidebarSection(name: "Filters", groups: filters)
+        sbCategorySection = SidebarSection(name: "Categories", groups: [])
+        
         super.init()
         
         sidebarPredicate = NSPredicate(format: "completedDate == nil")
-        
         initializeFetchedResultsController()
         initializeFetchedGroupsController()
         
         guard let fetchedGroups = fetchedGroupsController.fetchedObjects as? [Group] else { return }
+        let sbCatArray = mapFetchedGroupsToSidebarCategory(groupArray: fetchedGroups)
+                
+        sbCategorySection.groups = sbCatArray
+    }
+    
+    
+    //REPLACE THIS FUNCTION IS A SUBCLASS OF fetchedGroupsController
+    func mapFetchedGroupsToSidebarCategory(groupArray: [Group]) -> [SidebarCategoryItem] {
+        let sbCatArray: [SidebarCategoryItem] = groupArray.map { (theGroup) -> SidebarCategoryItem in
+            let sbCat = SidebarCategoryItem(withTitle: theGroup.groupName!)
+            sbCat.sbCategory = theGroup
+            return sbCat
+        }
         
-        sbCategorySection.groups = fetchedGroups
+        return sbCatArray
     }
     
     func getToDo(moID: NSManagedObjectID?) -> ToDo? {
@@ -240,10 +263,10 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
     
     // MARK: - OutlineView Methods
     func outlineView(_ outlineView: NSOutlineView, shouldSelectItem item: Any) -> Bool {
-        if let _ = item as? SidebarSection<String> {
+        if let _ = item as? SidebarSection<SidebarItem> {
             return false
         }
-        if let _ = item as? SidebarSection<Group> {
+        if let _ = item as? SidebarSection<SidebarItem> {
             return false
         }
         return true
@@ -251,12 +274,6 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
     
     func outlineViewSelectionDidChange(_ notification: Notification) {
         guard let sidebarView = notification.object as? NSOutlineView else { return }
-        
-        
-        if let sidebarItem = sidebarView.item(atRow: sidebarView.selectedRow) as? Any {
-            print(sidebarItem)
-        }
-        
         
         if let selectedGroup = sidebarView.item(atRow: sidebarView.selectedRow) as? Group {
             let groupPred = NSPredicate(format: "group = %@", selectedGroup)
@@ -287,10 +304,8 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
     func outlineView(_ outlineView: NSOutlineView, numberOfChildrenOfItem item: Any?) -> Int {
         if let item = item {
             switch item {
-            case let department as SidebarSection<String>:
-                return department.groups.count
-            case let department as SidebarSection<Group>:
-                return department.groups.count
+            case let sbSection as SidebarSection<SidebarItem>:
+                return sbSection.groups.count
             default:
                 return 0
             }
@@ -301,10 +316,8 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
     
     func outlineView(_ outlineView: NSOutlineView, isItemExpandable item: Any) -> Bool {
         switch item {
-        case _ as SidebarSection<String>:
-            return true
-        case let department as SidebarSection<Group>:
-            return (department.groups.count > 0) ? true : false
+        case let sbSection as SidebarSection<SidebarItem>:
+            return (sbSection.groups.count > 0) ? true : false
         default:
             return false
         }
@@ -313,10 +326,8 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
     func outlineView(_ outlineView: NSOutlineView, child index: Int, ofItem item: Any?) -> Any {
         if let item = item {
             switch item {
-            case let department as SidebarSection<String>:
-                return department.groups[index]
-            case let department as SidebarSection<Group>:
-                return department.groups[index]
+            case let sbSection as SidebarSection<SidebarItem>:
+                return sbSection.groups[index]
             default:
                 return self
             }
@@ -340,29 +351,23 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
     
     func outlineView(_ outlineView: NSOutlineView, viewFor tableColumn: NSTableColumn?, item: Any) -> NSView? {
         switch item {
-        case let filter as SidebarSection<String>:
+        case let sbSection as SidebarSection<SidebarItem>:
             let view = outlineView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "HeaderCell"), owner: self) as! NSTableCellView
             if let textField = view.textField {
-                textField.stringValue = filter.name
+                textField.stringValue = sbSection.name
             }
             return view
-        case let department as SidebarSection<Group>:
-            let view = outlineView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "HeaderCell"), owner: self) as! NSTableCellView
-            if let textField = view.textField {
-                textField.stringValue = department.name
-            }
-            return view
-        case let group as String:
+        case let sbItem as SidebarFilterItem:
             let view = outlineView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "DataCell"), owner: self) as! NSTableCellView
-            view.textField?.stringValue = group
+            view.textField?.stringValue = sbItem.sidebarTitle
             return view
-        case let group as Group:
+        case let sbCat as SidebarCategoryItem:
             let view = outlineView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "DataCell"), owner: self) as! GroupCellView
-            view.groupID = group.objectID
+            view.groupID = sbCat.sbCategory!.objectID
             view.groupCellViewDelegate = self
             if let textField = view.txtGroup {
                 textField.isEditable = true
-                textField.stringValue = group.groupName!
+                textField.stringValue = sbCat.sbCategory!.groupName!
             }
             return view
         default:
@@ -418,7 +423,8 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
         saveMoc()
         initializeFetchedGroupsController()
         guard let fetchedGroups = fetchedGroupsController.fetchedObjects as? [Group] else { return }
-        sbCategorySection.groups = fetchedGroups
+        let sbCatItems = mapFetchedGroupsToSidebarCategory(groupArray: fetchedGroups)
+        sbCategorySection.groups = sbCatItems
         mainTableViewDelgate?.reloadSidebar()
     }
     
@@ -427,7 +433,8 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
         saveMoc()
         initializeFetchedGroupsController()
         guard let fetchedGroups = fetchedGroupsController.fetchedObjects as? [Group] else { return }
-        sbCategorySection.groups = fetchedGroups
+        let sbCatItems = mapFetchedGroupsToSidebarCategory(groupArray: fetchedGroups)
+        sbCategorySection.groups = sbCatItems
         mainTableViewDelgate?.reloadSidebar()
     }
     
