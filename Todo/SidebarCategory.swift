@@ -16,4 +16,3 @@ class SidebarCategoryItem: SidebarItem {
         super.init(withTitle: itemName)
     }
 }
-

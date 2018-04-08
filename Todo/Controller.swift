@@ -29,20 +29,23 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
     weak var mainTableViewDelgate: MainTableViewDelgate?
     var sidebarPredicate: NSPredicate?
     
-    var sbFilterSection: SidebarSection<SidebarItem>
-    var sbCategorySection: SidebarSection<SidebarItem>
+    var sbFilterSection: SidebarSection
+    var sbCategorySection: SidebarSection
     
     override init() {
         var filters: [SidebarItem] = []
         let allFilter = SidebarFilterItem(withTitle: "All")
+        allFilter.sbFilter = .all
         let dailyFilter = SidebarFilterItem(withTitle: "Daily")
+        dailyFilter.sbFilter = .daily
         let completedFilter = SidebarFilterItem(withTitle: "Completed")
+        completedFilter.sbFilter = .completed
         filters.append(allFilter)
         filters.append(dailyFilter)
         filters.append(completedFilter)
         
-        sbFilterSection = SidebarSection(name: "Filters", groups: filters)
-        sbCategorySection = SidebarSection(name: "Categories", groups: [])
+        sbFilterSection = SidebarSection(name: "Filters", sbItem: filters)
+        sbCategorySection = SidebarSection(name: "Categories", sbItem: [])
         
         super.init()
         
@@ -52,8 +55,8 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
         
         guard let fetchedGroups = fetchedGroupsController.fetchedObjects as? [Group] else { return }
         let sbCatArray = mapFetchedGroupsToSidebarCategory(groupArray: fetchedGroups)
-                
-        sbCategorySection.groups = sbCatArray
+        
+        sbCategorySection.sbItem = sbCatArray
     }
     
     
@@ -263,10 +266,7 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
     
     // MARK: - OutlineView Methods
     func outlineView(_ outlineView: NSOutlineView, shouldSelectItem item: Any) -> Bool {
-        if let _ = item as? SidebarSection<SidebarItem> {
-            return false
-        }
-        if let _ = item as? SidebarSection<SidebarItem> {
+        if let _ = item as? SidebarSection {
             return false
         }
         return true
@@ -275,25 +275,32 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
     func outlineViewSelectionDidChange(_ notification: Notification) {
         guard let sidebarView = notification.object as? NSOutlineView else { return }
         
-        if let selectedGroup = sidebarView.item(atRow: sidebarView.selectedRow) as? Group {
-            let groupPred = NSPredicate(format: "group = %@", selectedGroup)
-            let completePred = NSPredicate(format: "completedDate == nil")
-            let compPred = NSCompoundPredicate(andPredicateWithSubpredicates: [groupPred, completePred])
-            sidebarPredicate = compPred
+        if let sbCatItem = sidebarView.item(atRow: sidebarView.selectedRow) as? SidebarCategoryItem {
+            if let selectedGroup = sbCatItem.sbCategory {
+                let groupPred = NSPredicate(format: "group = %@", selectedGroup)
+                let completePred = NSPredicate(format: "completedDate == nil")
+                let compPred = NSCompoundPredicate(andPredicateWithSubpredicates: [groupPred, completePred])
+                sidebarPredicate = compPred
+            }
         }
         
-        if let cat = sidebarView.item(atRow: sidebarView.selectedRow) as? String {
-            switch cat {
-            case "Daily":
-                let dailyPred = NSPredicate(format: "daily = %@", "1")
-                let completePred = NSPredicate(format: "completedDate == nil")
-                let compPred = NSCompoundPredicate(andPredicateWithSubpredicates: [dailyPred, completePred])
-                sidebarPredicate = compPred
-            case "Completed":
-                sidebarPredicate = NSPredicate(format: "completedDate != nil")
-            default:
+        if let cat = sidebarView.item(atRow: sidebarView.selectedRow) as? SidebarFilterItem {
+            if let filter = cat.sbFilter {
+                switch filter {
+                case .daily:
+                    let dailyPred = NSPredicate(format: "daily = %@", "1")
+                    let completePred = NSPredicate(format: "completedDate == nil")
+                    let compPred = NSCompoundPredicate(andPredicateWithSubpredicates: [dailyPred, completePred])
+                    sidebarPredicate = compPred
+                case .completed:
+                    sidebarPredicate = NSPredicate(format: "completedDate != nil")
+                default:
+                    sidebarPredicate = NSPredicate(format: "completedDate == nil")
+                }
+            } else {
                 sidebarPredicate = NSPredicate(format: "completedDate == nil")
             }
+
         }
         
         initializeFetchedResultsController()
@@ -304,8 +311,8 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
     func outlineView(_ outlineView: NSOutlineView, numberOfChildrenOfItem item: Any?) -> Int {
         if let item = item {
             switch item {
-            case let sbSection as SidebarSection<SidebarItem>:
-                return sbSection.groups.count
+            case let sbSection as SidebarSection:
+                return sbSection.sbItem.count
             default:
                 return 0
             }
@@ -316,8 +323,8 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
     
     func outlineView(_ outlineView: NSOutlineView, isItemExpandable item: Any) -> Bool {
         switch item {
-        case let sbSection as SidebarSection<SidebarItem>:
-            return (sbSection.groups.count > 0) ? true : false
+        case let sbSection as SidebarSection:
+            return (sbSection.sbItem.count > 0) ? true : false
         default:
             return false
         }
@@ -326,8 +333,8 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
     func outlineView(_ outlineView: NSOutlineView, child index: Int, ofItem item: Any?) -> Any {
         if let item = item {
             switch item {
-            case let sbSection as SidebarSection<SidebarItem>:
-                return sbSection.groups[index]
+            case let sbSection as SidebarSection:
+                return sbSection.sbItem[index]
             default:
                 return self
             }
@@ -351,7 +358,7 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
     
     func outlineView(_ outlineView: NSOutlineView, viewFor tableColumn: NSTableColumn?, item: Any) -> NSView? {
         switch item {
-        case let sbSection as SidebarSection<SidebarItem>:
+        case let sbSection as SidebarSection:
             let view = outlineView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "HeaderCell"), owner: self) as! NSTableCellView
             if let textField = view.textField {
                 textField.stringValue = sbSection.name
@@ -424,7 +431,7 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
         initializeFetchedGroupsController()
         guard let fetchedGroups = fetchedGroupsController.fetchedObjects as? [Group] else { return }
         let sbCatItems = mapFetchedGroupsToSidebarCategory(groupArray: fetchedGroups)
-        sbCategorySection.groups = sbCatItems
+        sbCategorySection.sbItem = sbCatItems
         mainTableViewDelgate?.reloadSidebar()
     }
     
@@ -434,7 +441,7 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
         initializeFetchedGroupsController()
         guard let fetchedGroups = fetchedGroupsController.fetchedObjects as? [Group] else { return }
         let sbCatItems = mapFetchedGroupsToSidebarCategory(groupArray: fetchedGroups)
-        sbCategorySection.groups = sbCatItems
+        sbCategorySection.sbItem = sbCatItems
         mainTableViewDelgate?.reloadSidebar()
     }
     

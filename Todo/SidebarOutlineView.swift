@@ -29,10 +29,7 @@ class SidebarOutlineView: NSOutlineView {
     override func frameOfCell(atColumn column: Int, row: Int) -> NSRect {
         let superframe = super.frameOfCell(atColumn: column, row: row)
         
-        if let _ = super.item(atRow: row) as? SidebarSection<String> {
-            return NSMakeRect(7, superframe.origin.y, self.bounds.size.width, superframe.size.height)
-        }
-        if let _ = super.item(atRow: row) as? SidebarSection<Group> {
+        if let _ = super.item(atRow: row) as? SidebarSection {
             return NSMakeRect(7, superframe.origin.y, self.bounds.size.width, superframe.size.height)
         }
         

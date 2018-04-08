@@ -15,6 +15,8 @@ enum SidebarFilter {
 }
 
 class SidebarFilterItem: SidebarItem {
+    var sbFilter: SidebarFilter?
+    
     override init(withTitle title: String) {
         super.init(withTitle: title)
     }
