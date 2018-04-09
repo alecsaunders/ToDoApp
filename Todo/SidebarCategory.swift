@@ -2,12 +2,17 @@
 //  SidebarCategory.swift
 //  Todo
 //
-//  Created by Alec Saunders on 9/6/17.
-//  Copyright © 2017 Alec Saunders. All rights reserved.
+//  Created by Alec Saunders on 4/1/18.
+//  Copyright © 2018 Alec Saunders. All rights reserved.
 //
 
 import Foundation
 
-struct SidebarCategory {
-    let groups = ["All", "Daily", "Completed"]
+
+class SidebarCategoryItem: SidebarItem {
+    var sbCategory: Group?
+    
+    override init(withTitle itemName: String) {
+        super.init(withTitle: itemName)
+    }
 }
