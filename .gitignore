@@ -1,2 +1,9 @@
 icon/
 icon/*
+.DS_Store
+Todo.xcodeproj/.DS_Store
+*.DS_Store
+Todo.xcodeproj/project.xcworkspace/xcuserdata/
+Todo.xcodeproj/project.xcworkspace/xcuserdata/*
+Todo.xcodeproj/xcuserdata/asaunders.xcuserdatad/
+Todo.xcodeproj/xcuserdata/asaunders.xcuserdatad/*
