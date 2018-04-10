@@ -224,11 +224,34 @@ class OutlineViewController: NSObject, NSFetchedResultsControllerDelegate, NSOut
     }
     
     // MARK: - Other Methods
+    
+    func addSidebarGroup(groupName: String) {
+        guard let newGroup = NSEntityDescription.insertNewObject(forEntityName: "Group", into: dataController.managedObjectContext) as? Group else { return }
+        newGroup.groupName = groupName
+        dataController.saveMoc()
+        initializeFetchedGroupsController()
+        guard let fetchedGroups = fetchedGroupsController.fetchedObjects as? [Group] else { return }
+        let sbCatItems = mapFetchedGroupsToSidebarCategory(groupArray: fetchedGroups)
+        sbCategorySection.sbItem = sbCatItems
+        mainTableViewDelgate?.reloadSidebar()
+    }
+    
+    func deleteSidebarGroup(group: Group) {
+        print("delete sidebar group")
+        dataController.managedObjectContext.delete(group)
+        dataController.saveMoc()
+        initializeFetchedGroupsController()
+        guard let fetchedGroups = fetchedGroupsController.fetchedObjects as? [Group] else { return }
+        let sbCatItems = mapFetchedGroupsToSidebarCategory(groupArray: fetchedGroups)
+        sbCategorySection.sbItem = sbCatItems
+        mainTableViewDelgate?.reloadSidebar()
+    }
+    
     func changeSidebarTitle(newTitle: String, moID: NSManagedObjectID) {
         let groupObj = dataController.managedObjectContext.object(with: moID)
         groupObj.setValue(newTitle, forKey: "groupName")
-//        saveMoc()
-//        initializeFetchedGroupsController()
+        dataController.saveMoc()
+        initializeFetchedGroupsController()
         mainTableViewDelgate?.reloadSidebar()
     }
 }

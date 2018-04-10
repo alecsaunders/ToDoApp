@@ -16,4 +16,12 @@ class DataController: NSObject {
         let appDel = NSApplication.shared.delegate as! AppDelegate
         managedObjectContext = appDel.persistentContainer.viewContext
     }
+    
+    func saveMoc() {
+        do {
+            try managedObjectContext.save()
+        } catch {
+            print("failed to save new to do")
+        }
+    }
 }
