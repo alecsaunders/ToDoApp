@@ -33,7 +33,7 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
         }
     }
     @IBAction func btnAddGroup(_ sender: NSButton) {
-        cntlr.addSidebarGroup(groupName: "New Group")
+        outlineCntlr.addSidebarGroup(groupName: "New Group")
     }
     @IBAction func completedCheck(_ sender: NSButton) {
         cntlr.completedWasChecked(state: sender.state.rawValue, btnIndex: sender.tag)
@@ -57,13 +57,15 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
         }
     }
     @IBAction func sidebarMenuDelete(_ sender: NSMenuItem) {
-        guard let item = sourceOutlineView.item(atRow: sourceOutlineView.clickedRow) as? Group else { return }
-        cntlr.deleteSidebarGroup(group: item)
+        guard let sbCatItem = sourceOutlineView.item(atRow: sourceOutlineView.clickedRow) as? SidebarCategoryItem else { return }
+        guard let sbCat = sbCatItem.sbCategory else { return }
+        outlineCntlr.deleteSidebarGroup(group: sbCat)
         sourceOutlineView.reloadData()
         sourceOutlineView?.expandItem(nil, expandChildren: true)
     }
 
     let cntlr = MainController()
+    let outlineCntlr = OutlineViewController()
     
     override func viewWillAppear() {
         if let windowConroller = self.view.window?.windowController as? WindowController {
@@ -83,8 +85,8 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
         mainTableView.doubleAction = #selector(self.doubleClick)
         mainTableView.reloadData()
         
-        sourceOutlineView.delegate = cntlr
-        sourceOutlineView.dataSource = cntlr
+        sourceOutlineView.delegate = outlineCntlr
+        sourceOutlineView.dataSource = outlineCntlr
         sourceOutlineView.setDraggingSourceOperationMask(NSDragOperation.every, forLocal: true)
         sourceOutlineView.registerForDraggedTypes([.string])
         sourceOutlineView?.expandItem(nil, expandChildren: true)
