@@ -13,6 +13,7 @@ import CoreData
 class OutlineViewController: NSObject, NSFetchedResultsControllerDelegate, NSOutlineViewDataSource, NSOutlineViewDelegate, GroupCellViewDelegate {
     let dataController = DataController()
     weak var mainTableViewDelgate: MainTableViewDelgate?
+    var fetchedGroupsController: NSFetchedResultsController<NSFetchRequestResult>!
     var sidebarPredicate: NSPredicate?
 
     var sbFilterSection: SidebarSection
@@ -36,14 +37,12 @@ class OutlineViewController: NSObject, NSFetchedResultsControllerDelegate, NSOut
         super.init()
         
         sidebarPredicate = NSPredicate(format: "completedDate == nil")
-//        initializeFetchedResultsController()
-//        initializeFetchedGroupsController()
-//
-//        guard let fetchedGroups = fetchedGroupsController.fetchedObjects as? [Group] else { return }
-//        let sbCatArray = mapFetchedGroupsToSidebarCategory(groupArray: fetchedGroups)
-//
-//        sbCategorySection.sbItem = sbCatArray
-        sbCategorySection.sbItem = []
+        initializeFetchedGroupsController()
+
+        guard let fetchedGroups = fetchedGroupsController.fetchedObjects as? [Group] else { return }
+        let sbCatArray = mapFetchedGroupsToSidebarCategory(groupArray: fetchedGroups)
+        
+        sbCategorySection.sbItem = sbCatArray
     }
     
     func mapFetchedGroupsToSidebarCategory(groupArray: [Group]) -> [SidebarCategoryItem] {
@@ -52,8 +51,22 @@ class OutlineViewController: NSObject, NSFetchedResultsControllerDelegate, NSOut
             sbCat.sbCategory = theGroup
             return sbCat
         }
-        
         return sbCatArray
+    }
+    
+    func initializeFetchedGroupsController() {
+        let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Group")
+        let sort = NSSortDescriptor(key: "groupName", ascending: true)
+        request.sortDescriptors = [sort]
+        let moc = dataController.managedObjectContext
+        fetchedGroupsController = NSFetchedResultsController(fetchRequest: request, managedObjectContext: moc, sectionNameKeyPath: nil, cacheName: nil)
+        fetchedGroupsController.delegate = self
+        
+        do {
+            try fetchedGroupsController.performFetch()
+        } catch {
+            fatalError("Failed to initialize fetch")
+        }
     }
     
     // MARK: - OutlineView Methods

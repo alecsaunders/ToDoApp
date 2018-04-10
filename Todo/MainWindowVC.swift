@@ -64,6 +64,7 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
     }
 
     let cntlr = MainController()
+    let outlineCntlr = OutlineViewController()
     
     override func viewWillAppear() {
         if let windowConroller = self.view.window?.windowController as? WindowController {
@@ -83,8 +84,8 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
         mainTableView.doubleAction = #selector(self.doubleClick)
         mainTableView.reloadData()
         
-        sourceOutlineView.delegate = cntlr
-        sourceOutlineView.dataSource = cntlr
+        sourceOutlineView.delegate = outlineCntlr
+        sourceOutlineView.dataSource = outlineCntlr
         sourceOutlineView.setDraggingSourceOperationMask(NSDragOperation.every, forLocal: true)
         sourceOutlineView.registerForDraggedTypes([.string])
         sourceOutlineView?.expandItem(nil, expandChildren: true)
