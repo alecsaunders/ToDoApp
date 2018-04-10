@@ -85,6 +85,7 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
         mainTableView.doubleAction = #selector(self.doubleClick)
         mainTableView.reloadData()
         
+        outlineCntlr.mainTableViewDelgate = self
         sourceOutlineView.delegate = outlineCntlr
         sourceOutlineView.dataSource = outlineCntlr
         sourceOutlineView.setDraggingSourceOperationMask(NSDragOperation.every, forLocal: true)

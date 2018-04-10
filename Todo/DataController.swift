@@ -18,10 +18,14 @@ class DataController: NSObject {
     }
     
     func saveMoc() {
-        do {
-            try managedObjectContext.save()
-        } catch {
-            print("failed to save new to do")
+        if managedObjectContext.hasChanges {
+            do {
+                try managedObjectContext.save()
+            } catch {
+                print("failed to save new to do")
+            }
+        } else {
+            print("Managed Object Context NOT hasChanges")
         }
     }
 }
