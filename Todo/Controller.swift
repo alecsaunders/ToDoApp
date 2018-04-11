@@ -14,10 +14,12 @@ import CoreData
 protocol MainTableViewDelgate: class {
     func reloadData()
     func reloadSidebar()
+    func initializeFetchedResultsController()
     func addToDoToGroup(toDoRowIndex: Int, group: Group)
     func setToDoToDaily(toDoRowIndex: Int)
     func updateStatusBar(numOfItems: Int, sidebarGroup: String?)
     func doubleClick(sender: AnyObject)
+    var testSidebarPredicate: NSPredicate? { get set }
     var clickedToDo: ToDo? { get }
 }
 
@@ -31,20 +33,9 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
     override init() {
         super.init()
         
+        mainTableViewDelgate?.testSidebarPredicate = NSPredicate(format: "completedDate == nil")
         sidebarPredicate = NSPredicate(format: "completedDate == nil")
         initializeFetchedResultsController()
-    }
-    
-    
-    //REPLACE THIS FUNCTION IS A SUBCLASS OF fetchedGroupsController
-    func mapFetchedGroupsToSidebarCategory(groupArray: [Group]) -> [SidebarCategoryItem] {
-        let sbCatArray: [SidebarCategoryItem] = groupArray.map { (theGroup) -> SidebarCategoryItem in
-            let sbCat = SidebarCategoryItem(withTitle: theGroup.groupName!)
-            sbCat.sbCategory = theGroup
-            return sbCat
-        }
-        
-        return sbCatArray
     }
     
     func getToDo(moID: NSManagedObjectID?) -> ToDo? {
@@ -77,7 +68,7 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
         let sort = NSSortDescriptor(key: "createdDate", ascending: true)
         request.sortDescriptors = [sort]
         
-        if let predicate = sidebarPredicate {
+        if let predicate = mainTableViewDelgate?.testSidebarPredicate {
             request.predicate = predicate
         }
         
