@@ -66,6 +66,7 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
     }
 
     let cntlr = MainController()
+    let tvCntlr = MainTableViewController()
     let outlineCntlr = OutlineViewController()
     
     override func viewWillAppear() {
@@ -81,8 +82,8 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
         
         cntlr.mainTableViewDelgate = self
         lblStatusBottom.textColor = NSColor.darkGray
-        mainTableView.delegate = cntlr
-        mainTableView.dataSource = cntlr
+        mainTableView.delegate = tvCntlr
+        mainTableView.dataSource = tvCntlr
         mainTableView.usesAlternatingRowBackgroundColors = true
         mainTableView.setDraggingSourceOperationMask(NSDragOperation.every, forLocal: false)
         mainTableView.registerForDraggedTypes(cntlr.registeredTypes)
