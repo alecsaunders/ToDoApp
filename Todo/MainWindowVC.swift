@@ -80,7 +80,7 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
         
         testSidebarPredicate = NSPredicate(format: "completedDate == nil")
         
-        cntlr.mainTableViewDelgate = self
+        tvCntlr.mainTableViewDelgate = self
         lblStatusBottom.textColor = NSColor.darkGray
         mainTableView.delegate = tvCntlr
         mainTableView.dataSource = tvCntlr
@@ -142,11 +142,12 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
     }
     
     func reloadData() {
+        tvCntlr.initializeFetchedResultsController()
         mainTableView.reloadData()
     }
     
     func initializeFetchedResultsController() {
-        cntlr.initializeFetchedResultsController()
+        tvCntlr.initializeFetchedResultsController()
     }
     
     func addToDoToGroup(toDoRowIndex: Int, group: Group) {
@@ -160,6 +161,7 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
     }
     
     func reloadSidebar() {
+        outlineCntlr.initializeFetchedGroupsController()
         sourceOutlineView.reloadData()
         sourceOutlineView?.expandItem(nil, expandChildren: true)
     }

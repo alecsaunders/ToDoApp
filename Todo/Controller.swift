@@ -14,58 +14,16 @@ import CoreData
 class MainController: NSObject, NSFetchedResultsControllerDelegate, InfoControllerDelegate, TableViewMenuDelegate {
     let registeredTypes = [NSPasteboard.PasteboardType.string]
     let dataController = DataController()
-    var fetchedResultsController: NSFetchedResultsController<NSFetchRequestResult>!
     weak var mainTableViewDelgate: MainTableViewDelgate?
     
     override init() {
         super.init()
-        
-        mainTableViewDelgate?.testSidebarPredicate = NSPredicate(format: "completedDate == nil")
-        initializeFetchedResultsController()
     }
     
     func getToDo(moID: NSManagedObjectID?) -> ToDo? {
         guard let managedObjectID = moID else { return nil }
         guard let theToDo = dataController.managedObjectContext.object(with: managedObjectID) as? ToDo else { return nil }
         return theToDo
-    }
-    
-    func initializeFetchedResultsController() {
-        let moc = dataController.managedObjectContext
-        
-        let fetch = NSFetchRequest<NSFetchRequestResult>(entityName: "ToDo")
-        let userDefaults = NSUserDefaultsController().defaults
-        if let retentionValue = userDefaults.value(forKey: "completeRetention") as? Int {
-            let retentionDelta = Calendar.current.date(byAdding: .day, value: retentionValue * -1, to: Date())! as NSDate
-            fetch.predicate = NSPredicate(format: "completedDate < %@", retentionDelta)
-        } else {
-            let retentionDelta = Calendar.current.date(byAdding: .day, value: -30, to: Date())! as NSDate
-            fetch.predicate = NSPredicate(format: "completedDate < %@", retentionDelta)
-        }
-        let batchDelete = NSBatchDeleteRequest(fetchRequest: fetch)
-        
-        do {
-            try moc.execute(batchDelete)
-        } catch {
-            fatalError("Failed to execute request: \(error)")
-        }
-        
-        let request = NSFetchRequest<NSFetchRequestResult>(entityName: "ToDo")
-        let sort = NSSortDescriptor(key: "createdDate", ascending: true)
-        request.sortDescriptors = [sort]
-        
-        if let predicate = mainTableViewDelgate?.testSidebarPredicate {
-            request.predicate = predicate
-        }
-        
-        fetchedResultsController = NSFetchedResultsController(fetchRequest: request, managedObjectContext: moc, sectionNameKeyPath: nil, cacheName: nil)
-        fetchedResultsController.delegate = self
-        
-        do {
-            try fetchedResultsController.performFetch()
-        } catch {
-            fatalError("Failed to initialize fetch")
-        }
     }
     
     func save(addedToDoTitle: String) {
@@ -76,7 +34,6 @@ class MainController: NSObject, NSFetchedResultsControllerDelegate, InfoControll
             theToDo.title = addedToDoTitle
             theToDo.createdDate = NSDate()
             dataController.saveMoc()
-            initializeFetchedResultsController()
             mainTableViewDelgate?.reloadData()
         }
     }
@@ -90,7 +47,6 @@ class MainController: NSObject, NSFetchedResultsControllerDelegate, InfoControll
             object.completedDate = nil
         }
         dataController.saveMoc()
-        initializeFetchedResultsController()
         mainTableViewDelgate?.reloadData()
     }
     
@@ -100,7 +56,6 @@ class MainController: NSObject, NSFetchedResultsControllerDelegate, InfoControll
         dataController.managedObjectContext.delete(object)
         dataController.saveMoc()
         
-        initializeFetchedResultsController()
         mainTableViewDelgate?.reloadData()
     }
     
@@ -134,7 +89,6 @@ class MainController: NSObject, NSFetchedResultsControllerDelegate, InfoControll
         if let toDo = getToDo(moID: moID) {
             toDo.daily = isDaily
             dataController.saveMoc()
-            initializeFetchedResultsController()
             mainTableViewDelgate?.reloadData()
         }
     }

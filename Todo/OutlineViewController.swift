@@ -108,7 +108,7 @@ class OutlineViewController: NSObject, NSFetchedResultsControllerDelegate, NSOut
             }
             
         }
-        mainTableViewDelgate?.initializeFetchedResultsController()
+        print("outlineview selection did change")
         mainTableViewDelgate?.reloadData()
     }
     
