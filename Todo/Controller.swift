@@ -77,6 +77,7 @@ class MainController: NSObject, NSFetchedResultsControllerDelegate, InfoControll
             theToDo.createdDate = NSDate()
             dataController.saveMoc()
             initializeFetchedResultsController()
+            // FIXME: The initializeFetchedResultsController initalizes the new fetched ToDos for the Controller method, but the MainTableViewController FetchedResultsController has not fetched the new to dos.
             mainTableViewDelgate?.reloadData()
         }
     }
