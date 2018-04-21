@@ -76,13 +76,16 @@ class MainController: NSObject, NSFetchedResultsControllerDelegate, InfoControll
         return theToDo
     }
     
-    func save(addedToDoTitle: String) {
+    func save(addedToDoTitle: String, newToDoSidebarSelection: SidebarItem?) {
         if addedToDoTitle.isEmpty {
             print("do not add a new to do item")
         } else {
             guard let theToDo = NSEntityDescription.insertNewObject(forEntityName: "ToDo", into: dataController.managedObjectContext) as? ToDo else { return }
             theToDo.title = addedToDoTitle
             theToDo.createdDate = NSDate()
+            if let sbCat = (newToDoSidebarSelection as? SidebarCategoryItem)?.sbCategory {
+                theToDo.group = sbCat
+            }
             dataController.saveMoc()
             mainTableViewDelgate?.reloadData()
         }

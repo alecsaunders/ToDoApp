@@ -28,7 +28,7 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
     @IBAction func btnAddItem(_ sender: NSButton) {
         if let windowConroller = self.view.window?.windowController as? WindowController {
             let txt = windowConroller.toDoCreateTextField.stringValue
-            cntlr.save(addedToDoTitle: txt)
+            cntlr.save(addedToDoTitle: txt, newToDoSidebarSelection: sourceOutlineView.item(atRow: sourceOutlineView.selectedRow) as? SidebarItem)
             windowConroller.toDoCreateTextField.stringValue = ""
         }
     }
@@ -172,7 +172,7 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
     
     // MARK: - Window Controller Delegate
     func addToDo(toDoText: String) {
-        cntlr.save(addedToDoTitle: toDoText)
+        cntlr.save(addedToDoTitle: toDoText, newToDoSidebarSelection: sourceOutlineView.item(atRow: sourceOutlineView.selectedRow) as? SidebarItem)
     }
     func clearToDoTextField(sender: NSTextField) {
         sender.stringValue = ""
