@@ -11,7 +11,6 @@ import CoreData
 
 
 class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDelegate {
-    var testSidebarPredicate: NSPredicate?
     let registeredTypes:[String] = [NSPasteboard.Name.generalPboard.rawValue]
     var clickedToDo: ToDo? {
         get {
@@ -80,9 +79,7 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
         
         cntlr.mainTableViewDelgate = self
         tvCntlr.mtvdel2 = cntlr
-        
-        testSidebarPredicate = NSPredicate(format: "completedDate == nil")
-        
+                
         tvCntlr.mainTableViewDelgate = self
         lblStatusBottom.textColor = NSColor.darkGray
         mainTableView.delegate = tvCntlr
@@ -145,12 +142,12 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
     }
     
     func reloadData() {
-        cntlr.initializeFetchedResultsController()
+        cntlr.initializeToDoFetchedResultsController()
         mainTableView.reloadData()
     }
     
     func initializeFetchedResultsController() {
-        cntlr.initializeFetchedResultsController()
+        cntlr.initializeToDoFetchedResultsController()
     }
     
     func addToDoToGroup(toDoRowIndex: Int, group: Group) {
