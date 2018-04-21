@@ -14,22 +14,17 @@ import CoreData
 class MainController: NSObject, NSFetchedResultsControllerDelegate, InfoControllerDelegate, TableViewMenuDelegate, MTVDel2 {
     let registeredTypes = [NSPasteboard.PasteboardType.string]
     let dataController = DataController()
-    var fetchedResultsController: NSFetchedResultsController<NSFetchRequestResult>!
+    var toDoFetchedResultsController: NSFetchedResultsController<NSFetchRequestResult>!
     weak var mainTableViewDelgate: MainTableViewDelgate?
-    
     var fetchedToDos: [ToDo]?
     
     override init() {
         super.init()
         
-        initializeFetchedResultsController()
-        if let toDos = fetchedResultsController.fetchedObjects as? [ToDo] {
-            fetchedToDos = toDos
-        }
-        mainTableViewDelgate?.testSidebarPredicate = NSPredicate(format: "completedDate == nil")
+        initializeToDoFetchedResultsController()
     }
     
-    func initializeFetchedResultsController() {
+    func initializeToDoFetchedResultsController() {
         let moc = dataController.managedObjectContext
         
         let fetch = NSFetchRequest<NSFetchRequestResult>(entityName: "ToDo")
@@ -55,14 +50,16 @@ class MainController: NSObject, NSFetchedResultsControllerDelegate, InfoControll
         
         if let predicate = mainTableViewDelgate?.testSidebarPredicate {
             request.predicate = predicate
+        } else {
+            request.predicate = NSPredicate(format: "completedDate == nil")
         }
         
-        fetchedResultsController = NSFetchedResultsController(fetchRequest: request, managedObjectContext: moc, sectionNameKeyPath: nil, cacheName: nil)
-        fetchedResultsController.delegate = self
+        toDoFetchedResultsController = NSFetchedResultsController(fetchRequest: request, managedObjectContext: moc, sectionNameKeyPath: nil, cacheName: nil)
+        toDoFetchedResultsController.delegate = self
         
         do {
-            try fetchedResultsController.performFetch()
-            if let toDos = fetchedResultsController.fetchedObjects as? [ToDo] {
+            try toDoFetchedResultsController.performFetch()
+            if let toDos = toDoFetchedResultsController.fetchedObjects as? [ToDo] {
                 fetchedToDos = toDos
             }
         } catch {
@@ -89,7 +86,7 @@ class MainController: NSObject, NSFetchedResultsControllerDelegate, InfoControll
     }
 
     func markCompleted(atIndex: Int, complete: Bool) {
-        guard let fetchedObjs = fetchedResultsController.fetchedObjects else { return }
+        guard let fetchedObjs = toDoFetchedResultsController.fetchedObjects else { return }
         guard let object = fetchedObjs[atIndex] as? ToDo else { return }
         if complete {
             object.completedDate = NSDate()
@@ -101,11 +98,10 @@ class MainController: NSObject, NSFetchedResultsControllerDelegate, InfoControll
     }
     
     func removeToDoEntityRecord(atIndex: Int) {
-        guard let fetchedObjs = fetchedResultsController.fetchedObjects else { return }
+        guard let fetchedObjs = toDoFetchedResultsController.fetchedObjects else { return }
         guard let object = fetchedObjs[atIndex] as? NSManagedObject else { return }
         dataController.managedObjectContext.delete(object)
         dataController.saveMoc()
-        
         mainTableViewDelgate?.reloadData()
     }
     
