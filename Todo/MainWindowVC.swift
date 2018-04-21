@@ -11,7 +11,7 @@ import CoreData
 
 
 class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDelegate {
-    let registeredTypes:[String] = [NSPasteboard.Name.generalPboard.rawValue]
+    let registeredTypes:[String] = [NSPasteboard.Name.general.rawValue]
     var clickedToDo: ToDo? {
         get {
             guard let v = mainTableView.view(atColumn: 1, row: mainTableView.clickedRow, makeIfNecessary: false) as? ToDoCellView else { return nil }
@@ -86,7 +86,7 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
         mainTableView.dataSource = tvCntlr
         mainTableView.usesAlternatingRowBackgroundColors = true
         mainTableView.setDraggingSourceOperationMask(NSDragOperation.every, forLocal: false)
-        mainTableView.registerForDraggedTypes(cntlr.registeredTypes)
+        mainTableView.registerForDraggedTypes(tvCntlr.registeredTypes)
         mainTableView.doubleAction = #selector(self.doubleClick)
         mainTableView.reloadData()
         
@@ -96,6 +96,9 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
         sourceOutlineView.setDraggingSourceOperationMask(NSDragOperation.every, forLocal: true)
         sourceOutlineView.registerForDraggedTypes([.string])
         sourceOutlineView?.expandItem(nil, expandChildren: true)
+        
+        cntlr.categoryDelegate = outlineCntlr
+        outlineCntlr.mainControllerDelegate = cntlr
         
         tvMenu.tvMenuDelegate = cntlr
     }
@@ -144,6 +147,11 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
     func reloadData() {
         cntlr.initializeToDoFetchedResultsController()
         mainTableView.reloadData()
+    }
+    
+    func toDoManagedObjectID(index: Int) -> NSManagedObjectID? {
+        guard let toDoCellView = mainTableView.view(atColumn: 1, row: index, makeIfNecessary: false) as? ToDoCellView else { return nil }
+        return toDoCellView.managedObjectID
     }
     
     func initializeFetchedResultsController() {

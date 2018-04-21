@@ -10,12 +10,15 @@ import Foundation
 import Cocoa
 import CoreData
 
+protocol MainControllerDelegate {
+    func assigneToDoToGroup(moID: NSManagedObjectID, group: Group)
+}
 
-class MainController: NSObject, NSFetchedResultsControllerDelegate, InfoControllerDelegate, TableViewMenuDelegate, MTVDel2 {
-    let registeredTypes = [NSPasteboard.PasteboardType.string]
+class MainController: NSObject, NSFetchedResultsControllerDelegate, InfoControllerDelegate, TableViewMenuDelegate, MTVDel2, MainControllerDelegate {
     let dataController = DataController()
     var toDoFetchedResultsController: NSFetchedResultsController<NSFetchRequestResult>!
     weak var mainTableViewDelgate: MainTableViewDelgate?
+    var categoryDelegate: CategoryDelegate?
     var fetchedToDos: [ToDo]?
     
     override init() {
@@ -48,7 +51,7 @@ class MainController: NSObject, NSFetchedResultsControllerDelegate, InfoControll
         let sort = NSSortDescriptor(key: "createdDate", ascending: true)
         request.sortDescriptors = [sort]
         
-        if let predicate = mainTableViewDelgate?.testSidebarPredicate {
+        if let predicate = categoryDelegate?.categoryPredicate {
             request.predicate = predicate
         } else {
             request.predicate = NSPredicate(format: "completedDate == nil")

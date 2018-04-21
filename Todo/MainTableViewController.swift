@@ -13,6 +13,7 @@ import CoreData
 protocol MainTableViewDelgate: class {
     func reloadData()
     func reloadSidebar()
+    func toDoManagedObjectID(index: Int) -> NSManagedObjectID?
     func addToDoToGroup(toDoRowIndex: Int, group: Group)
     func setToDoToDaily(toDoRowIndex: Int)
     func updateStatusBar(numOfItems: Int, sidebarGroup: String?)
@@ -91,6 +92,7 @@ class MainTableViewController: NSObject, NSTableViewDelegate, NSTableViewDataSou
         if dropOperation == .above {
             return .move
         }
+        
         return NSDragOperation(rawValue: UInt(0))
     }
     
@@ -110,5 +112,14 @@ class MainTableViewController: NSObject, NSTableViewDelegate, NSTableViewDataSou
         print(dragOrigin)
         print(dragDest)
         return false
+    }
+    
+    func tableView(_ tableView: NSTableView, pasteboardWriterForRow row: Int) -> NSPasteboardWriting? {
+        let pbItem = NSPasteboardItem()
+        guard let moID = mainTableViewDelgate?.toDoManagedObjectID(index: row) else { return nil }
+        
+        pbItem.setString(moID.uriRepresentation().absoluteString, forType: .string)
+//        pbItem.setData(moID.uriRepresentation().dataRepresentation, forType: .URL)
+        return pbItem
     }
 }

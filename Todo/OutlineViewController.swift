@@ -10,11 +10,16 @@ import Foundation
 import Cocoa
 import CoreData
 
-class OutlineViewController: NSObject, NSFetchedResultsControllerDelegate, NSOutlineViewDataSource, NSOutlineViewDelegate, GroupCellViewDelegate {
+protocol CategoryDelegate {
+    var categoryPredicate: NSPredicate? { get set }
+}
+
+class OutlineViewController: NSObject, NSFetchedResultsControllerDelegate, NSOutlineViewDataSource, NSOutlineViewDelegate, GroupCellViewDelegate, CategoryDelegate {
     let dataController = DataController()
     weak var mainTableViewDelgate: MainTableViewDelgate?
+    var mainControllerDelegate: MainControllerDelegate?
     var fetchedGroupsController: NSFetchedResultsController<NSFetchRequestResult>!
-    var sidebarPredicate: NSPredicate?
+    var categoryPredicate: NSPredicate?
 
     var sbFilterSection: SidebarSection
     var sbCategorySection: SidebarSection
@@ -36,7 +41,6 @@ class OutlineViewController: NSObject, NSFetchedResultsControllerDelegate, NSOut
         
         super.init()
         
-        sidebarPredicate = NSPredicate(format: "completedDate == nil")
         initializeFetchedGroupsController()
 
         guard let fetchedGroups = fetchedGroupsController.fetchedObjects as? [Group] else { return }
@@ -86,7 +90,7 @@ class OutlineViewController: NSObject, NSFetchedResultsControllerDelegate, NSOut
                 let groupPred = NSPredicate(format: "group = %@", selectedGroup)
                 let completePred = NSPredicate(format: "completedDate == nil")
                 let compPred = NSCompoundPredicate(andPredicateWithSubpredicates: [groupPred, completePred])
-                sidebarPredicate = compPred
+                categoryPredicate = compPred
             }
         }
         
@@ -97,14 +101,14 @@ class OutlineViewController: NSObject, NSFetchedResultsControllerDelegate, NSOut
                     let dailyPred = NSPredicate(format: "daily = %@", "1")
                     let completePred = NSPredicate(format: "completedDate == nil")
                     let compPred = NSCompoundPredicate(andPredicateWithSubpredicates: [dailyPred, completePred])
-                    mainTableViewDelgate?.testSidebarPredicate = compPred
+                    categoryPredicate = compPred
                 case .completed:
-                    mainTableViewDelgate?.testSidebarPredicate = NSPredicate(format: "completedDate != nil")
+                    categoryPredicate = NSPredicate(format: "completedDate != nil")
                 default:
-                    mainTableViewDelgate?.testSidebarPredicate = NSPredicate(format: "completedDate == nil")
+                    categoryPredicate = NSPredicate(format: "completedDate == nil")
                 }
             } else {
-                mainTableViewDelgate?.testSidebarPredicate = NSPredicate(format: "completedDate == nil")
+                categoryPredicate = NSPredicate(format: "completedDate == nil")
             }
             
         }
@@ -188,14 +192,19 @@ class OutlineViewController: NSObject, NSFetchedResultsControllerDelegate, NSOut
     }
     
     func outlineView(_ outlineView: NSOutlineView, validateDrop info: NSDraggingInfo, proposedItem item: Any?, proposedChildIndex index: Int) -> NSDragOperation {
-        if let _ = item as? Group {
+//        if let sbItem = item as? SidebarItem {
+//            if let sbFilterItem = sbItem as? SidebarFilterItem {
+//                if sbFilterItem.sbFilter == SidebarFilter.all {
+//                    return NSDragOperation(rawValue: UInt(0))
+//                }
+//            }
+//            return .move
+//        }
+        
+        if let _ = item as? SidebarCategoryItem {
             return .move
         }
-        if let cat = item as? String {
-            if cat == "Daily" {
-                return .move
-            }
-        }
+        
         return NSDragOperation(rawValue: UInt(0))
     }
     
@@ -203,19 +212,18 @@ class OutlineViewController: NSObject, NSFetchedResultsControllerDelegate, NSOut
         return true
     }
     
+    func outlineView(_ outlineView: NSOutlineView, pasteboardWriterForItem item: Any) -> NSPasteboardWriting? {
+        return nil
+    }
+    
     func outlineView(_ outlineView: NSOutlineView, acceptDrop info: NSDraggingInfo, item: Any?, childIndex index: Int) -> Bool {
         let pboard = info.draggingPasteboard()
-        let dragData = pboard.data(forType: .string)!
-        let rowIndexes: IndexSet? = NSKeyedUnarchiver.unarchiveObject(with: dragData) as? IndexSet
-        guard let dragOrigin: Int = rowIndexes?.first else { return false }
-        if let sidebarGroup = item as? Group {
-            mainTableViewDelgate?.addToDoToGroup(toDoRowIndex: dragOrigin, group: sidebarGroup)
-        }
-        if let cat = item as? String {
-            if cat == "Daily" {
-                mainTableViewDelgate?.setToDoToDaily(toDoRowIndex: dragOrigin)
-            }
-        }
+        guard let pbItem = pboard.pasteboardItems?[0] else { return false }
+        guard let managedObjectIDURLString = pbItem.string(forType: .string) else { return false }
+        guard let objectID = URL(string: managedObjectIDURLString) else { return false }
+        guard let managedObjectID = dataController.persistentContainer.persistentStoreCoordinator.managedObjectID(forURIRepresentation: objectID) else { return false }
+        guard let sbCat = (item as? SidebarCategoryItem)?.sbCategory else { return false }
+        mainControllerDelegate?.assigneToDoToGroup(moID: managedObjectID, group: sbCat)
         return true
     }
     
