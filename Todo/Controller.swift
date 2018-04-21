@@ -11,13 +11,63 @@ import Cocoa
 import CoreData
 
 
-class MainController: NSObject, NSFetchedResultsControllerDelegate, InfoControllerDelegate, TableViewMenuDelegate {
+class MainController: NSObject, NSFetchedResultsControllerDelegate, InfoControllerDelegate, TableViewMenuDelegate, MTVDel2 {
     let registeredTypes = [NSPasteboard.PasteboardType.string]
     let dataController = DataController()
+    var fetchedResultsController: NSFetchedResultsController<NSFetchRequestResult>!
     weak var mainTableViewDelgate: MainTableViewDelgate?
+    
+    var fetchedToDos: [ToDo]?
     
     override init() {
         super.init()
+        
+        initializeFetchedResultsController()
+        if let toDos = fetchedResultsController.fetchedObjects as? [ToDo] {
+            fetchedToDos = toDos
+        }
+        mainTableViewDelgate?.testSidebarPredicate = NSPredicate(format: "completedDate == nil")
+    }
+    
+    func initializeFetchedResultsController() {
+        let moc = dataController.managedObjectContext
+        
+        let fetch = NSFetchRequest<NSFetchRequestResult>(entityName: "ToDo")
+        let userDefaults = NSUserDefaultsController().defaults
+        if let retentionValue = userDefaults.value(forKey: "completeRetention") as? Int {
+            let retentionDelta = Calendar.current.date(byAdding: .day, value: retentionValue * -1, to: Date())! as NSDate
+            fetch.predicate = NSPredicate(format: "completedDate < %@", retentionDelta)
+        } else {
+            let retentionDelta = Calendar.current.date(byAdding: .day, value: -30, to: Date())! as NSDate
+            fetch.predicate = NSPredicate(format: "completedDate < %@", retentionDelta)
+        }
+        let batchDelete = NSBatchDeleteRequest(fetchRequest: fetch)
+        
+        do {
+            try moc.execute(batchDelete)
+        } catch {
+            fatalError("Failed to execute request: \(error)")
+        }
+        
+        let request = NSFetchRequest<NSFetchRequestResult>(entityName: "ToDo")
+        let sort = NSSortDescriptor(key: "createdDate", ascending: true)
+        request.sortDescriptors = [sort]
+        
+        if let predicate = mainTableViewDelgate?.testSidebarPredicate {
+            request.predicate = predicate
+        }
+        
+        fetchedResultsController = NSFetchedResultsController(fetchRequest: request, managedObjectContext: moc, sectionNameKeyPath: nil, cacheName: nil)
+        fetchedResultsController.delegate = self
+        
+        do {
+            try fetchedResultsController.performFetch()
+            if let toDos = fetchedResultsController.fetchedObjects as? [ToDo] {
+                fetchedToDos = toDos
+            }
+        } catch {
+            fatalError("Failed to initialize fetch")
+        }
     }
     
     func getToDo(moID: NSManagedObjectID?) -> ToDo? {

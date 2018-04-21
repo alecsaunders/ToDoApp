@@ -78,6 +78,9 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        cntlr.mainTableViewDelgate = self
+        tvCntlr.mtvdel2 = cntlr
+        
         testSidebarPredicate = NSPredicate(format: "completedDate == nil")
         
         tvCntlr.mainTableViewDelgate = self
@@ -142,12 +145,12 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
     }
     
     func reloadData() {
-        tvCntlr.initializeFetchedResultsController()
+        cntlr.initializeFetchedResultsController()
         mainTableView.reloadData()
     }
     
     func initializeFetchedResultsController() {
-        tvCntlr.initializeFetchedResultsController()
+        cntlr.initializeFetchedResultsController()
     }
     
     func addToDoToGroup(toDoRowIndex: Int, group: Group) {

@@ -22,55 +22,18 @@ protocol MainTableViewDelgate: class {
     var clickedToDo: ToDo? { get }
 }
 
+protocol MTVDel2 {
+    var fetchedToDos: [ToDo]? { get set }
+}
+
 class MainTableViewController: NSObject, NSTableViewDelegate, NSTableViewDataSource, ToDoCellViewDelegate, NSFetchedResultsControllerDelegate {
     let registeredTypes = [NSPasteboard.PasteboardType.string]
     let dataController = DataController()
-    var fetchedResultsController: NSFetchedResultsController<NSFetchRequestResult>!
     weak var mainTableViewDelgate: MainTableViewDelgate?
+    var mtvdel2: MTVDel2?
     
     override init() {
         super.init()
-        
-        mainTableViewDelgate?.testSidebarPredicate = NSPredicate(format: "completedDate == nil")
-        initializeFetchedResultsController()
-    }
-    
-    func initializeFetchedResultsController() {
-        let moc = dataController.managedObjectContext
-        
-        let fetch = NSFetchRequest<NSFetchRequestResult>(entityName: "ToDo")
-        let userDefaults = NSUserDefaultsController().defaults
-        if let retentionValue = userDefaults.value(forKey: "completeRetention") as? Int {
-            let retentionDelta = Calendar.current.date(byAdding: .day, value: retentionValue * -1, to: Date())! as NSDate
-            fetch.predicate = NSPredicate(format: "completedDate < %@", retentionDelta)
-        } else {
-            let retentionDelta = Calendar.current.date(byAdding: .day, value: -30, to: Date())! as NSDate
-            fetch.predicate = NSPredicate(format: "completedDate < %@", retentionDelta)
-        }
-        let batchDelete = NSBatchDeleteRequest(fetchRequest: fetch)
-        
-        do {
-            try moc.execute(batchDelete)
-        } catch {
-            fatalError("Failed to execute request: \(error)")
-        }
-        
-        let request = NSFetchRequest<NSFetchRequestResult>(entityName: "ToDo")
-        let sort = NSSortDescriptor(key: "createdDate", ascending: true)
-        request.sortDescriptors = [sort]
-        
-        if let predicate = mainTableViewDelgate?.testSidebarPredicate {
-            request.predicate = predicate
-        }
-        
-        fetchedResultsController = NSFetchedResultsController(fetchRequest: request, managedObjectContext: moc, sectionNameKeyPath: nil, cacheName: nil)
-        fetchedResultsController.delegate = self
-        
-        do {
-            try fetchedResultsController.performFetch()
-        } catch {
-            fatalError("Failed to initialize fetch")
-        }
     }
     
     // MARK: - To Do Table View Delegate Methods
@@ -89,14 +52,16 @@ class MainTableViewController: NSObject, NSTableViewDelegate, NSTableViewDataSou
     
     //MARK: - TableView Delegate Methods
     func numberOfRows(in tableView: NSTableView) -> Int {
-        guard let fetchedObjs = fetchedResultsController.fetchedObjects as? [ToDo] else { return 0 }
+        guard let mtv2 = mtvdel2 else { return 0 }
+        guard let fetchedObjs = mtv2.fetchedToDos else { return 0 }
         mainTableViewDelgate?.updateStatusBar(numOfItems: fetchedObjs.count, sidebarGroup: nil)
         return fetchedObjs.count
     }
     
     
     func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
-        guard let fetchedObjs = fetchedResultsController.fetchedObjects as? [ToDo] else { return nil }
+        guard let mtv2 = mtvdel2 else { return nil }
+        guard let fetchedObjs = mtv2.fetchedToDos else { return nil }
         let theToDo = fetchedObjs[row]
         
         if tableColumn == tableView.tableColumns[0] {
