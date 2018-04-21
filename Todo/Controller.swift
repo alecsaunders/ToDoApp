@@ -11,49 +11,20 @@ import Cocoa
 import CoreData
 
 
-protocol MainTableViewDelgate: class {
-    func reloadData()
-    func reloadSidebar()
-    func addToDoToGroup(toDoRowIndex: Int, group: Group)
-    func setToDoToDaily(toDoRowIndex: Int)
-    func updateStatusBar(numOfItems: Int, sidebarGroup: String?)
-    func doubleClick(sender: AnyObject)
-    var clickedToDo: ToDo? { get }
-}
-
-class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFetchedResultsControllerDelegate, InfoControllerDelegate, ToDoCellViewDelegate, TableViewMenuDelegate {
+class MainController: NSObject, NSFetchedResultsControllerDelegate, InfoControllerDelegate, TableViewMenuDelegate, MTVDel2 {
     let registeredTypes = [NSPasteboard.PasteboardType.string]
     let dataController = DataController()
-    var fetchedResultsController: NSFetchedResultsController<NSFetchRequestResult>!
+    var toDoFetchedResultsController: NSFetchedResultsController<NSFetchRequestResult>!
     weak var mainTableViewDelgate: MainTableViewDelgate?
-    var sidebarPredicate: NSPredicate?
+    var fetchedToDos: [ToDo]?
     
     override init() {
         super.init()
         
-        sidebarPredicate = NSPredicate(format: "completedDate == nil")
-        initializeFetchedResultsController()
+        initializeToDoFetchedResultsController()
     }
     
-    
-    //REPLACE THIS FUNCTION IS A SUBCLASS OF fetchedGroupsController
-    func mapFetchedGroupsToSidebarCategory(groupArray: [Group]) -> [SidebarCategoryItem] {
-        let sbCatArray: [SidebarCategoryItem] = groupArray.map { (theGroup) -> SidebarCategoryItem in
-            let sbCat = SidebarCategoryItem(withTitle: theGroup.groupName!)
-            sbCat.sbCategory = theGroup
-            return sbCat
-        }
-        
-        return sbCatArray
-    }
-    
-    func getToDo(moID: NSManagedObjectID?) -> ToDo? {
-        guard let managedObjectID = moID else { return nil }
-        guard let theToDo = dataController.managedObjectContext.object(with: managedObjectID) as? ToDo else { return nil }
-        return theToDo
-    }
-    
-    func initializeFetchedResultsController() {
+    func initializeToDoFetchedResultsController() {
         let moc = dataController.managedObjectContext
         
         let fetch = NSFetchRequest<NSFetchRequestResult>(entityName: "ToDo")
@@ -77,18 +48,29 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
         let sort = NSSortDescriptor(key: "createdDate", ascending: true)
         request.sortDescriptors = [sort]
         
-        if let predicate = sidebarPredicate {
+        if let predicate = mainTableViewDelgate?.testSidebarPredicate {
             request.predicate = predicate
+        } else {
+            request.predicate = NSPredicate(format: "completedDate == nil")
         }
         
-        fetchedResultsController = NSFetchedResultsController(fetchRequest: request, managedObjectContext: moc, sectionNameKeyPath: nil, cacheName: nil)
-        fetchedResultsController.delegate = self
+        toDoFetchedResultsController = NSFetchedResultsController(fetchRequest: request, managedObjectContext: moc, sectionNameKeyPath: nil, cacheName: nil)
+        toDoFetchedResultsController.delegate = self
         
         do {
-            try fetchedResultsController.performFetch()
+            try toDoFetchedResultsController.performFetch()
+            if let toDos = toDoFetchedResultsController.fetchedObjects as? [ToDo] {
+                fetchedToDos = toDos
+            }
         } catch {
             fatalError("Failed to initialize fetch")
         }
+    }
+    
+    func getToDo(moID: NSManagedObjectID?) -> ToDo? {
+        guard let managedObjectID = moID else { return nil }
+        guard let theToDo = dataController.managedObjectContext.object(with: managedObjectID) as? ToDo else { return nil }
+        return theToDo
     }
     
     func save(addedToDoTitle: String) {
@@ -99,13 +81,12 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
             theToDo.title = addedToDoTitle
             theToDo.createdDate = NSDate()
             dataController.saveMoc()
-            initializeFetchedResultsController()
             mainTableViewDelgate?.reloadData()
         }
     }
 
     func markCompleted(atIndex: Int, complete: Bool) {
-        guard let fetchedObjs = fetchedResultsController.fetchedObjects else { return }
+        guard let fetchedObjs = toDoFetchedResultsController.fetchedObjects else { return }
         guard let object = fetchedObjs[atIndex] as? ToDo else { return }
         if complete {
             object.completedDate = NSDate()
@@ -113,92 +94,20 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
             object.completedDate = nil
         }
         dataController.saveMoc()
-        initializeFetchedResultsController()
         mainTableViewDelgate?.reloadData()
     }
     
     func removeToDoEntityRecord(atIndex: Int) {
-        guard let fetchedObjs = fetchedResultsController.fetchedObjects else { return }
+        guard let fetchedObjs = toDoFetchedResultsController.fetchedObjects else { return }
         guard let object = fetchedObjs[atIndex] as? NSManagedObject else { return }
         dataController.managedObjectContext.delete(object)
         dataController.saveMoc()
-        
-        initializeFetchedResultsController()
         mainTableViewDelgate?.reloadData()
     }
     
     func updateNote(newNote: String, moID: NSManagedObjectID?) {
         guard let theToDo = getToDo(moID: moID) else { return }
         theToDo.note = newNote
-        dataController.saveMoc()
-    }
-    
-    //MARK: - TableView Delegate Methods
-    func numberOfRows(in tableView: NSTableView) -> Int {
-        guard let fetchedObjs = fetchedResultsController.fetchedObjects as? [ToDo] else { return 0 }
-        mainTableViewDelgate?.updateStatusBar(numOfItems: fetchedObjs.count, sidebarGroup: nil)
-        return fetchedObjs.count
-    }
-    
-    
-    func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
-        guard let fetchedObjs = fetchedResultsController.fetchedObjects as? [ToDo] else { return nil }
-        let theToDo = fetchedObjs[row]
-        
-        if tableColumn == tableView.tableColumns[0] {
-            guard let cell = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "col_complete"), owner: nil) as? NSTableCellView else { return nil }
-            if let completeBtn = cell.subviews[0] as? NSButton {
-                if let _ = theToDo.completedDate {
-                    completeBtn.state = NSControl.StateValue.on
-                } else {
-                    completeBtn.state = NSControl.StateValue.off
-                }
-                completeBtn.tag = row
-            }
-            return cell
-        }
-        if tableColumn == tableView.tableColumns[1] {
-            guard let cell = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "col_toDoText"), owner: nil) as? ToDoCellView else { return nil }
-            if let theTitle = theToDo.title {
-                cell.textField?.stringValue = theTitle
-            }
-            cell.toDoCellViewDelegate = self
-            cell.managedObjectID = theToDo.objectID
-            
-            return cell
-        }
-        return nil
-    }
-    
-    func tableView(_ tableView: NSTableView, validateDrop info: NSDraggingInfo, proposedRow row: Int, proposedDropOperation dropOperation: NSTableView.DropOperation) -> NSDragOperation {
-        if dropOperation == .above {
-            return .move
-        }
-        return NSDragOperation(rawValue: UInt(0))
-    }
-    
-    func tableView(_ tableView: NSTableView, writeRowsWith rowIndexes: IndexSet, to pboard: NSPasteboard) -> Bool {
-        let data = NSKeyedArchiver.archivedData(withRootObject: rowIndexes)
-        pboard.declareTypes(registeredTypes, owner: self)
-        pboard.setData(data, forType: .string)
-        return true
-    }
-    
-    func tableView(_ tableView: NSTableView, acceptDrop info: NSDraggingInfo, row: Int, dropOperation: NSTableView.DropOperation) -> Bool {
-        let dragData = info.draggingPasteboard().data(forType: .string)!
-        let rowIndexes: IndexSet? = NSKeyedUnarchiver.unarchiveObject(with: dragData) as? IndexSet
-        guard let ri: IndexSet = rowIndexes else { return true }
-        let dragOrigin = ri.first!
-        let dragDest = row
-        print(dragOrigin)
-        print(dragDest)
-        return false
-    }
-    
-    // MARK: - To Do Table View Delegate Methods
-    func changeText(newToDoTitle: String, moID: NSManagedObjectID) {
-        guard let toDoObj = getToDo(moID: moID) else { return }
-        toDoObj.setValue(newToDoTitle, forKey: "title")
         dataController.saveMoc()
     }
     
@@ -226,7 +135,6 @@ class MainController: NSObject, NSTableViewDelegate, NSTableViewDataSource, NSFe
         if let toDo = getToDo(moID: moID) {
             toDo.daily = isDaily
             dataController.saveMoc()
-            initializeFetchedResultsController()
             mainTableViewDelgate?.reloadData()
         }
     }

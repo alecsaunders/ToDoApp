@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		054AD4C820810CBC00EE2BD3 /* MainTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 054AD4C720810CBC00EE2BD3 /* MainTableViewController.swift */; };
 		F20B42DE1F7D661A0088EE33 /* SidebarOutlineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F20B42DD1F7D661A0088EE33 /* SidebarOutlineView.swift */; };
 		F20B42E01F7D9ADE0088EE33 /* PreferencesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F20B42DF1F7D9ADE0088EE33 /* PreferencesViewController.swift */; };
 		F22601901F5DA0A00087D2FB /* ToDo+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = F226018C1F5DA0A00087D2FB /* ToDo+CoreDataClass.swift */; };
@@ -22,7 +23,6 @@
 		F2871668207160B80090A694 /* SidebarFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2871667207160B80090A694 /* SidebarFilter.swift */; };
 		F287166A2071639D0090A694 /* SidebarCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = F28716692071639D0090A694 /* SidebarCategory.swift */; };
 		F296DD9A207A6CF5001519F3 /* OutlineViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F296DD99207A6CF5001519F3 /* OutlineViewController.swift */; };
-		F296DD9C207A703B001519F3 /* FetchedResultsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F296DD9B207A703B001519F3 /* FetchedResultsController.swift */; };
 		F2C462A11F58E8860014E5F4 /* GroupCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2C462A01F58E8860014E5F4 /* GroupCellView.swift */; };
 		F2C8A2681F41428500E246F7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2C8A2671F41428500E246F7 /* AppDelegate.swift */; };
 		F2C8A26A1F41428500E246F7 /* MainWindowVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2C8A2691F41428500E246F7 /* MainWindowVC.swift */; };
@@ -47,6 +47,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		054AD4C720810CBC00EE2BD3 /* MainTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTableViewController.swift; sourceTree = "<group>"; };
 		F20B42DD1F7D661A0088EE33 /* SidebarOutlineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarOutlineView.swift; sourceTree = "<group>"; };
 		F20B42DF1F7D9ADE0088EE33 /* PreferencesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesViewController.swift; sourceTree = "<group>"; };
 		F226018C1F5DA0A00087D2FB /* ToDo+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ToDo+CoreDataClass.swift"; sourceTree = "<group>"; };
@@ -62,7 +63,6 @@
 		F2871667207160B80090A694 /* SidebarFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarFilter.swift; sourceTree = "<group>"; };
 		F28716692071639D0090A694 /* SidebarCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarCategory.swift; sourceTree = "<group>"; };
 		F296DD99207A6CF5001519F3 /* OutlineViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutlineViewController.swift; sourceTree = "<group>"; };
-		F296DD9B207A703B001519F3 /* FetchedResultsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchedResultsController.swift; sourceTree = "<group>"; };
 		F2C462A01F58E8860014E5F4 /* GroupCellView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GroupCellView.swift; sourceTree = "<group>"; };
 		F2C8A2641F41428500E246F7 /* Todo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Todo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F2C8A2671F41428500E246F7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -183,7 +183,7 @@
 			isa = PBXGroup;
 			children = (
 				F2E822901F4895B100EEEA07 /* Controller.swift */,
-				F296DD9B207A703B001519F3 /* FetchedResultsController.swift */,
+				054AD4C720810CBC00EE2BD3 /* MainTableViewController.swift */,
 				F296DD99207A6CF5001519F3 /* OutlineViewController.swift */,
 				F226019E1F5DD5F30087D2FB /* DataController.swift */,
 				F2E293981F50D191008F4213 /* ToDoModelAccessor.swift */,
@@ -298,6 +298,7 @@
 				F2E822911F4895B100EEEA07 /* Controller.swift in Sources */,
 				F22601931F5DA0A00087D2FB /* Group+CoreDataProperties.swift in Sources */,
 				F22601921F5DA0A00087D2FB /* Group+CoreDataClass.swift in Sources */,
+				054AD4C820810CBC00EE2BD3 /* MainTableViewController.swift in Sources */,
 				F255491F1F493A2300AE360B /* WindowController.swift in Sources */,
 				F2603DFB1F4DDC0700A57AE0 /* ToDoCellView.swift in Sources */,
 				F2571EEA207171D00007D854 /* SidebarItem.swift in Sources */,
@@ -305,7 +306,6 @@
 				F296DD9A207A6CF5001519F3 /* OutlineViewController.swift in Sources */,
 				F287166A2071639D0090A694 /* SidebarCategory.swift in Sources */,
 				F22601901F5DA0A00087D2FB /* ToDo+CoreDataClass.swift in Sources */,
-				F296DD9C207A703B001519F3 /* FetchedResultsController.swift in Sources */,
 				F2C8A26A1F41428500E246F7 /* MainWindowVC.swift in Sources */,
 				F20B42DE1F7D661A0088EE33 /* SidebarOutlineView.swift in Sources */,
 				F2D232101F60778B00C0D3F4 /* SidebarFilters.swift in Sources */,
@@ -465,7 +465,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.AlecSaunders.Todo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_SWIFT3_OBJC_INFERENCE = Off;
 				SWIFT_VERSION = 4.0;
 			};
 			name = Debug;
@@ -479,7 +479,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.AlecSaunders.Todo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_SWIFT3_OBJC_INFERENCE = Off;
 				SWIFT_VERSION = 4.0;
 			};
 			name = Release;

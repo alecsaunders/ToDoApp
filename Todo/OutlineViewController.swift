@@ -45,6 +45,7 @@ class OutlineViewController: NSObject, NSFetchedResultsControllerDelegate, NSOut
         sbCategorySection.sbItem = sbCatArray
     }
     
+    //REPLACE THIS FUNCTION IS A SUBCLASS OF fetchedGroupsController
     func mapFetchedGroupsToSidebarCategory(groupArray: [Group]) -> [SidebarCategoryItem] {
         let sbCatArray: [SidebarCategoryItem] = groupArray.map { (theGroup) -> SidebarCategoryItem in
             let sbCat = SidebarCategoryItem(withTitle: theGroup.groupName!)
@@ -96,19 +97,18 @@ class OutlineViewController: NSObject, NSFetchedResultsControllerDelegate, NSOut
                     let dailyPred = NSPredicate(format: "daily = %@", "1")
                     let completePred = NSPredicate(format: "completedDate == nil")
                     let compPred = NSCompoundPredicate(andPredicateWithSubpredicates: [dailyPred, completePred])
-                    sidebarPredicate = compPred
+                    mainTableViewDelgate?.testSidebarPredicate = compPred
                 case .completed:
-                    sidebarPredicate = NSPredicate(format: "completedDate != nil")
+                    mainTableViewDelgate?.testSidebarPredicate = NSPredicate(format: "completedDate != nil")
                 default:
-                    sidebarPredicate = NSPredicate(format: "completedDate == nil")
+                    mainTableViewDelgate?.testSidebarPredicate = NSPredicate(format: "completedDate == nil")
                 }
             } else {
-                sidebarPredicate = NSPredicate(format: "completedDate == nil")
+                mainTableViewDelgate?.testSidebarPredicate = NSPredicate(format: "completedDate == nil")
             }
             
         }
-        
-//        initializeFetchedResultsController()
+        print("outlineview selection did change")
         mainTableViewDelgate?.reloadData()
     }
     
@@ -224,7 +224,6 @@ class OutlineViewController: NSObject, NSFetchedResultsControllerDelegate, NSOut
     }
     
     // MARK: - Other Methods
-    
     func addSidebarGroup(groupName: String) {
         guard let newGroup = NSEntityDescription.insertNewObject(forEntityName: "Group", into: dataController.managedObjectContext) as? Group else { return }
         newGroup.groupName = groupName
@@ -237,7 +236,6 @@ class OutlineViewController: NSObject, NSFetchedResultsControllerDelegate, NSOut
     }
     
     func deleteSidebarGroup(group: Group) {
-        print("delete sidebar group")
         dataController.managedObjectContext.delete(group)
         dataController.saveMoc()
         initializeFetchedGroupsController()

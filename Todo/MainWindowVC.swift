@@ -65,6 +65,7 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
     }
 
     let cntlr = MainController()
+    let tvCntlr = MainTableViewController()
     let outlineCntlr = OutlineViewController()
     
     override func viewWillAppear() {
@@ -75,10 +76,14 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         cntlr.mainTableViewDelgate = self
+        tvCntlr.mtvdel2 = cntlr
+                
+        tvCntlr.mainTableViewDelgate = self
         lblStatusBottom.textColor = NSColor.darkGray
-        mainTableView.delegate = cntlr
-        mainTableView.dataSource = cntlr
+        mainTableView.delegate = tvCntlr
+        mainTableView.dataSource = tvCntlr
         mainTableView.usesAlternatingRowBackgroundColors = true
         mainTableView.setDraggingSourceOperationMask(NSDragOperation.every, forLocal: false)
         mainTableView.registerForDraggedTypes(cntlr.registeredTypes)
@@ -137,7 +142,12 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
     }
     
     func reloadData() {
+        cntlr.initializeToDoFetchedResultsController()
         mainTableView.reloadData()
+    }
+    
+    func initializeFetchedResultsController() {
+        cntlr.initializeToDoFetchedResultsController()
     }
     
     func addToDoToGroup(toDoRowIndex: Int, group: Group) {
@@ -151,6 +161,7 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
     }
     
     func reloadSidebar() {
+        outlineCntlr.initializeFetchedGroupsController()
         sourceOutlineView.reloadData()
         sourceOutlineView?.expandItem(nil, expandChildren: true)
     }
