@@ -13,12 +13,10 @@ import CoreData
 protocol MainTableViewDelgate: class {
     func reloadData()
     func reloadSidebar()
-    func initializeFetchedResultsController()
     func addToDoToGroup(toDoRowIndex: Int, group: Group)
     func setToDoToDaily(toDoRowIndex: Int)
     func updateStatusBar(numOfItems: Int, sidebarGroup: String?)
     func doubleClick(sender: AnyObject)
-    var testSidebarPredicate: NSPredicate? { get set }
     var clickedToDo: ToDo? { get }
 }
 
