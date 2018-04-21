@@ -154,10 +154,6 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
         return toDoCellView.managedObjectID
     }
     
-    func initializeFetchedResultsController() {
-        cntlr.initializeToDoFetchedResultsController()
-    }
-    
     func addToDoToGroup(toDoRowIndex: Int, group: Group) {
         guard let moID = (mainTableView.view(atColumn: 1, row: toDoRowIndex, makeIfNecessary: false) as? ToDoCellView)?.managedObjectID else { return }
         cntlr.assigneToDoToGroup(moID: moID, group: group)
@@ -176,17 +172,13 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
     
     // MARK: - Window Controller Delegate
     func addToDo(toDoText: String) {
-        addToDoItemToMainTableView(toDoText: toDoText)
+        cntlr.save(addedToDoTitle: toDoText)
     }
     func clearToDoTextField(sender: NSTextField) {
         sender.stringValue = ""
     }
     
     // MARK: - Controller functions
-    func addToDoItemToMainTableView(toDoText: String) {
-        cntlr.save(addedToDoTitle: toDoText)
-    }
-    
     func updateStatusBar(numOfItems: Int, sidebarGroup: String?) {
         lblStatusBottom.stringValue = "\(sidebarGroup != nil ? "\(sidebarGroup!) - " : "")\(numOfItems) items"
     }
