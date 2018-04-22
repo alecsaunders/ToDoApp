@@ -54,10 +54,15 @@ class PreferencesViewController: NSViewController {
     
     override func viewWillAppear() {
         super.viewWillAppear()
-        let userDefaults = NSUserDefaultsController().defaults
         guard let retentionSettingValue = userDefaults.value(forKey: "completeRetention") as? Int else { return }
         guard let popUpIndex = retentionEnum.init(rawValue: retentionSettingValue)?.hashValue else { return }
         retentionPopUp.selectItem(at: popUpIndex)
+        
+        if !userDefaults.bool(forKey: "alternateRows") {
+            chkbxAlternateRowColor.state = .off
+        } else {
+            chkbxAlternateRowColor.state = .on
+        }
     }
     
     override func viewDidLoad() {

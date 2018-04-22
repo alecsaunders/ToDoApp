@@ -86,7 +86,6 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
         lblStatusBottom.textColor = NSColor.darkGray
         mainTableView.delegate = tvCntlr
         mainTableView.dataSource = tvCntlr
-        mainTableView.usesAlternatingRowBackgroundColors = true
         mainTableViewSetAlternatingRows()
         mainTableView.setDraggingSourceOperationMask(NSDragOperation.every, forLocal: false)
         mainTableView.registerForDraggedTypes(tvCntlr.registeredTypes)
@@ -133,8 +132,7 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
     func mainTableViewSetAlternatingRows() {
         let userDefaults = NSUserDefaultsController().defaults
         let alternateBool = userDefaults.bool(forKey: "alternateRows")
-        print("alternateBool")
-        print(alternateBool)
+        mainTableView.usesAlternatingRowBackgroundColors = alternateBool
     }
     
     
