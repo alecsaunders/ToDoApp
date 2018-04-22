@@ -77,6 +77,8 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        setupPrefs()
+        
         cntlr.mainTableViewDelgate = self
         tvCntlr.mtvdel2 = cntlr
                 
@@ -85,6 +87,7 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
         mainTableView.delegate = tvCntlr
         mainTableView.dataSource = tvCntlr
         mainTableView.usesAlternatingRowBackgroundColors = true
+        mainTableViewSetAlternatingRows()
         mainTableView.setDraggingSourceOperationMask(NSDragOperation.every, forLocal: false)
         mainTableView.registerForDraggedTypes(tvCntlr.registeredTypes)
         mainTableView.doubleAction = #selector(self.doubleClick)
@@ -103,6 +106,14 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
         tvMenu.tvMenuDelegate = cntlr
     }
     
+    func setupPrefs() {        
+        let notificationName = Notification.Name(rawValue: "PrefsChanged")
+        NotificationCenter.default.addObserver(forName: notificationName, object: nil, queue: nil) { (notification) in
+            let userDefaults = NSUserDefaultsController().defaults
+            self.mainTableView.usesAlternatingRowBackgroundColors = userDefaults.bool(forKey: "alternateRows")
+        }
+    }
+    
     override func prepare(for segue: NSStoryboardSegue, sender: Any?) {
         guard let dest = segue.destinationController as? InfoViewController else { return }
         guard let moID = (mainTableView.view(atColumn: 1, row: mainTableView.clickedRow, makeIfNecessary: false) as? ToDoCellView)?.managedObjectID else { return }
@@ -117,6 +128,13 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
         dest.note = theToDo.note
         dest.managedObjectID = theToDo.objectID
         dest.infoControllerDelegate = cntlr
+    }
+    
+    func mainTableViewSetAlternatingRows() {
+        let userDefaults = NSUserDefaultsController().defaults
+        let alternateBool = userDefaults.bool(forKey: "alternateRows")
+        print("alternateBool")
+        print(alternateBool)
     }
     
     
@@ -180,7 +198,6 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
     
     // MARK: - Controller functions
     func updateStatusBar(withText text: String) {
-        print("new updateStatusBar func")
         lblStatusBottom.stringValue = text
     }
     

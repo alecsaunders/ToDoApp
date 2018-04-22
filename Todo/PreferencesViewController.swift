@@ -8,20 +8,25 @@
 
 import Cocoa
 
+protocol PreferencesDelegate {
+    func setAltRowColorBool()
+}
+
 enum retentionEnum: Int {
     case immediatly = 0
     case one = 1
     case ten = 10
     case thirty = 30
 }
+
 class PreferencesViewController: NSViewController {
+    let userDefaults = NSUserDefaultsController().defaults
+    var prefDelegate: PreferencesDelegate?
+    
 
     @IBOutlet var retentionPopUp: NSPopUpButton!
     @IBAction func retentionPopUpAction(_ sender: NSPopUpButton) {
         let selectedIndex = sender.indexOfSelectedItem
-        
-        let userDefaults = NSUserDefaultsController().defaults
-        
         switch selectedIndex {
         case 0:
             userDefaults.set(0, forKey: "completeRetention")
@@ -34,6 +39,17 @@ class PreferencesViewController: NSViewController {
         default:
             userDefaults.set(30, forKey: "completeRetention")
         }        
+    }
+    @IBOutlet var chkbxAlternateRowColor: NSButton!
+    @IBAction func chkbxAlternateRowColor(_ sender: NSButton) {
+        if sender.state.rawValue == 0 {
+            userDefaults.set(false, forKey: "alternateRows")
+        } else {
+            userDefaults.set(true, forKey: "alternateRows")
+        }
+        
+        NotificationCenter.default.post(name: Notification.Name(rawValue: "PrefsChanged"), object: nil)
+        
     }
     
     override func viewWillAppear() {
