@@ -179,8 +179,9 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
     }
     
     // MARK: - Controller functions
-    func updateStatusBar(numOfItems: Int, sidebarGroup: String?) {
-        lblStatusBottom.stringValue = "\(sidebarGroup != nil ? "\(sidebarGroup!) - " : "")\(numOfItems) items"
+    func updateStatusBar(withText text: String) {
+        print("new updateStatusBar func")
+        lblStatusBottom.stringValue = text
     }
     
     override func updateViewConstraints() {
