@@ -21,10 +21,7 @@ class OutlineViewController: NSObject, NSFetchedResultsControllerDelegate, NSOut
     var fetchedGroupsController: NSFetchedResultsController<NSFetchRequestResult>!
     var categoryPredicate: NSPredicate?
 
-    var sbFilterSection: SidebarSection
-    var sbCategorySection: SidebarSection
-    
-    override init() {
+    var sbFilterSection: SidebarSection {
         var filters: [SidebarItem] = []
         let allFilter = SidebarFilterItem(withTitle: "All")
         allFilter.sbFilter = .all
@@ -35,18 +32,14 @@ class OutlineViewController: NSObject, NSFetchedResultsControllerDelegate, NSOut
         filters.append(allFilter)
         filters.append(dailyFilter)
         filters.append(completedFilter)
-        
-        sbFilterSection = SidebarSection(name: "Filters", sbItem: filters)
-        sbCategorySection = SidebarSection(name: "Categories", sbItem: [])
-        
+        return SidebarSection(name: "Filters", sbItem: filters)
+    }
+    var sbCategorySection: SidebarSection = SidebarSection(name: "Categories", sbItem: [])
+    var sbCatArray: [SidebarCategoryItem] = []
+    
+    override init() {
         super.init()
-        
         initializeFetchedGroupsController()
-
-        guard let fetchedGroups = fetchedGroupsController.fetchedObjects as? [Group] else { return }
-        let sbCatArray = mapFetchedGroupsToSidebarCategory(groupArray: fetchedGroups)
-        
-        sbCategorySection.sbItem = sbCatArray
     }
     
     //REPLACE THIS FUNCTION IS A SUBCLASS OF fetchedGroupsController
@@ -69,6 +62,9 @@ class OutlineViewController: NSObject, NSFetchedResultsControllerDelegate, NSOut
         
         do {
             try fetchedGroupsController.performFetch()
+            guard let fetchedGroups = fetchedGroupsController.fetchedObjects as? [Group] else { return }
+            let sbCatArray = mapFetchedGroupsToSidebarCategory(groupArray: fetchedGroups)
+            sbCategorySection.sbItem = sbCatArray
         } catch {
             fatalError("Failed to initialize fetch")
         }
@@ -237,9 +233,6 @@ class OutlineViewController: NSObject, NSFetchedResultsControllerDelegate, NSOut
         newGroup.groupName = groupName
         dataController.saveMoc()
         initializeFetchedGroupsController()
-        guard let fetchedGroups = fetchedGroupsController.fetchedObjects as? [Group] else { return }
-        let sbCatItems = mapFetchedGroupsToSidebarCategory(groupArray: fetchedGroups)
-        sbCategorySection.sbItem = sbCatItems
         mainTableViewDelgate?.reloadSidebar()
     }
     
@@ -247,9 +240,6 @@ class OutlineViewController: NSObject, NSFetchedResultsControllerDelegate, NSOut
         dataController.managedObjectContext.delete(group)
         dataController.saveMoc()
         initializeFetchedGroupsController()
-        guard let fetchedGroups = fetchedGroupsController.fetchedObjects as? [Group] else { return }
-        let sbCatItems = mapFetchedGroupsToSidebarCategory(groupArray: fetchedGroups)
-        sbCategorySection.sbItem = sbCatItems
         mainTableViewDelgate?.reloadSidebar()
     }
     
