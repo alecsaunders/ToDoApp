@@ -27,5 +27,8 @@ class ToDoCellView: NSTableCellView, NSTextFieldDelegate {
     override func draw(_ dirtyRect: NSRect) {
         super.draw(dirtyRect)
         toDoItemText.isEditable = true
+//        
+//        let font = NSFont(name: "Optima", size: 13)
+//        toDoItemText.font = font
     }
 }
