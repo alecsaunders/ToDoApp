@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		054AD4C820810CBC00EE2BD3 /* MainTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 054AD4C720810CBC00EE2BD3 /* MainTableViewController.swift */; };
+		05FBA107208E4686000FC726 /* FormatMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05FBA106208E4686000FC726 /* FormatMenu.swift */; };
 		F20B42DE1F7D661A0088EE33 /* SidebarOutlineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F20B42DD1F7D661A0088EE33 /* SidebarOutlineView.swift */; };
 		F20B42E01F7D9ADE0088EE33 /* PreferencesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F20B42DF1F7D9ADE0088EE33 /* PreferencesViewController.swift */; };
 		F22601901F5DA0A00087D2FB /* ToDo+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = F226018C1F5DA0A00087D2FB /* ToDo+CoreDataClass.swift */; };
@@ -48,6 +49,7 @@
 
 /* Begin PBXFileReference section */
 		054AD4C720810CBC00EE2BD3 /* MainTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTableViewController.swift; sourceTree = "<group>"; };
+		05FBA106208E4686000FC726 /* FormatMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormatMenu.swift; sourceTree = "<group>"; };
 		F20B42DD1F7D661A0088EE33 /* SidebarOutlineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarOutlineView.swift; sourceTree = "<group>"; };
 		F20B42DF1F7D9ADE0088EE33 /* PreferencesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesViewController.swift; sourceTree = "<group>"; };
 		F226018C1F5DA0A00087D2FB /* ToDo+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ToDo+CoreDataClass.swift"; sourceTree = "<group>"; };
@@ -102,6 +104,7 @@
 			isa = PBXGroup;
 			children = (
 				F243B71D1F7C030B0089764F /* TvMenu.swift */,
+				05FBA106208E4686000FC726 /* FormatMenu.swift */,
 				F2603DFA1F4DDC0700A57AE0 /* ToDoCellView.swift */,
 				F2C462A01F58E8860014E5F4 /* GroupCellView.swift */,
 				F20B42DD1F7D661A0088EE33 /* SidebarOutlineView.swift */,
@@ -236,7 +239,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0830;
-				LastUpgradeCheck = 0900;
+				LastUpgradeCheck = 0930;
 				ORGANIZATIONNAME = "Alec Saunders";
 				TargetAttributes = {
 					F2C8A2631F41428500E246F7 = {
@@ -315,6 +318,7 @@
 				F20B42E01F7D9ADE0088EE33 /* PreferencesViewController.swift in Sources */,
 				F226019F1F5DD5F30087D2FB /* DataController.swift in Sources */,
 				F2C8A26D1F41428500E246F7 /* Todo.xcdatamodeld in Sources */,
+				05FBA107208E4686000FC726 /* FormatMenu.swift in Sources */,
 				F243B71E1F7C030B0089764F /* TvMenu.swift in Sources */,
 				F22601911F5DA0A00087D2FB /* ToDo+CoreDataProperties.swift in Sources */,
 				F2C8A2681F41428500E246F7 /* AppDelegate.swift in Sources */,
@@ -366,6 +370,7 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
@@ -373,6 +378,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
@@ -422,6 +428,7 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
@@ -429,6 +436,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
@@ -463,6 +471,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = Todo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				PRODUCT_BUNDLE_IDENTIFIER = com.AlecSaunders.Todo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Off;
@@ -477,6 +486,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = Todo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				PRODUCT_BUNDLE_IDENTIFIER = com.AlecSaunders.Todo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Off;

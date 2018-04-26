@@ -11,7 +11,7 @@ import CoreData
 
 
 class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDelegate {
-    let registeredTypes:[String] = [NSPasteboard.Name.generalPboard.rawValue]
+    let registeredTypes:[String] = [NSPasteboard.Name.general.rawValue]
     var clickedToDo: ToDo? {
         get {
             guard let v = mainTableView.view(atColumn: 1, row: mainTableView.clickedRow, makeIfNecessary: false) as? ToDoCellView else { return nil }
@@ -28,7 +28,7 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
     @IBAction func btnAddItem(_ sender: NSButton) {
         if let windowConroller = self.view.window?.windowController as? WindowController {
             let txt = windowConroller.toDoCreateTextField.stringValue
-            cntlr.save(addedToDoTitle: txt)
+            cntlr.save(addedToDoTitle: txt, newToDoSidebarSelection: sourceOutlineView.item(atRow: sourceOutlineView.selectedRow) as? SidebarItem)
             windowConroller.toDoCreateTextField.stringValue = ""
         }
     }
@@ -77,6 +77,8 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        setupPrefs()
+        
         cntlr.mainTableViewDelgate = self
         tvCntlr.mtvdel2 = cntlr
                 
@@ -84,9 +86,9 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
         lblStatusBottom.textColor = NSColor.darkGray
         mainTableView.delegate = tvCntlr
         mainTableView.dataSource = tvCntlr
-        mainTableView.usesAlternatingRowBackgroundColors = true
+        mainTableViewSetAlternatingRows()
         mainTableView.setDraggingSourceOperationMask(NSDragOperation.every, forLocal: false)
-        mainTableView.registerForDraggedTypes(cntlr.registeredTypes)
+        mainTableView.registerForDraggedTypes(tvCntlr.registeredTypes)
         mainTableView.doubleAction = #selector(self.doubleClick)
         mainTableView.reloadData()
         
@@ -97,7 +99,18 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
         sourceOutlineView.registerForDraggedTypes([.string])
         sourceOutlineView?.expandItem(nil, expandChildren: true)
         
+        cntlr.categoryDelegate = outlineCntlr
+        outlineCntlr.mainControllerDelegate = cntlr
+        
         tvMenu.tvMenuDelegate = cntlr
+    }
+    
+    func setupPrefs() {        
+        let notificationName = Notification.Name(rawValue: "PrefsChanged")
+        NotificationCenter.default.addObserver(forName: notificationName, object: nil, queue: nil) { (notification) in
+            let userDefaults = NSUserDefaultsController().defaults
+            self.mainTableView.usesAlternatingRowBackgroundColors = userDefaults.bool(forKey: "alternateRows")
+        }
     }
     
     override func prepare(for segue: NSStoryboardSegue, sender: Any?) {
@@ -114,6 +127,12 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
         dest.note = theToDo.note
         dest.managedObjectID = theToDo.objectID
         dest.infoControllerDelegate = cntlr
+    }
+    
+    func mainTableViewSetAlternatingRows() {
+        let userDefaults = NSUserDefaultsController().defaults
+        let alternateBool = userDefaults.bool(forKey: "alternateRows")
+        mainTableView.usesAlternatingRowBackgroundColors = alternateBool
     }
     
     
@@ -146,8 +165,9 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
         mainTableView.reloadData()
     }
     
-    func initializeFetchedResultsController() {
-        cntlr.initializeToDoFetchedResultsController()
+    func toDoManagedObjectID(index: Int) -> NSManagedObjectID? {
+        guard let toDoCellView = mainTableView.view(atColumn: 1, row: index, makeIfNecessary: false) as? ToDoCellView else { return nil }
+        return toDoCellView.managedObjectID
     }
     
     func addToDoToGroup(toDoRowIndex: Int, group: Group) {
@@ -168,19 +188,15 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
     
     // MARK: - Window Controller Delegate
     func addToDo(toDoText: String) {
-        addToDoItemToMainTableView(toDoText: toDoText)
+        cntlr.save(addedToDoTitle: toDoText, newToDoSidebarSelection: sourceOutlineView.item(atRow: sourceOutlineView.selectedRow) as? SidebarItem)
     }
     func clearToDoTextField(sender: NSTextField) {
         sender.stringValue = ""
     }
     
     // MARK: - Controller functions
-    func addToDoItemToMainTableView(toDoText: String) {
-        cntlr.save(addedToDoTitle: toDoText)
-    }
-    
-    func updateStatusBar(numOfItems: Int, sidebarGroup: String?) {
-        lblStatusBottom.stringValue = "\(sidebarGroup != nil ? "\(sidebarGroup!) - " : "")\(numOfItems) items"
+    func updateStatusBar(withText text: String) {
+        lblStatusBottom.stringValue = text
     }
     
     override func updateViewConstraints() {

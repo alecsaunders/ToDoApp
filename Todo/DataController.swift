@@ -10,11 +10,13 @@ import Cocoa
 import CoreData
 
 class DataController: NSObject {
+    var persistentContainer: NSPersistentContainer
     var managedObjectContext: NSManagedObjectContext
     
     override init() {
         let appDel = NSApplication.shared.delegate as! AppDelegate
-        managedObjectContext = appDel.persistentContainer.viewContext
+        persistentContainer = appDel.persistentContainer
+        managedObjectContext = persistentContainer.viewContext
     }
     
     func saveMoc() {

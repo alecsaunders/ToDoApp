@@ -8,20 +8,27 @@
 
 import Cocoa
 
+protocol PreferencesDelegate {
+    func setAltRowColorBool()
+}
+
 enum retentionEnum: Int {
     case immediatly = 0
     case one = 1
     case ten = 10
     case thirty = 30
 }
+
 class PreferencesViewController: NSViewController {
+    let userDefaults = NSUserDefaultsController().defaults
+    var prefDelegate: PreferencesDelegate?
+    var fontManager: NSFontManager = NSFontManager.shared
+    var fontPanel: NSFontPanel?
+    
 
     @IBOutlet var retentionPopUp: NSPopUpButton!
     @IBAction func retentionPopUpAction(_ sender: NSPopUpButton) {
         let selectedIndex = sender.indexOfSelectedItem
-        
-        let userDefaults = NSUserDefaultsController().defaults
-        
         switch selectedIndex {
         case 0:
             userDefaults.set(0, forKey: "completeRetention")
@@ -35,17 +42,51 @@ class PreferencesViewController: NSViewController {
             userDefaults.set(30, forKey: "completeRetention")
         }        
     }
+    @IBOutlet var chkbxAlternateRowColor: NSButton!
+    @IBAction func chkbxAlternateRowColor(_ sender: NSButton) {
+        if sender.state.rawValue == 0 {
+            userDefaults.set(false, forKey: "alternateRows")
+        } else {
+            userDefaults.set(true, forKey: "alternateRows")
+        }
+        
+        NotificationCenter.default.post(name: Notification.Name(rawValue: "PrefsChanged"), object: nil)
+        
+    }
+    @IBAction func btnToDoFont(_ sender: NSButton) {
+//        fontManager.target = self
+//        fontManager.action = #selector(self.changeToDoFont)
+//
+//        fontPanel = fontManager.fontPanel(true)
+//        let font = NSFont(name: "Optima", size: 13)
+//        fontPanel?.setPanelFont(font!, isMultiple: false)
+//        fontPanel?.orderFront(self)
+//        fontPanel?.isEnabled = true
+    }
     
     override func viewWillAppear() {
         super.viewWillAppear()
-        let userDefaults = NSUserDefaultsController().defaults
         guard let retentionSettingValue = userDefaults.value(forKey: "completeRetention") as? Int else { return }
         guard let popUpIndex = retentionEnum.init(rawValue: retentionSettingValue)?.hashValue else { return }
         retentionPopUp.selectItem(at: popUpIndex)
+        
+        if !userDefaults.bool(forKey: "alternateRows") {
+            chkbxAlternateRowColor.state = .off
+        } else {
+            chkbxAlternateRowColor.state = .on
+        }
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
     }
+    
+//    @objc func changeToDoFont() {
+//        fontManager.modifyFontViaPanel(self)
+//    }
+//
+//    override func changeFont(_ sender: Any?) {
+//        print(sender)
+//    }
     
 }

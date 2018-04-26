@@ -10,12 +10,15 @@ import Foundation
 import Cocoa
 import CoreData
 
+protocol MainControllerDelegate {
+    func assigneToDoToGroup(moID: NSManagedObjectID, group: Group)
+}
 
-class MainController: NSObject, NSFetchedResultsControllerDelegate, InfoControllerDelegate, TableViewMenuDelegate, MTVDel2 {
-    let registeredTypes = [NSPasteboard.PasteboardType.string]
+class MainController: NSObject, NSFetchedResultsControllerDelegate, InfoControllerDelegate, TableViewMenuDelegate, MTVDel2, MainControllerDelegate {
     let dataController = DataController()
     var toDoFetchedResultsController: NSFetchedResultsController<NSFetchRequestResult>!
     weak var mainTableViewDelgate: MainTableViewDelgate?
+    var categoryDelegate: CategoryDelegate?
     var fetchedToDos: [ToDo]?
     
     override init() {
@@ -48,7 +51,7 @@ class MainController: NSObject, NSFetchedResultsControllerDelegate, InfoControll
         let sort = NSSortDescriptor(key: "createdDate", ascending: true)
         request.sortDescriptors = [sort]
         
-        if let predicate = mainTableViewDelgate?.testSidebarPredicate {
+        if let predicate = categoryDelegate?.categoryPredicate {
             request.predicate = predicate
         } else {
             request.predicate = NSPredicate(format: "completedDate == nil")
@@ -73,13 +76,16 @@ class MainController: NSObject, NSFetchedResultsControllerDelegate, InfoControll
         return theToDo
     }
     
-    func save(addedToDoTitle: String) {
+    func save(addedToDoTitle: String, newToDoSidebarSelection: SidebarItem?) {
         if addedToDoTitle.isEmpty {
             print("do not add a new to do item")
         } else {
             guard let theToDo = NSEntityDescription.insertNewObject(forEntityName: "ToDo", into: dataController.managedObjectContext) as? ToDo else { return }
             theToDo.title = addedToDoTitle
             theToDo.createdDate = NSDate()
+            if let sbCat = (newToDoSidebarSelection as? SidebarCategoryItem)?.sbCategory {
+                theToDo.group = sbCat
+            }
             dataController.saveMoc()
             mainTableViewDelgate?.reloadData()
         }
