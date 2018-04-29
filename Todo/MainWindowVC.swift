@@ -186,6 +186,13 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
         sourceOutlineView?.expandItem(nil, expandChildren: true)
     }
     
+    func removeRows(atIndex index: Int) {
+        mainTableView.beginUpdates()
+        let removedIndecies = IndexSet.init(integer: index)
+        mainTableView.removeRows(at: removedIndecies, withAnimation: .slideUp)
+        mainTableView.endUpdates()
+    }
+    
     // MARK: - Window Controller Delegate
     func addToDo(toDoText: String) {
         cntlr.save(addedToDoTitle: toDoText, newToDoSidebarSelection: sourceOutlineView.item(atRow: sourceOutlineView.selectedRow) as? SidebarItem)

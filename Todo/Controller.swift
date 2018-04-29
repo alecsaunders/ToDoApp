@@ -16,6 +16,7 @@ protocol MainControllerDelegate {
 
 class MainController: NSObject, NSFetchedResultsControllerDelegate, InfoControllerDelegate, TableViewMenuDelegate, MTVDel2, MainControllerDelegate {
     let dataController = DataController()
+    let toDoModelAcessor = ToDoModelAccessor()
     var toDoFetchedResultsController: NSFetchedResultsController<NSFetchRequestResult>!
     weak var mainTableViewDelgate: MainTableViewDelgate?
     var categoryDelegate: CategoryDelegate?
@@ -92,6 +93,7 @@ class MainController: NSObject, NSFetchedResultsControllerDelegate, InfoControll
     }
 
     func markCompleted(atIndex: Int, complete: Bool) {
+        print("marked completed")
         guard let fetchedObjs = toDoFetchedResultsController.fetchedObjects else { return }
         guard let object = fetchedObjs[atIndex] as? ToDo else { return }
         if complete {
@@ -99,16 +101,23 @@ class MainController: NSObject, NSFetchedResultsControllerDelegate, InfoControll
         } else {
             object.completedDate = nil
         }
-        dataController.saveMoc()
-        mainTableViewDelgate?.reloadData()
+        print("Marking completed at row: \(atIndex)")
+        if toDoModelAcessor.managedContextDidSave() {
+            mainTableViewDelgate?.removeRows(atIndex: atIndex)
+            initializeToDoFetchedResultsController()
+        } else {
+            mainTableViewDelgate?.reloadData()
+        }
+        
     }
     
     func removeToDoEntityRecord(atIndex: Int) {
-        guard let fetchedObjs = toDoFetchedResultsController.fetchedObjects else { return }
-        guard let object = fetchedObjs[atIndex] as? NSManagedObject else { return }
-        dataController.managedObjectContext.delete(object)
-        dataController.saveMoc()
-        mainTableViewDelgate?.reloadData()
+        print("removing to do record")
+//        guard let fetchedObjs = toDoFetchedResultsController.fetchedObjects else { return }
+//        guard let object = fetchedObjs[atIndex] as? NSManagedObject else { return }
+//        dataController.managedObjectContext.delete(object)
+//        dataController.saveMoc()
+//        mainTableViewDelgate?.reloadData()
     }
     
     func updateNote(newNote: String, moID: NSManagedObjectID?) {

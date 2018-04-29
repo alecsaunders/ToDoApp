@@ -10,11 +10,11 @@ import Cocoa
 
 
 class ToDoModelAccessor {
-    let appDelegate = NSApplication.shared.delegate as? AppDelegate
-    var managedContext: NSManagedObjectContext? = nil
+    let appDelegate = NSApplication.shared.delegate as! AppDelegate
+    var managedObjectContext: NSManagedObjectContext
     
     init() {
-        managedContext = appDelegate?.persistentContainer.viewContext
+        managedObjectContext = appDelegate.persistentContainer.viewContext
     }
     
     func getToDoItems() {
@@ -22,9 +22,9 @@ class ToDoModelAccessor {
     }
 
     
-    func managedContextDidSave(managedContext: NSManagedObjectContext) -> Bool {
+    func managedContextDidSave() -> Bool {
         do {
-            try managedContext.save()
+            try managedObjectContext.save()
             return true
         } catch let error as NSError {
             print("Could not delete. \(error), \(error.userInfo)")
