@@ -22,6 +22,8 @@ enum retentionEnum: Int {
 class PreferencesViewController: NSViewController {
     let userDefaults = NSUserDefaultsController().defaults
     var prefDelegate: PreferencesDelegate?
+    var fontManager: NSFontManager = NSFontManager.shared
+    var fontPanel: NSFontPanel?
     
 
     @IBOutlet var retentionPopUp: NSPopUpButton!
@@ -51,6 +53,16 @@ class PreferencesViewController: NSViewController {
         NotificationCenter.default.post(name: Notification.Name(rawValue: "PrefsChanged"), object: nil)
         
     }
+    @IBAction func btnToDoFont(_ sender: NSButton) {
+//        fontManager.target = self
+//        fontManager.action = #selector(self.changeToDoFont)
+//
+//        fontPanel = fontManager.fontPanel(true)
+//        let font = NSFont(name: "Optima", size: 13)
+//        fontPanel?.setPanelFont(font!, isMultiple: false)
+//        fontPanel?.orderFront(self)
+//        fontPanel?.isEnabled = true
+    }
     
     override func viewWillAppear() {
         super.viewWillAppear()
@@ -68,5 +80,13 @@ class PreferencesViewController: NSViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
     }
+    
+//    @objc func changeToDoFont() {
+//        fontManager.modifyFontViaPanel(self)
+//    }
+//
+//    override func changeFont(_ sender: Any?) {
+//        print(sender)
+//    }
     
 }
