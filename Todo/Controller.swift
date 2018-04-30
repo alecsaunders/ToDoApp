@@ -92,18 +92,19 @@ class MainController: NSObject, NSFetchedResultsControllerDelegate, InfoControll
         }
     }
 
-    func markCompleted(atIndex: Int, complete: Bool) {
-        print("marked completed")
+    func markCompleted(atIndex index: Int, complete: Bool) {
+        print("marked completed at index \(index)")
         guard let fetchedObjs = toDoFetchedResultsController.fetchedObjects else { return }
-        guard let object = fetchedObjs[atIndex] as? ToDo else { return }
+        guard let object = fetchedObjs[index] as? ToDo else { return }
         if complete {
             object.completedDate = NSDate()
         } else {
             object.completedDate = nil
         }
-        print("Marking completed at row: \(atIndex)")
+        print("Marking completed at row: \(index)")
+        print(fetchedObjs[index])
         if toDoModelAcessor.managedContextDidSave() {
-            mainTableViewDelgate?.removeRows(atIndex: atIndex)
+            mainTableViewDelgate?.removeRows(atIndex: index)
             initializeToDoFetchedResultsController()
         } else {
             mainTableViewDelgate?.reloadData()
@@ -128,13 +129,12 @@ class MainController: NSObject, NSFetchedResultsControllerDelegate, InfoControll
     
     
     // MARK: - Update View
-    func completedWasChecked(state: Int, btnIndex: Int) {
+    func completedWasChecked(state: Int, btnIndex index: Int, withManagedObjectID moID: NSManagedObjectID) {
         switch state {
         case 1:
-            markCompleted(atIndex: btnIndex, complete: true)
+            markCompleted(atIndex: index, complete: true)
         case 0:
-            markCompleted(atIndex: btnIndex, complete: false)
-            break
+            markCompleted(atIndex: index, complete: false)
         default:
             break
         }
