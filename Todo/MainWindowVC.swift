@@ -41,6 +41,20 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
     }
     @IBOutlet var tvMenu: TvMenu!
     @IBAction func markComplete(_ sender: NSMenuItem) {
+        // FIXME: Refactor
+        if let clicked_view = mainTableView.view(atColumn: 0, row: mainTableView.clickedRow, makeIfNecessary: false) as? NSTableCellView {
+            if let button = clicked_view.subviews[0] as? NSButton {
+                switch button.state {
+                    case .on:
+                        button.state = .off
+                    case .off:
+                        button.state = .on
+                    default:
+                        print("default")
+                }
+            }
+        }
+        // END - Refactor
         guard let moID = (mainTableView.view(atColumn: 1, row: mainTableView.clickedRow, makeIfNecessary: false) as? ToDoCellView)?.managedObjectID else { return }
         cntlr.completedWasChecked(state: sender.state.rawValue, btnIndex: mainTableView.clickedRow, withManagedObjectID: moID)
     }
