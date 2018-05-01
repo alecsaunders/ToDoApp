@@ -93,7 +93,6 @@ class MainController: NSObject, NSFetchedResultsControllerDelegate, InfoControll
     }
 
     func markCompleted(atIndex index: Int, complete: Bool) {
-        print("marked completed at index \(index)")
         guard let fetchedObjs = toDoFetchedResultsController.fetchedObjects else { return }
         guard let object = fetchedObjs[index] as? ToDo else { return }
         if complete {
@@ -101,8 +100,6 @@ class MainController: NSObject, NSFetchedResultsControllerDelegate, InfoControll
         } else {
             object.completedDate = nil
         }
-        print("Marking completed at row: \(index)")
-        print(fetchedObjs[index])
         if toDoModelAcessor.managedContextDidSave() {
             mainTableViewDelgate?.removeRows(atIndex: index)
             initializeToDoFetchedResultsController()

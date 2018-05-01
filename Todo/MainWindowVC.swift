@@ -36,13 +36,11 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
         outlineCntlr.addSidebarGroup(groupName: "New Group")
     }
     @IBAction func completedCheck(_ sender: NSButton) {
-//        markToDoComplete(withSenderState: sender.state.rawValue)
         guard let moID = (mainTableView.view(atColumn: 1, row: sender.tag, makeIfNecessary: false) as? ToDoCellView)?.managedObjectID else { return }
         cntlr.completedWasChecked(state: sender.state.rawValue, btnIndex: sender.tag, withManagedObjectID: moID)
     }
     @IBOutlet var tvMenu: TvMenu!
     @IBAction func markComplete(_ sender: NSMenuItem) {
-//        markToDoComplete(withSenderState: sender.state.rawValue)
         guard let moID = (mainTableView.view(atColumn: 1, row: mainTableView.clickedRow, makeIfNecessary: false) as? ToDoCellView)?.managedObjectID else { return }
         cntlr.completedWasChecked(state: sender.state.rawValue, btnIndex: mainTableView.clickedRow, withManagedObjectID: moID)
     }
@@ -148,7 +146,6 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
     
     func markToDoComplete(withSenderState state: Int) {
         let clickedRow = mainTableView.clickedRow
-        print(clickedRow)
         guard let moID = (mainTableView.view(atColumn: 1, row: clickedRow, makeIfNecessary: false) as? ToDoCellView)?.managedObjectID else { return }
         cntlr.completedWasChecked(state: state, btnIndex: clickedRow, withManagedObjectID: moID)
     }
@@ -199,10 +196,9 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
     }
     
     func removeRows(atIndex index: Int) {
-        print("removeRows")
         if let rView = mainTableView.view(atColumn: 1, row: index, makeIfNecessary: false) as? ToDoCellView {
             if let rToDo = cntlr.dataController.managedObjectContext.object(with: rView.managedObjectID!) as? ToDo {
-                print(rToDo)
+                // do something
             }
         } else {
             print("No ToDoCellView at index \(index)")
@@ -212,6 +208,20 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
         let removedIndecies = IndexSet.init(integer: index)
         mainTableView.removeRows(at: removedIndecies, withAnimation: .slideUp)
         mainTableView.endUpdates()
+        
+        
+        for index in 0..<mainTableView.numberOfRows {
+            if let tmpView = mainTableView.view(atColumn: 0, row: index, makeIfNecessary: false) as? NSTableCellView {
+                if let completeBtn = tmpView.subviews[0] as? NSButton {
+                    completeBtn.tag = index
+                } else {
+                    mainTableView.reloadData()
+                }
+            } else {
+                mainTableView.reloadData()
+            }
+            
+        }
     }
     
     // MARK: - Window Controller Delegate
