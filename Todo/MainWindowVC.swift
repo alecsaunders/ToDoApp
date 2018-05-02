@@ -206,6 +206,11 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
         mainTableView.removeRows(at: removedIndecies, withAnimation: .slideUp)
         mainTableView.endUpdates()
         
+        let numOfItems = mainTableView.numberOfRows
+        let sidebarGroup: Group? = nil
+        let statusBarText = "\(sidebarGroup != nil ? "\(sidebarGroup!) - " : "")\(numOfItems == 1  ? "\(numOfItems) item" : "\(numOfItems) items")"
+        updateStatusBar(withText: statusBarText)
+        
         for index in 0..<mainTableView.numberOfRows {
             if let tmpView = mainTableView.view(atColumn: 0, row: index, makeIfNecessary: false) as? NSTableCellView {
                 if let completeBtn = tmpView.subviews[0] as? NSButton {
