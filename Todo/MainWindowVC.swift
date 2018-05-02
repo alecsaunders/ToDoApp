@@ -36,8 +36,7 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
         outlineCntlr.addSidebarGroup(groupName: "New Group")
     }
     @IBAction func completedCheck(_ sender: NSButton) {
-        guard let moID = (mainTableView.view(atColumn: 1, row: sender.tag, makeIfNecessary: false) as? ToDoCellView)?.managedObjectID else { return }
-        cntlr.completedWasChecked(state: sender.state.rawValue, btnIndex: sender.tag, withManagedObjectID: moID)
+        cntlr.completedWasChecked(state: sender.state.rawValue, btnIndex: sender.tag)
     }
     @IBOutlet var tvMenu: TvMenu!
     @IBAction func markComplete(_ sender: NSMenuItem) {
@@ -55,8 +54,7 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
             }
         }
         // END - Refactor
-        guard let moID = (mainTableView.view(atColumn: 1, row: mainTableView.clickedRow, makeIfNecessary: false) as? ToDoCellView)?.managedObjectID else { return }
-        cntlr.completedWasChecked(state: sender.state.rawValue, btnIndex: mainTableView.clickedRow, withManagedObjectID: moID)
+        cntlr.completedWasChecked(state: sender.state.rawValue, btnIndex: mainTableView.clickedRow)
     }
     @IBAction func menuGetInfo(_ sender: NSMenuItem) {
         if mainTableView.clickedRow >= 0 {
@@ -157,13 +155,6 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
         sidebarView.animator().isHidden = hide
     }
     
-    
-    func markToDoComplete(withSenderState state: Int) {
-        let clickedRow = mainTableView.clickedRow
-        guard let moID = (mainTableView.view(atColumn: 1, row: clickedRow, makeIfNecessary: false) as? ToDoCellView)?.managedObjectID else { return }
-        cntlr.completedWasChecked(state: state, btnIndex: clickedRow, withManagedObjectID: moID)
-    }
-    
     // MARK: - Main Table View Delegate Functions
     @objc func doubleClick(sender: AnyObject) {
         if mainTableView.clickedRow >= 0 {
@@ -210,19 +201,10 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
     }
     
     func removeRows(atIndex index: Int) {
-        if let rView = mainTableView.view(atColumn: 1, row: index, makeIfNecessary: false) as? ToDoCellView {
-            if let rToDo = cntlr.dataController.managedObjectContext.object(with: rView.managedObjectID!) as? ToDo {
-                // do something
-            }
-        } else {
-            print("No ToDoCellView at index \(index)")
-        }
-        
         mainTableView.beginUpdates()
         let removedIndecies = IndexSet.init(integer: index)
         mainTableView.removeRows(at: removedIndecies, withAnimation: .slideUp)
         mainTableView.endUpdates()
-        
         
         for index in 0..<mainTableView.numberOfRows {
             if let tmpView = mainTableView.view(atColumn: 0, row: index, makeIfNecessary: false) as? NSTableCellView {

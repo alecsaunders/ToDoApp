@@ -126,7 +126,7 @@ class MainController: NSObject, NSFetchedResultsControllerDelegate, InfoControll
     
     
     // MARK: - Update View
-    func completedWasChecked(state: Int, btnIndex index: Int, withManagedObjectID moID: NSManagedObjectID) {
+    func completedWasChecked(state: Int, btnIndex index: Int) {
         switch state {
         case 1:
             markCompleted(atIndex: index, complete: true)
