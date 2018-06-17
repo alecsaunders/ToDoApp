@@ -14,8 +14,8 @@ protocol MainTableViewDelgate: class {
     func reloadData()
     func reloadSidebar()
     func removeRows(atIndex index: Int)
-    func toDoManagedObjectID(index: Int) -> NSManagedObjectID?
-    func addToDoToGroup(toDoRowIndex: Int, group: Group)
+//    func toDoManagedObjectID(index: Int) -> NSManagedObjectID?
+//    func addToDoToGroup(toDoRowIndex: Int, group: Group)
     func setToDoToDaily(toDoRowIndex: Int)
     func updateStatusBar(withText text: String)
     func doubleClick(sender: AnyObject)
@@ -27,8 +27,8 @@ protocol MTVDel2 {
 }
 
 class MainTableViewController: NSObject, NSTableViewDelegate, NSTableViewDataSource, ToDoCellViewDelegate, NSFetchedResultsControllerDelegate {
+    
     let registeredTypes = [NSPasteboard.PasteboardType.string]
-    let dataController = DataController()
     weak var mainTableViewDelgate: MainTableViewDelgate?
     var mtvdel2: MTVDel2?
     
@@ -36,30 +36,30 @@ class MainTableViewController: NSObject, NSTableViewDelegate, NSTableViewDataSou
         super.init()
     }
     
-    func updateStatusBar(numOfItems: Int, sidebarGroup: Group?) {
-        let statusBarText = "\(sidebarGroup != nil ? "\(sidebarGroup!) - " : "")\(numOfItems == 1  ? "\(numOfItems) item" : "\(numOfItems) items")"
-        mainTableViewDelgate?.updateStatusBar(withText: statusBarText)
-    }
+//    func updateStatusBar(numOfItems: Int, sidebarGroup: Group?) {
+//        let statusBarText = "\(sidebarGroup != nil ? "\(sidebarGroup!) - " : "")\(numOfItems == 1  ? "\(numOfItems) item" : "\(numOfItems) items")"
+//        mainTableViewDelgate?.updateStatusBar(withText: statusBarText)
+//    }
     
     // MARK: - To Do Table View Delegate Methods
-    func changeText(newToDoTitle: String, moID: NSManagedObjectID) {
-        guard let toDoObj = getToDo(moID: moID) else { return }
-        toDoObj.setValue(newToDoTitle, forKey: "title")
-        dataController.saveMoc()
+    func changeText(newToDoTitle: String) {
+//        guard let toDoObj = getToDo(moID: moID) else { return }
+//        toDoObj.setValue(newToDoTitle, forKey: "title")
+//        dataController.saveMoc()
     }
     
-    func getToDo(moID: NSManagedObjectID?) -> ToDo? {
-        guard let managedObjectID = moID else { return nil }
-        guard let theToDo = dataController.managedObjectContext.object(with: managedObjectID) as? ToDo else { return nil }
-        return theToDo
-    }
+//    func getToDo(moID: NSManagedObjectID?) -> ToDo? {
+//        guard let managedObjectID = moID else { return nil }
+//        guard let theToDo = dataController.managedObjectContext.object(with: managedObjectID) as? ToDo else { return nil }
+//        return theToDo
+//    }
 
     
     //MARK: - TableView Delegate Methods
     func numberOfRows(in tableView: NSTableView) -> Int {
         guard let mtv2 = mtvdel2 else { return 0 }
         guard let fetchedObjs = mtv2.fetchedToDos else { return 0 }
-        updateStatusBar(numOfItems: fetchedObjs.count, sidebarGroup: nil)
+//        updateStatusBar(numOfItems: fetchedObjs.count, sidebarGroup: nil)
         return fetchedObjs.count
     }
     
@@ -83,11 +83,8 @@ class MainTableViewController: NSObject, NSTableViewDelegate, NSTableViewDataSou
         }
         if tableColumn == tableView.tableColumns[1] {
             guard let cell = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "col_toDoText"), owner: nil) as? ToDoCellView else { return nil }
-            if let theTitle = theToDo.title {
-                cell.textField?.stringValue = theTitle
-            }
+            cell.textField?.stringValue = theToDo.title
             cell.toDoCellViewDelegate = self
-            cell.managedObjectID = theToDo.objectID
             
             return cell
         }
@@ -121,11 +118,12 @@ class MainTableViewController: NSObject, NSTableViewDelegate, NSTableViewDataSou
     }
     
     func tableView(_ tableView: NSTableView, pasteboardWriterForRow row: Int) -> NSPasteboardWriting? {
-        let pbItem = NSPasteboardItem()
-        guard let moID = mainTableViewDelgate?.toDoManagedObjectID(index: row) else { return nil }
-        
-        pbItem.setString(moID.uriRepresentation().absoluteString, forType: .string)
+//        let pbItem = NSPasteboardItem()
+//        guard let moID = mainTableViewDelgate?.toDoManagedObjectID(index: row) else { return nil }
+//
+//        pbItem.setString(moID.uriRepresentation().absoluteString, forType: .string)
 //        pbItem.setData(moID.uriRepresentation().dataRepresentation, forType: .URL)
-        return pbItem
+//        return pbItem
+        return nil
     }
 }

@@ -15,7 +15,7 @@ protocol CategoryDelegate {
 }
 
 class OutlineViewController: NSObject, NSFetchedResultsControllerDelegate, NSOutlineViewDataSource, NSOutlineViewDelegate, GroupCellViewDelegate, CategoryDelegate {
-    let dataController = DataController()
+//    let dataController = DataController()
     weak var mainTableViewDelgate: MainTableViewDelgate?
     var mainControllerDelegate: MainControllerDelegate?
     var fetchedGroupsController: NSFetchedResultsController<NSFetchRequestResult>!
@@ -45,7 +45,7 @@ class OutlineViewController: NSObject, NSFetchedResultsControllerDelegate, NSOut
     //REPLACE THIS FUNCTION IS A SUBCLASS OF fetchedGroupsController
     func mapFetchedGroupsToSidebarCategory(groupArray: [Group]) -> [SidebarCategoryItem] {
         let sbCatArray: [SidebarCategoryItem] = groupArray.map { (theGroup) -> SidebarCategoryItem in
-            let sbCat = SidebarCategoryItem(withTitle: theGroup.groupName!)
+            let sbCat = SidebarCategoryItem(withTitle: theGroup.groupName)
             sbCat.sbCategory = theGroup
             return sbCat
         }
@@ -53,21 +53,21 @@ class OutlineViewController: NSObject, NSFetchedResultsControllerDelegate, NSOut
     }
     
     func initializeFetchedGroupsController() {
-        let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Group")
-        let sort = NSSortDescriptor(key: "groupName", ascending: true)
-        request.sortDescriptors = [sort]
-        let moc = dataController.managedObjectContext
-        fetchedGroupsController = NSFetchedResultsController(fetchRequest: request, managedObjectContext: moc, sectionNameKeyPath: nil, cacheName: nil)
-        fetchedGroupsController.delegate = self
-        
-        do {
-            try fetchedGroupsController.performFetch()
-            guard let fetchedGroups = fetchedGroupsController.fetchedObjects as? [Group] else { return }
-            let sbCatArray = mapFetchedGroupsToSidebarCategory(groupArray: fetchedGroups)
-            sbCategorySection.sbItem = sbCatArray
-        } catch {
-            fatalError("Failed to initialize fetch")
-        }
+//        let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Group")
+//        let sort = NSSortDescriptor(key: "groupName", ascending: true)
+//        request.sortDescriptors = [sort]
+//        let moc = dataController.managedObjectContext
+//        fetchedGroupsController = NSFetchedResultsController(fetchRequest: request, managedObjectContext: moc, sectionNameKeyPath: nil, cacheName: nil)
+//        fetchedGroupsController.delegate = self
+//
+//        do {
+//            try fetchedGroupsController.performFetch()
+//            guard let fetchedGroups = fetchedGroupsController.fetchedObjects as? [Group] else { return }
+//            let sbCatArray = mapFetchedGroupsToSidebarCategory(groupArray: fetchedGroups)
+//            sbCategorySection.sbItem = sbCatArray
+//        } catch {
+//            fatalError("Failed to initialize fetch")
+//        }
     }
     
     // MARK: - OutlineView Methods
@@ -79,37 +79,37 @@ class OutlineViewController: NSObject, NSFetchedResultsControllerDelegate, NSOut
     }
     
     func outlineViewSelectionDidChange(_ notification: Notification) {
-        guard let sidebarView = notification.object as? NSOutlineView else { return }
-        
-        if let sbCatItem = sidebarView.item(atRow: sidebarView.selectedRow) as? SidebarCategoryItem {
-            if let selectedGroup = sbCatItem.sbCategory {
-                let groupPred = NSPredicate(format: "group = %@", selectedGroup)
-                let completePred = NSPredicate(format: "completedDate == nil")
-                let compPred = NSCompoundPredicate(andPredicateWithSubpredicates: [groupPred, completePred])
-                categoryPredicate = compPred
-            }
-        }
-        
-        if let cat = sidebarView.item(atRow: sidebarView.selectedRow) as? SidebarFilterItem {
-            if let filter = cat.sbFilter {
-                switch filter {
-                case .daily:
-                    let dailyPred = NSPredicate(format: "daily = %@", "1")
-                    let completePred = NSPredicate(format: "completedDate == nil")
-                    let compPred = NSCompoundPredicate(andPredicateWithSubpredicates: [dailyPred, completePred])
-                    categoryPredicate = compPred
-                case .completed:
-                    categoryPredicate = NSPredicate(format: "completedDate != nil")
-                default:
-                    categoryPredicate = NSPredicate(format: "completedDate == nil")
-                }
-            } else {
-                categoryPredicate = NSPredicate(format: "completedDate == nil")
-            }
-            
-        }
-        print("outlineview selection did change")
-        mainTableViewDelgate?.reloadData()
+//        guard let sidebarView = notification.object as? NSOutlineView else { return }
+//        
+//        if let sbCatItem = sidebarView.item(atRow: sidebarView.selectedRow) as? SidebarCategoryItem {
+//            if let selectedGroup = sbCatItem.sbCategory {
+//                let groupPred = NSPredicate(format: "group = %@", selectedGroup)
+//                let completePred = NSPredicate(format: "completedDate == nil")
+//                let compPred = NSCompoundPredicate(andPredicateWithSubpredicates: [groupPred, completePred])
+//                categoryPredicate = compPred
+//            }
+//        }
+//        
+//        if let cat = sidebarView.item(atRow: sidebarView.selectedRow) as? SidebarFilterItem {
+//            if let filter = cat.sbFilter {
+//                switch filter {
+//                case .daily:
+//                    let dailyPred = NSPredicate(format: "daily = %@", "1")
+//                    let completePred = NSPredicate(format: "completedDate == nil")
+//                    let compPred = NSCompoundPredicate(andPredicateWithSubpredicates: [dailyPred, completePred])
+//                    categoryPredicate = compPred
+//                case .completed:
+//                    categoryPredicate = NSPredicate(format: "completedDate != nil")
+//                default:
+//                    categoryPredicate = NSPredicate(format: "completedDate == nil")
+//                }
+//            } else {
+//                categoryPredicate = NSPredicate(format: "completedDate == nil")
+//            }
+//            
+//        }
+//        print("outlineview selection did change")
+//        mainTableViewDelgate?.reloadData()
     }
     
     
@@ -175,11 +175,11 @@ class OutlineViewController: NSObject, NSFetchedResultsControllerDelegate, NSOut
             return view
         case let sbCat as SidebarCategoryItem:
             let view = outlineView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "DataCell"), owner: self) as! GroupCellView
-            view.groupID = sbCat.sbCategory!.objectID
+//            view.groupID = sbCat.sbCategory!.objectID
             view.groupCellViewDelegate = self
             if let textField = view.txtGroup {
                 textField.isEditable = true
-                textField.stringValue = sbCat.sbCategory!.groupName!
+                textField.stringValue = "fixme: Static Group name"
             }
             return view
         default:
@@ -212,16 +212,16 @@ class OutlineViewController: NSObject, NSFetchedResultsControllerDelegate, NSOut
         return nil
     }
     
-    func outlineView(_ outlineView: NSOutlineView, acceptDrop info: NSDraggingInfo, item: Any?, childIndex index: Int) -> Bool {
-        let pboard = info.draggingPasteboard()
-        guard let pbItem = pboard.pasteboardItems?[0] else { return false }
-        guard let managedObjectIDURLString = pbItem.string(forType: .string) else { return false }
-        guard let objectID = URL(string: managedObjectIDURLString) else { return false }
-        guard let managedObjectID = dataController.persistentContainer.persistentStoreCoordinator.managedObjectID(forURIRepresentation: objectID) else { return false }
-        guard let sbCat = (item as? SidebarCategoryItem)?.sbCategory else { return false }
-        mainControllerDelegate?.assigneToDoToGroup(moID: managedObjectID, group: sbCat)
-        return true
-    }
+//    func outlineView(_ outlineView: NSOutlineView, acceptDrop info: NSDraggingInfo, item: Any?, childIndex index: Int) -> Bool {
+//        let pboard = info.draggingPasteboard()
+//        guard let pbItem = pboard.pasteboardItems?[0] else { return false }
+//        guard let managedObjectIDURLString = pbItem.string(forType: .string) else { return false }
+//        guard let objectID = URL(string: managedObjectIDURLString) else { return false }
+//        guard let managedObjectID = dataController.persistentContainer.persistentStoreCoordinator.managedObjectID(forURIRepresentation: objectID) else { return false }
+//        guard let sbCat = (item as? SidebarCategoryItem)?.sbCategory else { return false }
+//        mainControllerDelegate?.assigneToDoToGroup(moID: managedObjectID, group: sbCat)
+//        return true
+//    }
     
     func outlineView(_ outlineView: NSOutlineView, shouldShowOutlineCellForItem item: Any) -> Bool {
         return false
@@ -229,25 +229,25 @@ class OutlineViewController: NSObject, NSFetchedResultsControllerDelegate, NSOut
     
     // MARK: - Other Methods
     func addSidebarGroup(groupName: String) {
-        guard let newGroup = NSEntityDescription.insertNewObject(forEntityName: "Group", into: dataController.managedObjectContext) as? Group else { return }
-        newGroup.groupName = groupName
-        dataController.saveMoc()
-        initializeFetchedGroupsController()
-        mainTableViewDelgate?.reloadSidebar()
+//        guard let newGroup = NSEntityDescription.insertNewObject(forEntityName: "Group", into: dataController.managedObjectContext) as? Group else { return }
+//        newGroup.groupName = groupName
+//        dataController.saveMoc()
+//        initializeFetchedGroupsController()
+//        mainTableViewDelgate?.reloadSidebar()
     }
     
     func deleteSidebarGroup(group: Group) {
-        dataController.managedObjectContext.delete(group)
-        dataController.saveMoc()
-        initializeFetchedGroupsController()
-        mainTableViewDelgate?.reloadSidebar()
+//        dataController.managedObjectContext.delete(group)
+//        dataController.saveMoc()
+//        initializeFetchedGroupsController()
+//        mainTableViewDelgate?.reloadSidebar()
     }
     
     func changeSidebarTitle(newTitle: String, moID: NSManagedObjectID) {
-        let groupObj = dataController.managedObjectContext.object(with: moID)
-        groupObj.setValue(newTitle, forKey: "groupName")
-        dataController.saveMoc()
-        initializeFetchedGroupsController()
-        mainTableViewDelgate?.reloadSidebar()
+//        let groupObj = dataController.managedObjectContext.object(with: moID)
+//        groupObj.setValue(newTitle, forKey: "groupName")
+//        dataController.saveMoc()
+//        initializeFetchedGroupsController()
+//        mainTableViewDelgate?.reloadSidebar()
     }
 }

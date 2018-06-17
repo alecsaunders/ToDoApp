@@ -8,8 +8,9 @@ target 'Todo' do
 
   # Pods for Todo
 
-  pod 'FirebaseCore', :git => 'https://github.com/firebase/firebase-ios-sdk.git', :tag => '5.0.0'
-  pod 'FirebaseAuth', :git => 'https://github.com/firebase/firebase-ios-sdk.git', :tag => '5.0.0'
+  pod 'Firebase', :git =>         'https://github.com/firebase/firebase-ios-sdk.git', :tag => '5.0.0'
+  pod 'FirebaseCore', :git =>     'https://github.com/firebase/firebase-ios-sdk.git', :tag => '5.0.0'
+  pod 'FirebaseAuth', :git =>     'https://github.com/firebase/firebase-ios-sdk.git', :tag => '5.0.0'
   pod 'FirebaseDatabase', :git => 'https://github.com/firebase/firebase-ios-sdk.git', :tag => '5.0.0'
 
   target 'TodoTests' do

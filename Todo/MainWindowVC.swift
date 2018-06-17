@@ -15,8 +15,8 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
     var clickedToDo: ToDo? {
         get {
             guard let v = mainTableView.view(atColumn: 1, row: mainTableView.clickedRow, makeIfNecessary: false) as? ToDoCellView else { return nil }
-            guard let moID = v.managedObjectID else { return nil }
-            guard let theToDo = cntlr.getToDo(moID: moID) else { return nil }
+//            guard let moID = v.managedObjectID else { return nil }
+            guard let theToDo = cntlr.getToDo(moID: nil) else { return nil }
             return theToDo
         }
     }
@@ -134,12 +134,11 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
         
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
-        let clickedCreateDate = theToDo.createdDate! as Date
+        let clickedCreateDate = theToDo.createdDate //! as Date
         let clickedCreateDateString = dateFormatter.string(from: clickedCreateDate)
         dest.infoTitleString = theToDo.title
         dest.intoCreatedDateString = clickedCreateDateString
         dest.note = theToDo.note
-        dest.managedObjectID = theToDo.objectID
         dest.infoControllerDelegate = cntlr
     }
     
@@ -157,25 +156,25 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
     
     // MARK: - Main Table View Delegate Functions
     @objc func doubleClick(sender: AnyObject) {
-        if mainTableView.clickedRow >= 0 {
-            performSegue(withIdentifier: NSStoryboardSegue.Identifier(rawValue: "infoSegue"), sender: self)
-        }
-        if let v = mainTableView.view(atColumn: 1, row: mainTableView.clickedRow, makeIfNecessary: false) as? ToDoCellView {
-            if let toDo = cntlr.dataController.managedObjectContext.object(with: v.managedObjectID!) as? ToDo {
-//                let isoDate = "2017-08-25T04:55:00+0000"
-//
-//                let dateFormatter = DateFormatter()
-//                dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
-//                let date = dateFormatter.date(from:isoDate)! as NSDate
-//
-//                toDo.completedDate = date
-                print(toDo)
-            }
-        }
+//        if mainTableView.clickedRow >= 0 {
+//            performSegue(withIdentifier: NSStoryboardSegue.Identifier(rawValue: "infoSegue"), sender: self)
+//        }
+//        if let v = mainTableView.view(atColumn: 1, row: mainTableView.clickedRow, makeIfNecessary: false) as? ToDoCellView {
+//            if let toDo = cntlr.dataController.managedObjectContext.object(with: v.managedObjectID!) as? ToDo {
+////                let isoDate = "2017-08-25T04:55:00+0000"
+////
+////                let dateFormatter = DateFormatter()
+////                dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+////                let date = dateFormatter.date(from:isoDate)! as NSDate
+////
+////                toDo.completedDate = date
+//                print(toDo)
+//            }
+//        }
     }
     
     func reloadData() {
-        cntlr.initializeToDoFetchedResultsController()
+//        cntlr.initializeToDoFetchedResultsController()
         mainTableView.reloadData()
     }
     
@@ -185,8 +184,8 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
     }
     
     func addToDoToGroup(toDoRowIndex: Int, group: Group) {
-        guard let moID = (mainTableView.view(atColumn: 1, row: toDoRowIndex, makeIfNecessary: false) as? ToDoCellView)?.managedObjectID else { return }
-        cntlr.assigneToDoToGroup(moID: moID, group: group)
+//        guard let moID = (mainTableView.view(atColumn: 1, row: toDoRowIndex, makeIfNecessary: false) as? ToDoCellView)?.managedObjectID else { return }
+//        cntlr.assigneToDoToGroup(moID: moID, group: group)
     }
     
     func setToDoToDaily(toDoRowIndex: Int) {

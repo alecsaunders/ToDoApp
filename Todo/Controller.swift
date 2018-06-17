@@ -11,7 +11,7 @@ import Cocoa
 import CoreData
 
 protocol MainControllerDelegate {
-    func assigneToDoToGroup(moID: NSManagedObjectID, group: Group)
+//    func assigneToDoToGroup(moID: NSManagedObjectID, group: Group)
 }
 
 class MainController: NSObject, NSFetchedResultsControllerDelegate, InfoControllerDelegate, TableViewMenuDelegate, MTVDel2, MainControllerDelegate {
@@ -22,45 +22,45 @@ class MainController: NSObject, NSFetchedResultsControllerDelegate, InfoControll
     override init() {
         super.init()
         
-        initializeToDoFetchedResultsController()
     }
 
     
     func getToDo(moID: NSManagedObjectID?) -> ToDo? {
-        guard let managedObjectID = moID else { return nil }
-        guard let theToDo = dataController.managedObjectContext.object(with: managedObjectID) as? ToDo else { return nil }
+//        guard let managedObjectID = moID else { return nil }
+//        guard let theToDo = dataController.managedObjectContext.object(with: managedObjectID) as? ToDo else { return nil }
+        let theToDo = ToDo(id: "id", title: "title", note: "", daily: false, createdDate: Date(), completedDate: nil)
         return theToDo
     }
-    
+
     func save(addedToDoTitle: String, newToDoSidebarSelection: SidebarItem?) {
         if addedToDoTitle.isEmpty {
             print("do not add a new to do item")
         } else {
-            guard let theToDo = NSEntityDescription.insertNewObject(forEntityName: "ToDo", into: dataController.managedObjectContext) as? ToDo else { return }
-            theToDo.title = addedToDoTitle
-            theToDo.createdDate = NSDate()
-            if let sbCat = (newToDoSidebarSelection as? SidebarCategoryItem)?.sbCategory {
-                theToDo.group = sbCat
-            }
-            dataController.saveMoc()
-            mainTableViewDelgate?.reloadData()
+//            guard let theToDo = NSEntityDescription.insertNewObject(forEntityName: "ToDo", into: dataController.managedObjectContext) as? ToDo else { return }
+//            theToDo.title = addedToDoTitle
+//            theToDo.createdDate = NSDate()
+//            if let sbCat = (newToDoSidebarSelection as? SidebarCategoryItem)?.sbCategory {
+//                theToDo.group = sbCat
+//            }
+//            dataController.saveMoc()
+//            mainTableViewDelgate?.reloadData()
         }
     }
 
     func markCompleted(atIndex index: Int, complete: Bool) {
-        guard let fetchedObjs = toDoFetchedResultsController.fetchedObjects else { return }
-        guard let object = fetchedObjs[index] as? ToDo else { return }
-        if complete {
-            object.completedDate = NSDate()
-        } else {
-            object.completedDate = nil
-        }
-        if toDoModelAcessor.managedContextDidSave() {
-            mainTableViewDelgate?.removeRows(atIndex: index)
-            initializeToDoFetchedResultsController()
-        } else {
-            mainTableViewDelgate?.reloadData()
-        }
+//        guard let fetchedObjs = toDoFetchedResultsController.fetchedObjects else { return }
+//        guard let object = fetchedObjs[index] as? ToDo else { return }
+//        if complete {
+//            object.completedDate = NSDate()
+//        } else {
+//            object.completedDate = nil
+//        }
+//        if toDoModelAcessor.managedContextDidSave() {
+//            mainTableViewDelgate?.removeRows(atIndex: index)
+//            initializeToDoFetchedResultsController()
+//        } else {
+//            mainTableViewDelgate?.reloadData()
+//        }
         
     }
     
@@ -74,9 +74,9 @@ class MainController: NSObject, NSFetchedResultsControllerDelegate, InfoControll
     }
     
     func updateNote(newNote: String, moID: NSManagedObjectID?) {
-        guard let theToDo = getToDo(moID: moID) else { return }
-        theToDo.note = newNote
-        dataController.saveMoc()
+//        guard let theToDo = getToDo(moID: moID) else { return }
+//        theToDo.note = newNote
+//        dataController.saveMoc()
     }
     
     
@@ -92,16 +92,16 @@ class MainController: NSObject, NSFetchedResultsControllerDelegate, InfoControll
         }
     }
     
-    func assigneToDoToGroup(moID: NSManagedObjectID, group: Group) {
-        guard let theToDo = getToDo(moID: moID) else { return }
-        theToDo.group = group
-        dataController.saveMoc()
-    }
+//    func assigneToDoToGroup(moID: NSManagedObjectID, group: Group) {
+//        guard let theToDo = getToDo(moID: moID) else { return }
+//        theToDo.group = group
+//        dataController.saveMoc()
+//    }
     
     func setToDaily(moID: NSManagedObjectID, isDaily: Bool) {
         if let toDo = getToDo(moID: moID) {
-            toDo.daily = isDaily
-            dataController.saveMoc()
+//            toDo.daily = isDaily
+//            dataController.saveMoc()
             mainTableViewDelgate?.reloadData()
         }
     }

@@ -9,7 +9,7 @@
 import Cocoa
 
 protocol ToDoCellViewDelegate: class {
-    func changeText(newToDoTitle: String, moID: NSManagedObjectID)
+//    func changeText(newToDoTitle: String, moID: NSManagedObjectID)
 }
 
 class ToDoCellView: NSTableCellView, NSTextFieldDelegate {
@@ -20,7 +20,7 @@ class ToDoCellView: NSTableCellView, NSTextFieldDelegate {
         let newText = toDoItemText.stringValue
         if let toDoDel = toDoCellViewDelegate {
             guard let moID = managedObjectID else { return }
-            toDoDel.changeText(newToDoTitle: newText, moID: moID)
+//            toDoDel.changeText(newToDoTitle: newText, moID: moID)
         }
     }
     

@@ -13,8 +13,6 @@
 		7C4A9C54E8366852DFF01BAF /* Pods_TodoTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50A4FE3D0EE751808D95138E /* Pods_TodoTests.framework */; };
 		F20B42DE1F7D661A0088EE33 /* SidebarOutlineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F20B42DD1F7D661A0088EE33 /* SidebarOutlineView.swift */; };
 		F20B42E01F7D9ADE0088EE33 /* PreferencesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F20B42DF1F7D9ADE0088EE33 /* PreferencesViewController.swift */; };
-		F22601921F5DA0A00087D2FB /* Group+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = F226018E1F5DA0A00087D2FB /* Group+CoreDataClass.swift */; };
-		F22601931F5DA0A00087D2FB /* Group+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = F226018F1F5DA0A00087D2FB /* Group+CoreDataProperties.swift */; };
 		F22601951F5DA1120087D2FB /* SidebarSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = F22601941F5DA1120087D2FB /* SidebarSection.swift */; };
 		F243B71E1F7C030B0089764F /* TvMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = F243B71D1F7C030B0089764F /* TvMenu.swift */; };
 		F255491F1F493A2300AE360B /* WindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F255491E1F493A2300AE360B /* WindowController.swift */; };
@@ -23,6 +21,7 @@
 		F2871668207160B80090A694 /* SidebarFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2871667207160B80090A694 /* SidebarFilter.swift */; };
 		F287166A2071639D0090A694 /* SidebarCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = F28716692071639D0090A694 /* SidebarCategory.swift */; };
 		F296DD9A207A6CF5001519F3 /* OutlineViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F296DD99207A6CF5001519F3 /* OutlineViewController.swift */; };
+		F29C4BC720D6B55B002A6C24 /* Group.swift in Sources */ = {isa = PBXBuildFile; fileRef = F29C4BC620D6B55B002A6C24 /* Group.swift */; };
 		F2C462A11F58E8860014E5F4 /* GroupCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2C462A01F58E8860014E5F4 /* GroupCellView.swift */; };
 		F2C8A2681F41428500E246F7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2C8A2671F41428500E246F7 /* AppDelegate.swift */; };
 		F2C8A26A1F41428500E246F7 /* MainWindowVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2C8A2691F41428500E246F7 /* MainWindowVC.swift */; };
@@ -57,8 +56,6 @@
 		F069DF5A0732CA02E50BD6E6 /* Pods-Todo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Todo.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Todo/Pods-Todo.debug.xcconfig"; sourceTree = "<group>"; };
 		F20B42DD1F7D661A0088EE33 /* SidebarOutlineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarOutlineView.swift; sourceTree = "<group>"; };
 		F20B42DF1F7D9ADE0088EE33 /* PreferencesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesViewController.swift; sourceTree = "<group>"; };
-		F226018E1F5DA0A00087D2FB /* Group+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Group+CoreDataClass.swift"; sourceTree = "<group>"; };
-		F226018F1F5DA0A00087D2FB /* Group+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Group+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		F22601941F5DA1120087D2FB /* SidebarSection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SidebarSection.swift; sourceTree = "<group>"; };
 		F243B71D1F7C030B0089764F /* TvMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TvMenu.swift; sourceTree = "<group>"; };
 		F255491E1F493A2300AE360B /* WindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WindowController.swift; sourceTree = "<group>"; };
@@ -67,6 +64,7 @@
 		F2871667207160B80090A694 /* SidebarFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarFilter.swift; sourceTree = "<group>"; };
 		F28716692071639D0090A694 /* SidebarCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarCategory.swift; sourceTree = "<group>"; };
 		F296DD99207A6CF5001519F3 /* OutlineViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutlineViewController.swift; sourceTree = "<group>"; };
+		F29C4BC620D6B55B002A6C24 /* Group.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Group.swift; sourceTree = "<group>"; };
 		F2C462A01F58E8860014E5F4 /* GroupCellView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GroupCellView.swift; sourceTree = "<group>"; };
 		F2C8A2641F41428500E246F7 /* Todo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Todo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F2C8A2671F41428500E246F7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -192,8 +190,7 @@
 				F28716692071639D0090A694 /* SidebarCategory.swift */,
 				F2D2320F1F60778B00C0D3F4 /* SidebarFilters.swift */,
 				F2E9B4DB20D5A1D900CAB458 /* ToDo.swift */,
-				F226018E1F5DA0A00087D2FB /* Group+CoreDataClass.swift */,
-				F226018F1F5DA0A00087D2FB /* Group+CoreDataProperties.swift */,
+				F29C4BC620D6B55B002A6C24 /* Group.swift */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -389,9 +386,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F29C4BC720D6B55B002A6C24 /* Group.swift in Sources */,
 				F2E822911F4895B100EEEA07 /* Controller.swift in Sources */,
-				F22601931F5DA0A00087D2FB /* Group+CoreDataProperties.swift in Sources */,
-				F22601921F5DA0A00087D2FB /* Group+CoreDataClass.swift in Sources */,
 				054AD4C820810CBC00EE2BD3 /* MainTableViewController.swift in Sources */,
 				F255491F1F493A2300AE360B /* WindowController.swift in Sources */,
 				F2603DFB1F4DDC0700A57AE0 /* ToDoCellView.swift in Sources */,
