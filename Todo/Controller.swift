@@ -15,9 +15,6 @@ protocol MainControllerDelegate {
 }
 
 class MainController: NSObject, NSFetchedResultsControllerDelegate, InfoControllerDelegate, TableViewMenuDelegate, MTVDel2, MainControllerDelegate {
-    let dataController = DataController()
-    let toDoModelAcessor = ToDoModelAccessor()
-    var toDoFetchedResultsController: NSFetchedResultsController<NSFetchRequestResult>!
     weak var mainTableViewDelgate: MainTableViewDelgate?
     var categoryDelegate: CategoryDelegate?
     var fetchedToDos: [ToDo]?
@@ -27,49 +24,7 @@ class MainController: NSObject, NSFetchedResultsControllerDelegate, InfoControll
         
         initializeToDoFetchedResultsController()
     }
-    
-    func initializeToDoFetchedResultsController() {
-        let moc = dataController.managedObjectContext
-        
-        let fetch = NSFetchRequest<NSFetchRequestResult>(entityName: "ToDo")
-        let userDefaults = NSUserDefaultsController().defaults
-        if let retentionValue = userDefaults.value(forKey: "completeRetention") as? Int {
-            let retentionDelta = Calendar.current.date(byAdding: .day, value: retentionValue * -1, to: Date())! as NSDate
-            fetch.predicate = NSPredicate(format: "completedDate < %@", retentionDelta)
-        } else {
-            let retentionDelta = Calendar.current.date(byAdding: .day, value: -30, to: Date())! as NSDate
-            fetch.predicate = NSPredicate(format: "completedDate < %@", retentionDelta)
-        }
-        let batchDelete = NSBatchDeleteRequest(fetchRequest: fetch)
-        
-        do {
-            try moc.execute(batchDelete)
-        } catch {
-            fatalError("Failed to execute request: \(error)")
-        }
-        
-        let request = NSFetchRequest<NSFetchRequestResult>(entityName: "ToDo")
-        let sort = NSSortDescriptor(key: "createdDate", ascending: true)
-        request.sortDescriptors = [sort]
-        
-        if let predicate = categoryDelegate?.categoryPredicate {
-            request.predicate = predicate
-        } else {
-            request.predicate = NSPredicate(format: "completedDate == nil")
-        }
-        
-        toDoFetchedResultsController = NSFetchedResultsController(fetchRequest: request, managedObjectContext: moc, sectionNameKeyPath: nil, cacheName: nil)
-        toDoFetchedResultsController.delegate = self
-        
-        do {
-            try toDoFetchedResultsController.performFetch()
-            if let toDos = toDoFetchedResultsController.fetchedObjects as? [ToDo] {
-                fetchedToDos = toDos
-            }
-        } catch {
-            fatalError("Failed to initialize fetch")
-        }
-    }
+
     
     func getToDo(moID: NSManagedObjectID?) -> ToDo? {
         guard let managedObjectID = moID else { return nil }
