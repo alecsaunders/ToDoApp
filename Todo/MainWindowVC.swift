@@ -95,8 +95,7 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
         
         cntlr = MainController()
         cntlr.mainTableViewDelgate = self
-        tvCntlr.mtvdel2 = cntlr
-                
+        tvCntlr.mtvdel2 = cntlr.firebaseController
         tvCntlr.mainTableViewDelgate = self
         lblStatusBottom.textColor = NSColor.darkGray
         mainTableView.delegate = tvCntlr

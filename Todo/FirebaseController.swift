@@ -12,16 +12,17 @@ import FirebaseDatabase
 import FirebaseAuth
 
 protocol FBControllerDelegate {
-    var dataArray: [ToDo]? { get set }
     func reloadUI()
 }
 
-class FirebaseController {
+class FirebaseController: MTVDel2 {
     var fbControlDel: FBControllerDelegate?
     var ref: DatabaseReference!
     var fbItem: DatabaseReference!
+    var fetchedToDos: [ToDo]
     
     init() {
+        fetchedToDos = []
         FirebaseApp.configure()
         ref = Database.database().reference()
         fbItem = ref.child("item")
@@ -40,10 +41,9 @@ class FirebaseController {
                     print("error decoding \(error)")
                 }
             }
-            if self.fbControlDel != nil {
-                self.fbControlDel?.dataArray = newDataArray
-                self.fbControlDel?.reloadUI()
-            }
+            self.fetchedToDos = newDataArray
+            print(newDataArray)
+            self.fbControlDel?.reloadUI()
         }) { (error) in
             print(error.localizedDescription)
         }
@@ -65,10 +65,6 @@ class FirebaseController {
                 print("Deleted item")
             }
         })
-    }
-    
-    func markDaily(forToDo toDo: ToDo) {
-        fbItem.child(toDo.id).child("daily").setValue(toDo.daily.hashValue.description)
     }
     
     func update(toDo: ToDo, property prop: String, with newVal: Any?) {

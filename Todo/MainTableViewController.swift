@@ -23,7 +23,7 @@ protocol MainTableViewDelgate: class {
 }
 
 protocol MTVDel2 {
-    var fetchedToDos: [ToDo]? { get set }
+    var fetchedToDos: [ToDo] { get set }
 }
 
 class MainTableViewController: NSObject, NSTableViewDelegate, NSTableViewDataSource, ToDoCellViewDelegate, NSFetchedResultsControllerDelegate {
@@ -58,16 +58,15 @@ class MainTableViewController: NSObject, NSTableViewDelegate, NSTableViewDataSou
     //MARK: - TableView Delegate Methods
     func numberOfRows(in tableView: NSTableView) -> Int {
         guard let mtv2 = mtvdel2 else { return 0 }
-        guard let fetchedObjs = mtv2.fetchedToDos else { return 0 }
 //        updateStatusBar(numOfItems: fetchedObjs.count, sidebarGroup: nil)
-        return fetchedObjs.count
+        print("Mtv2 fetched to dos count: \(mtv2.fetchedToDos.count)")
+        return mtv2.fetchedToDos.count
     }
     
     
     func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
         guard let mtv2 = mtvdel2 else { return nil }
-        guard let fetchedObjs = mtv2.fetchedToDos else { return nil }
-        let theToDo = fetchedObjs[row]
+        let theToDo = mtv2.fetchedToDos[row]
         
         if tableColumn == tableView.tableColumns[0] {
             guard let cell = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "col_complete"), owner: nil) as? NSTableCellView else { return nil }

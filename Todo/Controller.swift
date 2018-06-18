@@ -14,16 +14,22 @@ protocol MainControllerDelegate {
 //    func assigneToDoToGroup(moID: NSManagedObjectID, group: Group)
 }
 
-class MainController: NSObject, NSFetchedResultsControllerDelegate, InfoControllerDelegate, TableViewMenuDelegate, MTVDel2, MainControllerDelegate {
+class MainController: NSObject, NSFetchedResultsControllerDelegate, InfoControllerDelegate, TableViewMenuDelegate, MainControllerDelegate, FBControllerDelegate {
+    
     var firebaseController: FirebaseController!
     weak var mainTableViewDelgate: MainTableViewDelgate?
     var categoryDelegate: CategoryDelegate?
-    var fetchedToDos: [ToDo]?
     
     override init() {
         firebaseController = FirebaseController()
-        firebaseController?.loadDataFromFirebase()
         super.init()
+        firebaseController.fbControlDel = self
+        firebaseController?.loadDataFromFirebase()
+    }
+    
+    func reloadUI() {
+        print("Fb control del: reloadUI")
+        mainTableViewDelgate?.reloadData()
     }
 
     
@@ -41,13 +47,9 @@ class MainController: NSObject, NSFetchedResultsControllerDelegate, InfoControll
             let newKey = firebaseController.getNewKey()
             let newToDo = ToDo(id: newKey, title: addedToDoTitle, note: "", daily: false, createdDate: Date(), completedDate: nil)
             firebaseController.saveToDoToFirebase(toDo: newToDo)
-//            guard let theToDo = NSEntityDescription.insertNewObject(forEntityName: "ToDo", into: dataController.managedObjectContext) as? ToDo else { return }
-//            theToDo.title = addedToDoTitle
-//            theToDo.createdDate = NSDate()
 //            if let sbCat = (newToDoSidebarSelection as? SidebarCategoryItem)?.sbCategory {
 //                theToDo.group = sbCat
 //            }
-//            dataController.saveMoc()
 //            mainTableViewDelgate?.reloadData()
         }
     }
