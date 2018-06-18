@@ -28,7 +28,6 @@ class MainController: NSObject, NSFetchedResultsControllerDelegate, InfoControll
     }
     
     func reloadUI() {
-        print("Fb control del: reloadUI")
         mainTableViewDelgate?.reloadData()
     }
 

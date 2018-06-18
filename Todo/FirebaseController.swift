@@ -42,7 +42,6 @@ class FirebaseController: MTVDel2 {
                 }
             }
             self.fetchedToDos = newDataArray
-            print(newDataArray)
             self.fbControlDel?.reloadUI()
         }) { (error) in
             print(error.localizedDescription)
@@ -51,6 +50,7 @@ class FirebaseController: MTVDel2 {
     
     func saveToDoToFirebase(toDo: ToDo) {
         fbItem.child(toDo.id).setValue(toDo.getDictionary())
+        loadDataFromFirebase()
     }
     
     func getNewKey() -> String {
