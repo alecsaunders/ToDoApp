@@ -39,7 +39,7 @@ class MainController: NSObject, NSFetchedResultsControllerDelegate, InfoControll
             print("do not add a new to do item")
         } else {
             let newKey = firebaseController.getNewKey()
-            var newToDo = ToDo(id: newKey, title: addedToDoTitle, note: "", daily: false, createdDate: Date(), completedDate: nil)
+            let newToDo = ToDo(id: newKey, title: addedToDoTitle, note: "", daily: false, createdDate: Date(), completedDate: nil)
             firebaseController.saveToDoToFirebase(toDo: newToDo)
 //            guard let theToDo = NSEntityDescription.insertNewObject(forEntityName: "ToDo", into: dataController.managedObjectContext) as? ToDo else { return }
 //            theToDo.title = addedToDoTitle
