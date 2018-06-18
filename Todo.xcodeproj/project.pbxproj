@@ -22,6 +22,7 @@
 		F287166A2071639D0090A694 /* SidebarCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = F28716692071639D0090A694 /* SidebarCategory.swift */; };
 		F296DD9A207A6CF5001519F3 /* OutlineViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F296DD99207A6CF5001519F3 /* OutlineViewController.swift */; };
 		F29C4BC720D6B55B002A6C24 /* Group.swift in Sources */ = {isa = PBXBuildFile; fileRef = F29C4BC620D6B55B002A6C24 /* Group.swift */; };
+		F29C4BE920D742AA002A6C24 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = F29C4BE820D742AA002A6C24 /* GoogleService-Info.plist */; };
 		F2C462A11F58E8860014E5F4 /* GroupCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2C462A01F58E8860014E5F4 /* GroupCellView.swift */; };
 		F2C8A2681F41428500E246F7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2C8A2671F41428500E246F7 /* AppDelegate.swift */; };
 		F2C8A26A1F41428500E246F7 /* MainWindowVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2C8A2691F41428500E246F7 /* MainWindowVC.swift */; };
@@ -33,7 +34,6 @@
 		F2E822911F4895B100EEEA07 /* Controller.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2E822901F4895B100EEEA07 /* Controller.swift */; };
 		F2E9B4DC20D5A1D900CAB458 /* ToDo.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2E9B4DB20D5A1D900CAB458 /* ToDo.swift */; };
 		F2E9B4DE20D5A31F00CAB458 /* FirebaseController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2E9B4DD20D5A31F00CAB458 /* FirebaseController.swift */; };
-		F2E9B4E020D5A3DE00CAB458 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = F2E9B4DF20D5A3DE00CAB458 /* GoogleService-Info.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -65,6 +65,7 @@
 		F28716692071639D0090A694 /* SidebarCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarCategory.swift; sourceTree = "<group>"; };
 		F296DD99207A6CF5001519F3 /* OutlineViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutlineViewController.swift; sourceTree = "<group>"; };
 		F29C4BC620D6B55B002A6C24 /* Group.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Group.swift; sourceTree = "<group>"; };
+		F29C4BE820D742AA002A6C24 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		F2C462A01F58E8860014E5F4 /* GroupCellView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GroupCellView.swift; sourceTree = "<group>"; };
 		F2C8A2641F41428500E246F7 /* Todo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Todo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F2C8A2671F41428500E246F7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -80,7 +81,6 @@
 		F2E822901F4895B100EEEA07 /* Controller.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Controller.swift; sourceTree = "<group>"; };
 		F2E9B4DB20D5A1D900CAB458 /* ToDo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDo.swift; sourceTree = "<group>"; };
 		F2E9B4DD20D5A31F00CAB458 /* FirebaseController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseController.swift; sourceTree = "<group>"; };
-		F2E9B4DF20D5A3DE00CAB458 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		FEE3F6DBF5AEFC79753AAA76 /* Pods-TodoTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TodoTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-TodoTests/Pods-TodoTests.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -167,7 +167,7 @@
 				F2C8A26E1F41428500E246F7 /* Assets.xcassets */,
 				F2C8A2701F41428500E246F7 /* Main.storyboard */,
 				F2C8A2731F41428500E246F7 /* Info.plist */,
-				F2E9B4DF20D5A3DE00CAB458 /* GoogleService-Info.plist */,
+				F29C4BE820D742AA002A6C24 /* GoogleService-Info.plist */,
 			);
 			path = Todo;
 			sourceTree = "<group>";
@@ -307,7 +307,7 @@
 			files = (
 				F2C8A26F1F41428500E246F7 /* Assets.xcassets in Resources */,
 				F2C8A2721F41428500E246F7 /* Main.storyboard in Resources */,
-				F2E9B4E020D5A3DE00CAB458 /* GoogleService-Info.plist in Resources */,
+				F29C4BE920D742AA002A6C24 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
