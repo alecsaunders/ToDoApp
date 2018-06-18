@@ -174,7 +174,6 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
     }
     
     func reloadData() {
-//        cntlr.initializeToDoFetchedResultsController()
         mainTableView.reloadData()
     }
     

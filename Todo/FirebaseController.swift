@@ -24,12 +24,14 @@ class FirebaseController: MTVDel2 {
     init() {
         fetchedToDos = []
         FirebaseApp.configure()
+        Database.setLoggingEnabled(true)
         ref = Database.database().reference()
         fbItem = ref.child("item")
     }
     
     func loadDataFromFirebase() {
-        fbItem.observeSingleEvent(of: .value, with: { (snapshot) in
+        let fbQuery = fbItem.queryOrdered(byChild: "createdDate")
+        fbQuery.observeSingleEvent(of: .value, with: { (snapshot) in
             var newDataArray: [ToDo] = []
             for child in snapshot.children.allObjects as! [DataSnapshot] {
                 do {
@@ -41,6 +43,7 @@ class FirebaseController: MTVDel2 {
                     print("error decoding \(error)")
                 }
             }
+            newDataArray = newDataArray.filter { $0.completedDate == nil }
             self.fetchedToDos = newDataArray
             self.fbControlDel?.reloadUI()
         }) { (error) in
