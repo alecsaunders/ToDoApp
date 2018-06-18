@@ -13,7 +13,6 @@ import FirebaseCore
 class AppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
-        FirebaseApp.configure()
         let userDefaults = NSUserDefaultsController().defaults
         
         if userDefaults.value(forKey: "completeRetention") == nil {

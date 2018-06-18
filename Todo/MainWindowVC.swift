@@ -78,7 +78,7 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
         sourceOutlineView?.expandItem(nil, expandChildren: true)
     }
 
-    let cntlr = MainController()
+    var cntlr: MainController!
     let tvCntlr = MainTableViewController()
     let outlineCntlr = OutlineViewController()
     
@@ -93,6 +93,7 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
         
         setupPrefs()
         
+        cntlr = MainController()
         cntlr.mainTableViewDelgate = self
         tvCntlr.mtvdel2 = cntlr
                 

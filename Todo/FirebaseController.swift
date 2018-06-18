@@ -22,6 +22,7 @@ class FirebaseController {
     var fbItem: DatabaseReference!
     
     init() {
+        FirebaseApp.configure()
         ref = Database.database().reference()
         fbItem = ref.child("item")
     }

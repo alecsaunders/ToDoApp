@@ -15,13 +15,15 @@ protocol MainControllerDelegate {
 }
 
 class MainController: NSObject, NSFetchedResultsControllerDelegate, InfoControllerDelegate, TableViewMenuDelegate, MTVDel2, MainControllerDelegate {
+    var firebaseController: FirebaseController!
     weak var mainTableViewDelgate: MainTableViewDelgate?
     var categoryDelegate: CategoryDelegate?
     var fetchedToDos: [ToDo]?
     
     override init() {
+        firebaseController = FirebaseController()
+        firebaseController?.loadDataFromFirebase()
         super.init()
-        
     }
 
     
@@ -36,6 +38,9 @@ class MainController: NSObject, NSFetchedResultsControllerDelegate, InfoControll
         if addedToDoTitle.isEmpty {
             print("do not add a new to do item")
         } else {
+            let newKey = firebaseController.getNewKey()
+            var newToDo = ToDo(id: newKey, title: addedToDoTitle, note: "", daily: false, createdDate: Date(), completedDate: nil)
+            firebaseController.saveToDoToFirebase(toDo: newToDo)
 //            guard let theToDo = NSEntityDescription.insertNewObject(forEntityName: "ToDo", into: dataController.managedObjectContext) as? ToDo else { return }
 //            theToDo.title = addedToDoTitle
 //            theToDo.createdDate = NSDate()
