@@ -54,20 +54,13 @@ class MainController: NSObject, NSFetchedResultsControllerDelegate, InfoControll
     }
 
     func markCompleted(atIndex index: Int, complete: Bool) {
-//        guard let fetchedObjs = toDoFetchedResultsController.fetchedObjects else { return }
-//        guard let object = fetchedObjs[index] as? ToDo else { return }
-//        if complete {
-//            object.completedDate = NSDate()
-//        } else {
-//            object.completedDate = nil
-//        }
-//        if toDoModelAcessor.managedContextDidSave() {
-//            mainTableViewDelgate?.removeRows(atIndex: index)
-//            initializeToDoFetchedResultsController()
-//        } else {
-//            mainTableViewDelgate?.reloadData()
-//        }
-        
+        var completedToDo = firebaseController.fetchedToDos[index]
+        if complete {
+            completedToDo.completedDate = Date()
+        } else {
+            completedToDo.completedDate = nil
+        }
+        firebaseController.update(toDo: completedToDo, property: "completedDate", with: completedToDo.completedDate)
     }
     
     func removeToDoEntityRecord(atIndex: Int) {

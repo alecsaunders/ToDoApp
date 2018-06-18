@@ -77,13 +77,18 @@ class FirebaseController: MTVDel2 {
                 let newValTyped = newValUnwrapped as! Bool
                 fbItem.child(toDo.id).child(prop).setValue(newValTyped)
             case "createdDate", "completedDate":
+                print("switch \(prop)")
                 let newValTyped = (newValUnwrapped as! Date).timeIntervalSince1970
                 fbItem.child(toDo.id).child(prop).setValue(newValTyped)
             default:
                 print("nothing to do")
             }
-            
+        } else {
+            if prop == "completedDate" {
+                fbItem.child(toDo.id).child(prop).removeValue()
+            }
         }
+        loadDataFromFirebase()
     }
 }
 
