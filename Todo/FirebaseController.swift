@@ -19,7 +19,9 @@ class FirebaseController: MTVDel2 {
     var fbControlDel: FBControllerDelegate?
     var ref: DatabaseReference!
     var fbItem: DatabaseReference!
+    var categoryDelegate: CategoryDelegate?
     var fetchedToDos: [ToDo]
+    
     
     init() {
         fetchedToDos = []
@@ -43,7 +45,13 @@ class FirebaseController: MTVDel2 {
                     print("error decoding \(error)")
                 }
             }
-            newDataArray = newDataArray.filter { $0.completedDate == nil }
+            if let catDel = self.categoryDelegate {
+                // FIXME: - figure this out later
+//                print("cat del: \(catDel.categoryPredicate)")
+//                newDataArray = newDataArray.filter { $0.completedDate == nil }
+            } else {
+                print("not cat del")
+            }
             self.fetchedToDos = newDataArray
             self.fbControlDel?.reloadUI()
         }) { (error) in

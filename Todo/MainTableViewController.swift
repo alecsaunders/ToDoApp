@@ -82,7 +82,8 @@ class MainTableViewController: NSObject, NSTableViewDelegate, NSTableViewDataSou
         }
         if tableColumn == tableView.tableColumns[1] {
             guard let cell = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "col_toDoText"), owner: nil) as? ToDoCellView else { return nil }
-            cell.textField?.stringValue = theToDo.title
+            cell.cellToDo = theToDo
+            cell.textField?.stringValue = cell.cellToDo!.title
             cell.toDoCellViewDelegate = self
             
             return cell

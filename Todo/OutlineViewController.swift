@@ -15,7 +15,6 @@ protocol CategoryDelegate {
 }
 
 class OutlineViewController: NSObject, NSFetchedResultsControllerDelegate, NSOutlineViewDataSource, NSOutlineViewDelegate, GroupCellViewDelegate, CategoryDelegate {
-//    let dataController = DataController()
     weak var mainTableViewDelgate: MainTableViewDelgate?
     var mainControllerDelegate: MainControllerDelegate?
     var fetchedGroupsController: NSFetchedResultsController<NSFetchRequestResult>!
@@ -79,37 +78,40 @@ class OutlineViewController: NSObject, NSFetchedResultsControllerDelegate, NSOut
     }
     
     func outlineViewSelectionDidChange(_ notification: Notification) {
-//        guard let sidebarView = notification.object as? NSOutlineView else { return }
-//        
-//        if let sbCatItem = sidebarView.item(atRow: sidebarView.selectedRow) as? SidebarCategoryItem {
-//            if let selectedGroup = sbCatItem.sbCategory {
+        guard let sidebarView = notification.object as? NSOutlineView else { return }
+        if let sbCatItem = sidebarView.item(atRow: sidebarView.selectedRow) as? SidebarCategoryItem {
+            if let selectedGroup = sbCatItem.sbCategory {
+                print(selectedGroup)
 //                let groupPred = NSPredicate(format: "group = %@", selectedGroup)
 //                let completePred = NSPredicate(format: "completedDate == nil")
 //                let compPred = NSCompoundPredicate(andPredicateWithSubpredicates: [groupPred, completePred])
 //                categoryPredicate = compPred
-//            }
-//        }
-//        
-//        if let cat = sidebarView.item(atRow: sidebarView.selectedRow) as? SidebarFilterItem {
-//            if let filter = cat.sbFilter {
-//                switch filter {
-//                case .daily:
+            }
+        }
+
+        if let cat = sidebarView.item(atRow: sidebarView.selectedRow) as? SidebarFilterItem {
+            if let filter = cat.sbFilter {
+                switch filter {
+                case .daily:
+                    print("daily")
 //                    let dailyPred = NSPredicate(format: "daily = %@", "1")
 //                    let completePred = NSPredicate(format: "completedDate == nil")
 //                    let compPred = NSCompoundPredicate(andPredicateWithSubpredicates: [dailyPred, completePred])
 //                    categoryPredicate = compPred
-//                case .completed:
+                case .completed:
+                    print("completed")
 //                    categoryPredicate = NSPredicate(format: "completedDate != nil")
-//                default:
-//                    categoryPredicate = NSPredicate(format: "completedDate == nil")
-//                }
-//            } else {
+                default:
+                    
+                    categoryPredicate = NSPredicate(format: "completedDate == nil")
+                }
+            } else {
+                print("else block")
 //                categoryPredicate = NSPredicate(format: "completedDate == nil")
-//            }
-//            
-//        }
-//        print("outlineview selection did change")
-//        mainTableViewDelgate?.reloadData()
+            }
+            
+        }
+        print("outlineview selection did change")
     }
     
     

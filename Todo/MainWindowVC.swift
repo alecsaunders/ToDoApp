@@ -62,14 +62,10 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
         }
     }
     @IBAction func menuDaily(_ sender: NSMenuItem) {
-        guard let moID = (mainTableView.view(atColumn: 1, row: mainTableView.clickedRow, makeIfNecessary: false) as? ToDoCellView)?.managedObjectID else { return }
-        guard let theToDo = cntlr.getToDo(moID: moID) else { return }
-        if theToDo.daily {
-            cntlr.setToDaily(moID: moID, isDaily: false)
-        } else {
-            cntlr.setToDaily(moID: moID, isDaily: true)
-        }
+        guard let theToDo = (mainTableView.view(atColumn: 1, row: mainTableView.clickedRow, makeIfNecessary: false) as? ToDoCellView)?.cellToDo else { return }
+        cntlr.setToDaily(toDo: theToDo, isDaily: !theToDo.daily)
     }
+
     @IBAction func sidebarMenuDelete(_ sender: NSMenuItem) {
         guard let sbCatItem = sourceOutlineView.item(atRow: sourceOutlineView.clickedRow) as? SidebarCategoryItem else { return }
         guard let sbCat = sbCatItem.sbCategory else { return }
@@ -95,6 +91,9 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
         
         cntlr = MainController()
         cntlr.mainTableViewDelgate = self
+        outlineCntlr.categoryPredicate = NSPredicate(format: "completedDate == nil")
+        cntlr.firebaseController.categoryDelegate = outlineCntlr
+        cntlr.reloadUI()
         tvCntlr.mtvdel2 = cntlr.firebaseController
         tvCntlr.mainTableViewDelgate = self
         lblStatusBottom.textColor = NSColor.darkGray
@@ -113,7 +112,6 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
         sourceOutlineView.registerForDraggedTypes([.string])
         sourceOutlineView?.expandItem(nil, expandChildren: true)
         
-        cntlr.categoryDelegate = outlineCntlr
         outlineCntlr.mainControllerDelegate = cntlr
         
         tvMenu.tvMenuDelegate = cntlr
@@ -188,8 +186,8 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
     }
     
     func setToDoToDaily(toDoRowIndex: Int) {
-        guard let moID = (mainTableView.view(atColumn: 1, row: toDoRowIndex, makeIfNecessary: false) as? ToDoCellView)?.managedObjectID else { return }
-        cntlr.setToDaily(moID: moID, isDaily: true)
+        guard var theToDo = (mainTableView.view(atColumn: 1, row: toDoRowIndex, makeIfNecessary: false) as? ToDoCellView)?.cellToDo else { return }
+        cntlr.setToDaily(toDo: theToDo, isDaily: !theToDo.daily)
     }
     
     func reloadSidebar() {

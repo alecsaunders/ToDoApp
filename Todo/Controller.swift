@@ -18,7 +18,6 @@ class MainController: NSObject, NSFetchedResultsControllerDelegate, InfoControll
     
     var firebaseController: FirebaseController!
     weak var mainTableViewDelgate: MainTableViewDelgate?
-    var categoryDelegate: CategoryDelegate?
     
     override init() {
         firebaseController = FirebaseController()
@@ -97,12 +96,8 @@ class MainController: NSObject, NSFetchedResultsControllerDelegate, InfoControll
 //        dataController.saveMoc()
 //    }
     
-    func setToDaily(moID: NSManagedObjectID, isDaily: Bool) {
-        if let toDo = getToDo(moID: moID) {
-//            toDo.daily = isDaily
-//            dataController.saveMoc()
-            mainTableViewDelgate?.reloadData()
-        }
+    func setToDaily(toDo: ToDo, isDaily: Bool) {
+        firebaseController.update(toDo: toDo, property: "daily", with: isDaily)
     }
     
     //MARK: - Table View Menu Delegate Functions
