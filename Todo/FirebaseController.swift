@@ -16,11 +16,11 @@ protocol FBControllerDelegate {
 }
 
 class FirebaseController: MTVDel2 {
+    private var ref: DatabaseReference!
+    private var fbItem: DatabaseReference!
     var fbControlDel: FBControllerDelegate?
-    var ref: DatabaseReference!
-    var fbItem: DatabaseReference!
-    var categoryDelegate: CategoryDelegate?
     var fetchedToDos: [ToDo]
+    var categoryDelegate: CategoryDelegate?
     
     
     init() {
@@ -34,38 +34,38 @@ class FirebaseController: MTVDel2 {
     func loadDataFromFirebase() {
         let fbQuery = fbItem.queryOrdered(byChild: "createdDate")
         fbQuery.observeSingleEvent(of: .value, with: { (snapshot) in
-            var newDataArray: [ToDo] = []
-            for child in snapshot.children.allObjects as! [DataSnapshot] {
-                do {
-                    guard let fbChildToDoDict = child.value as? [String: Any] else { return }
-                    let toDoData = try JSONSerialization.data(withJSONObject: fbChildToDoDict, options: [])
-                    let decodedToDo = try JSONDecoder().decode(ToDo.self, from: toDoData)
-                    newDataArray.append(decodedToDo)
-                } catch {
-                    print("error decoding \(error)")
-                }
-            }
-            if let catDel = self.categoryDelegate {
-                // FIXME: - figure this out later
-//                print("cat del: \(catDel.categoryPredicate)")
-//                newDataArray = newDataArray.filter { $0.completedDate == nil }
-            } else {
-                print("not cat del")
-            }
-            self.fetchedToDos = newDataArray
-            self.fbControlDel?.reloadUI()
+            self.decodeFirebaseSnapshots(snapshot: snapshot)
         }) { (error) in
             print(error.localizedDescription)
         }
     }
     
-    func saveToDoToFirebase(toDo: ToDo) {
-        fbItem.child(toDo.id).setValue(toDo.getDictionary())
-        loadDataFromFirebase()
+    private func decodeFirebaseSnapshots(snapshot: DataSnapshot) {
+        for child in snapshot.children.allObjects as! [DataSnapshot] {
+            do {
+                guard let fbChildToDoDict = child.value as? [String: Any] else { return }
+                let toDoData = try JSONSerialization.data(withJSONObject: fbChildToDoDict, options: [])
+                let decodedToDo = try JSONDecoder().decode(ToDo.self, from: toDoData)
+                fetchedToDos.append(decodedToDo)
+            } catch {
+                print("error decoding \(error)")
+            }
+        }
+        filterFetchedToDos()
+        fbControlDel?.reloadUI()
+    }
+    
+    private func filterFetchedToDos() {
+        print(fetchedToDos)
     }
     
     func getNewKey() -> String {
         return ref.child("item").childByAutoId().key
+    }
+    
+    func saveToDoToFirebase(toDo: ToDo) {
+        fbItem.child(toDo.id).setValue(toDo.getDictionary())
+        loadDataFromFirebase()
     }
     
     func delete(item: ToDo) {
