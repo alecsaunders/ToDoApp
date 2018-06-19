@@ -36,10 +36,10 @@ class MainTableViewController: NSObject, NSTableViewDelegate, NSTableViewDataSou
         super.init()
     }
     
-//    func updateStatusBar(numOfItems: Int, sidebarGroup: Group?) {
-//        let statusBarText = "\(sidebarGroup != nil ? "\(sidebarGroup!) - " : "")\(numOfItems == 1  ? "\(numOfItems) item" : "\(numOfItems) items")"
-//        mainTableViewDelgate?.updateStatusBar(withText: statusBarText)
-//    }
+    func updateStatusBar(numOfItems: Int, sidebarGroup: Group?) {
+        let statusBarText = "\(sidebarGroup != nil ? "\(sidebarGroup!) - " : "")\(numOfItems == 1  ? "\(numOfItems) item" : "\(numOfItems) items")"
+        mainTableViewDelgate?.updateStatusBar(withText: statusBarText)
+    }
     
     // MARK: - To Do Table View Delegate Methods
     func changeText(newToDoTitle: String) {
@@ -58,8 +58,7 @@ class MainTableViewController: NSObject, NSTableViewDelegate, NSTableViewDataSou
     //MARK: - TableView Delegate Methods
     func numberOfRows(in tableView: NSTableView) -> Int {
         guard let mtv2 = mtvdel2 else { return 0 }
-//        updateStatusBar(numOfItems: fetchedObjs.count, sidebarGroup: nil)
-        print("Mtv2 fetched to dos count: \(mtv2.fetchedToDos.count)")
+        updateStatusBar(numOfItems: mtv2.fetchedToDos.count, sidebarGroup: nil)
         return mtv2.fetchedToDos.count
     }
     
