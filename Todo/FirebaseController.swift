@@ -32,43 +32,26 @@ class FirebaseController: MTVDel2 {
     }
     
     func loadDataFromFirebase() {
-        let fbQuery = fbItem.queryOrdered(byChild: "createdDate")
-        fbQuery.observeSingleEvent(of: .value, with: { (snapshot) in
-            self.decodeFirebaseSnapshots(snapshot: snapshot)
-        }) { (error) in
-            print(error.localizedDescription)
+        fetchedToDos = []
+        fbItem.observe(.childAdded) { (snapshot) in
+            let decodedToDo = self.decodeFirebaseSnapshots(snapshot: snapshot)
+            if let actualToDo = decodedToDo {
+                self.fetchedToDos.append(actualToDo)
+            }
+            self.fbControlDel?.reloadUI()
         }
     }
     
-    private func decodeFirebaseSnapshots(snapshot: DataSnapshot) {
-        var newlyFetchedItems: [ToDo] = []
-        for child in snapshot.children.allObjects as! [DataSnapshot] {
-            do {
-                guard let fbChildToDoDict = child.value as? [String: Any] else { return }
-                let toDoData = try JSONSerialization.data(withJSONObject: fbChildToDoDict, options: [])
-                let decodedToDo = try JSONDecoder().decode(ToDo.self, from: toDoData)
-                newlyFetchedItems.append(decodedToDo)
-            } catch {
-                print("error decoding \(error)")
-            }
+    private func decodeFirebaseSnapshots(snapshot: DataSnapshot) -> ToDo? {
+        var decodedToDo: ToDo?
+        do {
+            guard let fbChildToDoDict = snapshot.value as? [String: Any] else { return nil }
+            let toDoData = try JSONSerialization.data(withJSONObject: fbChildToDoDict, options: [])
+            decodedToDo = try JSONDecoder().decode(ToDo.self, from: toDoData)
+        } catch {
+            print("error decoding \(error)")
         }
-        filter(fetchedToDos: newlyFetchedItems)
-        fbControlDel?.reloadUI()
-    }
-    
-    private func filter(fetchedToDos toDoArray: [ToDo]) {
-        if let catFilter = categoryDelegate?.categoryFilter {
-            switch catFilter {
-                case .all:
-                    fetchedToDos = toDoArray.filter { $0.completedDate == nil }
-                case .completed:
-                    fetchedToDos = toDoArray.filter { $0.completedDate != nil }
-                case .daily:
-                    fetchedToDos = toDoArray.filter { $0.daily && $0.completedDate == nil }
-            }
-        } else {
-            fetchedToDos = toDoArray.filter { $0.completedDate == nil }
-        }
+        return decodedToDo
     }
     
     func getNewKey() -> String {
