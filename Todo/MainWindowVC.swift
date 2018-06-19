@@ -91,7 +91,6 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
         
         cntlr = MainController()
         cntlr.mainTableViewDelgate = self
-        outlineCntlr.categoryPredicate = NSPredicate(format: "completedDate == nil")
         cntlr.firebaseController.categoryDelegate = outlineCntlr
         cntlr.reloadUI()
         tvCntlr.mtvdel2 = cntlr.firebaseController
@@ -172,6 +171,7 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
     }
     
     func reloadData() {
+        print("reload data")
         mainTableView.reloadData()
     }
     

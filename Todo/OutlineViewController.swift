@@ -11,14 +11,14 @@ import Cocoa
 import CoreData
 
 protocol CategoryDelegate {
-    var categoryPredicate: NSPredicate? { get set }
+    var categoryFilter: SidebarFilter { get set }
 }
 
 class OutlineViewController: NSObject, NSFetchedResultsControllerDelegate, NSOutlineViewDataSource, NSOutlineViewDelegate, GroupCellViewDelegate, CategoryDelegate {
     weak var mainTableViewDelgate: MainTableViewDelgate?
     var mainControllerDelegate: MainControllerDelegate?
     var fetchedGroupsController: NSFetchedResultsController<NSFetchRequestResult>!
-    var categoryPredicate: NSPredicate?
+    var categoryFilter: SidebarFilter = .all
 
     var sbFilterSection: SidebarSection {
         var filters: [SidebarItem] = []
@@ -91,27 +91,14 @@ class OutlineViewController: NSObject, NSFetchedResultsControllerDelegate, NSOut
 
         if let cat = sidebarView.item(atRow: sidebarView.selectedRow) as? SidebarFilterItem {
             if let filter = cat.sbFilter {
-                switch filter {
-                case .daily:
-                    print("daily")
-//                    let dailyPred = NSPredicate(format: "daily = %@", "1")
-//                    let completePred = NSPredicate(format: "completedDate == nil")
-//                    let compPred = NSCompoundPredicate(andPredicateWithSubpredicates: [dailyPred, completePred])
-//                    categoryPredicate = compPred
-                case .completed:
-                    print("completed")
-//                    categoryPredicate = NSPredicate(format: "completedDate != nil")
-                default:
-                    
-                    categoryPredicate = NSPredicate(format: "completedDate == nil")
-                }
+                categoryFilter = filter
             } else {
                 print("else block")
 //                categoryPredicate = NSPredicate(format: "completedDate == nil")
             }
             
         }
-        print("outlineview selection did change")
+        mainTableViewDelgate?.reloadData()
     }
     
     

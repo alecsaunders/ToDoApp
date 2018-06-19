@@ -19,8 +19,8 @@ class FirebaseController: MTVDel2 {
     private var ref: DatabaseReference!
     private var fbItem: DatabaseReference!
     var fbControlDel: FBControllerDelegate?
-    var fetchedToDos: [ToDo]
     var categoryDelegate: CategoryDelegate?
+    var fetchedToDos: [ToDo]
     
     
     init() {
@@ -41,22 +41,34 @@ class FirebaseController: MTVDel2 {
     }
     
     private func decodeFirebaseSnapshots(snapshot: DataSnapshot) {
+        var newlyFetchedItems: [ToDo] = []
         for child in snapshot.children.allObjects as! [DataSnapshot] {
             do {
                 guard let fbChildToDoDict = child.value as? [String: Any] else { return }
                 let toDoData = try JSONSerialization.data(withJSONObject: fbChildToDoDict, options: [])
                 let decodedToDo = try JSONDecoder().decode(ToDo.self, from: toDoData)
-                fetchedToDos.append(decodedToDo)
+                newlyFetchedItems.append(decodedToDo)
             } catch {
                 print("error decoding \(error)")
             }
         }
-        filterFetchedToDos()
+        filter(fetchedToDos: newlyFetchedItems)
         fbControlDel?.reloadUI()
     }
     
-    private func filterFetchedToDos() {
-        print(fetchedToDos)
+    private func filter(fetchedToDos toDoArray: [ToDo]) {
+        if let catFilter = categoryDelegate?.categoryFilter {
+            switch catFilter {
+                case .all:
+                    fetchedToDos = toDoArray.filter { $0.completedDate == nil }
+                case .completed:
+                    fetchedToDos = toDoArray.filter { $0.completedDate != nil }
+                case .daily:
+                    fetchedToDos = toDoArray.filter { $0.daily && $0.completedDate == nil }
+            }
+        } else {
+            fetchedToDos = toDoArray.filter { $0.completedDate == nil }
+        }
     }
     
     func getNewKey() -> String {
