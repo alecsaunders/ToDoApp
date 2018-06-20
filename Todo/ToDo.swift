@@ -14,6 +14,7 @@ struct ToDo: Codable {
     var note: String
     var daily: Bool
     var createdDate: Date
+    var isComplete: Bool
     var completedDate: Date?
     
     enum CodingKeys: String, CodingKey {
@@ -22,6 +23,7 @@ struct ToDo: Codable {
         case note
         case daily
         case createdDate
+        case isComplete
         case completedDate
     }
 }
@@ -34,7 +36,8 @@ extension ToDo {
             "note": note,
             "daily": daily,
             "createdDate": createdDate.timeIntervalSince1970,
-            "completedDate": completedDate?.timeIntervalSince1970 as Any
+            "isComplete": isComplete,
+            "completedDate": completedDate?.timeIntervalSince1970 as Any,
         ]
     }
 }
@@ -47,6 +50,7 @@ extension ToDo {
         note = try allValues.decode(String.self, forKey: .note)
         daily = try allValues.decode(Bool.self, forKey: .daily)
         createdDate = try Date(timeIntervalSince1970:  (allValues.decode(Double.self, forKey: .createdDate)))
+        isComplete = try allValues.decode(Bool.self, forKey: .isComplete)
         let completedDateDouble = try allValues.decodeIfPresent(Double.self, forKey: .completedDate)
         if let compDateDouble = completedDateDouble {
             completedDate = Date(timeIntervalSince1970: compDateDouble)

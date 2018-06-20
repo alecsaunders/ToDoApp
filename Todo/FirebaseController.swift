@@ -22,7 +22,6 @@ class FirebaseController: MTVDel2 {
     var categoryDelegate: CategoryDelegate?
     var fetchedToDos: [ToDo]
     
-    
     init() {
         fetchedToDos = []
         FirebaseApp.configure()
@@ -32,26 +31,23 @@ class FirebaseController: MTVDel2 {
     }
     
     func loadDataFromFirebase() {
-        fetchedToDos = []
-        fbItem.observe(.childAdded) { (snapshot) in
-            let decodedToDo = self.decodeFirebaseSnapshots(snapshot: snapshot)
-            if let actualToDo = decodedToDo {
-                self.fetchedToDos.append(actualToDo)
+        let query = fbItem.queryOrdered(byChild: "isComplete").queryEqual(toValue: false)
+        query.observe(.value) { (snapshot) in
+            self.fetchedToDos = []
+            for child in snapshot.children.allObjects as! [DataSnapshot] {
+                print("Child: \(child)")
+                guard let fbChildToDoDict = child.value as? [String: Any] else { return }
+                do {
+                    let toDoData = try JSONSerialization.data(withJSONObject: fbChildToDoDict, options: [])
+                    let decodedToDo = try JSONDecoder().decode(ToDo.self, from: toDoData)
+                    self.fetchedToDos.append(decodedToDo)
+                } catch {
+                    print("Error decoding to do: \(error.localizedDescription)")
+                }
+
             }
             self.fbControlDel?.reloadUI()
         }
-    }
-    
-    private func decodeFirebaseSnapshots(snapshot: DataSnapshot) -> ToDo? {
-        var decodedToDo: ToDo?
-        do {
-            guard let fbChildToDoDict = snapshot.value as? [String: Any] else { return nil }
-            let toDoData = try JSONSerialization.data(withJSONObject: fbChildToDoDict, options: [])
-            decodedToDo = try JSONDecoder().decode(ToDo.self, from: toDoData)
-        } catch {
-            print("error decoding \(error)")
-        }
-        return decodedToDo
     }
     
     func getNewKey() -> String {
@@ -82,19 +78,22 @@ class FirebaseController: MTVDel2 {
             case "daily":
                 let newValTyped = newValUnwrapped as! Bool
                 fbItem.child(toDo.id).child(prop).setValue(newValTyped)
-            case "createdDate", "completedDate":
-                print("switch \(prop)")
+            case "createdDate":
                 let newValTyped = (newValUnwrapped as! Date).timeIntervalSince1970
+                fbItem.child(toDo.id).child(prop).setValue(newValTyped)
+            case "completedDate":
+                let newValTyped = (newValUnwrapped as! Date).timeIntervalSince1970
+                fbItem.child(toDo.id).child("isComplete").setValue(true)
                 fbItem.child(toDo.id).child(prop).setValue(newValTyped)
             default:
                 print("nothing to do")
             }
         } else {
             if prop == "completedDate" {
+                fbItem.child(toDo.id).child("isComplete").setValue(false)
                 fbItem.child(toDo.id).child(prop).removeValue()
             }
         }
-        loadDataFromFirebase()
     }
 }
 

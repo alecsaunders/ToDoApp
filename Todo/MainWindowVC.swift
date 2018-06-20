@@ -171,7 +171,6 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
     }
     
     func reloadData() {
-        print("reload data")
         mainTableView.reloadData()
     }
     
@@ -186,7 +185,7 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
     }
     
     func setToDoToDaily(toDoRowIndex: Int) {
-        guard var theToDo = (mainTableView.view(atColumn: 1, row: toDoRowIndex, makeIfNecessary: false) as? ToDoCellView)?.cellToDo else { return }
+        guard let theToDo = (mainTableView.view(atColumn: 1, row: toDoRowIndex, makeIfNecessary: false) as? ToDoCellView)?.cellToDo else { return }
         cntlr.setToDaily(toDo: theToDo, isDaily: !theToDo.daily)
     }
     

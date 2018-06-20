@@ -34,7 +34,7 @@ class MainController: NSObject, NSFetchedResultsControllerDelegate, InfoControll
     func getToDo(moID: NSManagedObjectID?) -> ToDo? {
 //        guard let managedObjectID = moID else { return nil }
 //        guard let theToDo = dataController.managedObjectContext.object(with: managedObjectID) as? ToDo else { return nil }
-        let theToDo = ToDo(id: "id", title: "title", note: "", daily: false, createdDate: Date(), completedDate: nil)
+        let theToDo = ToDo(id: "id", title: "title", note: "", daily: false, createdDate: Date(), isComplete: false, completedDate: nil)
         return theToDo
     }
 
@@ -43,23 +43,13 @@ class MainController: NSObject, NSFetchedResultsControllerDelegate, InfoControll
             print("do not add a new to do item")
         } else {
             let newKey = firebaseController.getNewKey()
-            let newToDo = ToDo(id: newKey, title: addedToDoTitle, note: "", daily: false, createdDate: Date(), completedDate: nil)
+            let newToDo = ToDo(id: newKey, title: addedToDoTitle, note: "", daily: false, createdDate: Date(), isComplete: false, completedDate: nil)
             firebaseController.saveToDoToFirebase(toDo: newToDo)
 //            if let sbCat = (newToDoSidebarSelection as? SidebarCategoryItem)?.sbCategory {
 //                theToDo.group = sbCat
 //            }
 //            mainTableViewDelgate?.reloadData()
         }
-    }
-
-    func markCompleted(atIndex index: Int, complete: Bool) {
-        var completedToDo = firebaseController.fetchedToDos[index]
-        if complete {
-            completedToDo.completedDate = Date()
-        } else {
-            completedToDo.completedDate = nil
-        }
-        firebaseController.update(toDo: completedToDo, property: "completedDate", with: completedToDo.completedDate)
     }
     
     func removeToDoEntityRecord(atIndex: Int) {
@@ -98,6 +88,19 @@ class MainController: NSObject, NSFetchedResultsControllerDelegate, InfoControll
     
     func setToDaily(toDo: ToDo, isDaily: Bool) {
         firebaseController.update(toDo: toDo, property: "daily", with: isDaily)
+    }
+    
+    
+    func markCompleted(atIndex index: Int, complete: Bool) {
+        var completedToDo = firebaseController.fetchedToDos[index]
+        if complete {
+            completedToDo.completedDate = Date()
+            completedToDo.isComplete = true
+        } else {
+            completedToDo.completedDate = nil
+            completedToDo.isComplete = false
+        }
+        firebaseController.update(toDo: completedToDo, property: "completedDate", with: completedToDo.completedDate)
     }
     
     //MARK: - Table View Menu Delegate Functions
