@@ -8,17 +8,15 @@
 
 import Foundation
 import Cocoa
-import CoreData
 
 protocol CategoryDelegate {
-    var categoryFilter: SidebarFilter { get set }
+    func updateMainView(with sidebarSelection: SidebarItem)
 }
 
-class OutlineViewController: NSObject, NSFetchedResultsControllerDelegate, NSOutlineViewDataSource, NSOutlineViewDelegate, GroupCellViewDelegate, CategoryDelegate {
+class OutlineViewController: NSObject, NSFetchedResultsControllerDelegate, NSOutlineViewDataSource, NSOutlineViewDelegate, GroupCellViewDelegate {
     weak var mainTableViewDelgate: MainTableViewDelgate?
     var mainControllerDelegate: MainControllerDelegate?
-    var fetchedGroupsController: NSFetchedResultsController<NSFetchRequestResult>!
-    var categoryFilter: SidebarFilter = .all
+    var categoryDelegate: CategoryDelegate?
 
     var sbFilterSection: SidebarSection {
         var filters: [SidebarItem] = []
@@ -79,26 +77,9 @@ class OutlineViewController: NSObject, NSFetchedResultsControllerDelegate, NSOut
     
     func outlineViewSelectionDidChange(_ notification: Notification) {
         guard let sidebarView = notification.object as? NSOutlineView else { return }
-        if let sbCatItem = sidebarView.item(atRow: sidebarView.selectedRow) as? SidebarCategoryItem {
-            if let selectedGroup = sbCatItem.sbCategory {
-                print(selectedGroup)
-//                let groupPred = NSPredicate(format: "group = %@", selectedGroup)
-//                let completePred = NSPredicate(format: "completedDate == nil")
-//                let compPred = NSCompoundPredicate(andPredicateWithSubpredicates: [groupPred, completePred])
-//                categoryPredicate = compPred
-            }
-        }
-
-        if let cat = sidebarView.item(atRow: sidebarView.selectedRow) as? SidebarFilterItem {
-            if let filter = cat.sbFilter {
-                categoryFilter = filter
-            } else {
-                print("else block")
-//                categoryPredicate = NSPredicate(format: "completedDate == nil")
-            }
-            
-        }
-        mainTableViewDelgate?.reloadData()
+        guard let sbItem = sidebarView.item(atRow: sidebarView.selectedRow) as? SidebarItem  else { return }
+        guard let catDel = categoryDelegate else { return }
+        catDel.updateMainView(with: sbItem)
     }
     
     

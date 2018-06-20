@@ -15,11 +15,11 @@ protocol FBControllerDelegate {
     func reloadUI()
 }
 
-class FirebaseController: MTVDel2 {
+class FirebaseController: MTVDel2, CategoryDelegate {
     private var ref: DatabaseReference!
     private var fbItem: DatabaseReference!
+    var fbQuery: DatabaseQuery?
     var fbControlDel: FBControllerDelegate?
-    var categoryDelegate: CategoryDelegate?
     var fetchedToDos: [ToDo]
     
     init() {
@@ -31,11 +31,14 @@ class FirebaseController: MTVDel2 {
     }
     
     func loadDataFromFirebase() {
-        let query = fbItem.queryOrdered(byChild: "isComplete").queryEqual(toValue: false)
+        var query = fbItem.queryOrdered(byChild: "isComplete").queryEqual(toValue: false)
+        if let newQuery = fbQuery {
+            query = newQuery
+        }
+        print("Load data from Firebase - query: \(query)")
         query.observe(.value) { (snapshot) in
             self.fetchedToDos = []
             for child in snapshot.children.allObjects as! [DataSnapshot] {
-                print("Child: \(child)")
                 guard let fbChildToDoDict = child.value as? [String: Any] else { return }
                 do {
                     let toDoData = try JSONSerialization.data(withJSONObject: fbChildToDoDict, options: [])
@@ -48,6 +51,20 @@ class FirebaseController: MTVDel2 {
             }
             self.fbControlDel?.reloadUI()
         }
+    }
+    
+    func updateMainView(with sidebarSelection: SidebarItem) {
+        if let sbFilterItem = sidebarSelection as? SidebarFilterItem {
+            switch sbFilterItem.sbFilter! {
+            case .all:
+                fbQuery = fbItem.queryOrdered(byChild: "isComplete").queryEqual(toValue: false)
+            case .completed:
+                fbQuery = fbItem.queryOrdered(byChild: "isComplete").queryEqual(toValue: true)
+            default:
+                fbQuery = fbItem.queryOrdered(byChild: "isComplete").queryEqual(toValue: false)
+            }
+        }
+        loadDataFromFirebase()
     }
     
     func getNewKey() -> String {
@@ -83,6 +100,9 @@ class FirebaseController: MTVDel2 {
                 fbItem.child(toDo.id).child(prop).setValue(newValTyped)
             case "completedDate":
                 let newValTyped = (newValUnwrapped as! Date).timeIntervalSince1970
+                print("completed case")
+                // FIXME: - figure out the logic to set multiple values at once
+//                fbItem.child(toDo.id).setValuesForKeys(["isComplete": true, "completedDate": Double(newValTyped)])
                 fbItem.child(toDo.id).child("isComplete").setValue(true)
                 fbItem.child(toDo.id).child(prop).setValue(newValTyped)
             default:

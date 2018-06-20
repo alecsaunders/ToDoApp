@@ -91,7 +91,6 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
         
         cntlr = MainController()
         cntlr.mainTableViewDelgate = self
-        cntlr.firebaseController.categoryDelegate = outlineCntlr
         cntlr.reloadUI()
         tvCntlr.mtvdel2 = cntlr.firebaseController
         tvCntlr.mainTableViewDelgate = self
@@ -104,6 +103,7 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
         mainTableView.doubleAction = #selector(self.doubleClick)
         mainTableView.reloadData()
         
+        outlineCntlr.categoryDelegate = cntlr.firebaseController
         outlineCntlr.mainTableViewDelgate = self
         sourceOutlineView.delegate = outlineCntlr
         sourceOutlineView.dataSource = outlineCntlr
