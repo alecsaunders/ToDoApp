@@ -51,25 +51,36 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        setupPrefs()
-        
         cntlr = MainController()
         cntlr.mainTableViewDelgate = self
-        cntlr.reloadUI()
-        
         mtvdel2 = cntlr.firebaseController
         
+        setupPrefs()
+        setupMainTableView()
+        setupSourceOutlineView()
+
+        tvMenu.tvMenuDelegate = cntlr
         lblStatusBottom.textColor = NSColor.darkGray
-        
+
+    }
+    func setupPrefs() {
+        let notificationName = Notification.Name(rawValue: "PrefsChanged")
+        NotificationCenter.default.addObserver(forName: notificationName, object: nil, queue: nil) { (notification) in
+            self.mainTableView.usesAlternatingRowBackgroundColors = self.cntlr.mainTableViewSetAlternatingRows()
+        }
+    }
+    
+    func setupMainTableView() {
         mainTableView.delegate = self
         mainTableView.dataSource = self
-        
         mainTableView.setDraggingSourceOperationMask(NSDragOperation.every, forLocal: false)
         mainTableView.registerForDraggedTypes(registeredTypes)
         mainTableView.doubleAction = #selector(self.doubleClick)
-        mainTableView.reloadData()
         mainTableView.usesAlternatingRowBackgroundColors = cntlr.mainTableViewSetAlternatingRows()
+        mainTableView.reloadData()
+    }
+    
+    func setupSourceOutlineView() {
         outlineCntlr.categoryDelegate = cntlr.firebaseController
         outlineCntlr.mainTableViewDelgate = self
         sourceOutlineView.delegate = outlineCntlr
@@ -77,10 +88,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         sourceOutlineView.setDraggingSourceOperationMask(NSDragOperation.every, forLocal: true)
         sourceOutlineView.registerForDraggedTypes([.string])
         sourceOutlineView?.expandItem(nil, expandChildren: true)
-        
         outlineCntlr.mainControllerDelegate = cntlr
-        
-        tvMenu.tvMenuDelegate = cntlr
     }
     
     @IBAction func sidebarMenuDelete(_ sender: NSMenuItem) {
@@ -125,13 +133,6 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     func showInfoViewController() {
         guard mainTableView.clickedRow >= 0 else { return }
         performSegue(withIdentifier: NSStoryboardSegue.Identifier(rawValue: "infoSegue"), sender: self)
-    }
-
-    func setupPrefs() {
-        let notificationName = Notification.Name(rawValue: "PrefsChanged")
-        NotificationCenter.default.addObserver(forName: notificationName, object: nil, queue: nil) { (notification) in
-            self.mainTableView.usesAlternatingRowBackgroundColors = self.cntlr.mainTableViewSetAlternatingRows()
-        }
     }
     
     override func prepare(for segue: NSStoryboardSegue, sender: Any?) {
