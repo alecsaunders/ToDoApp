@@ -66,7 +66,6 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
         outlineCntlr.mainControllerDelegate = cntlr
         
         tvMenu.tvMenuDelegate = cntlr
-
     }
     
     @IBAction func sidebarMenuDelete(_ sender: NSMenuItem) {
@@ -78,7 +77,7 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
     }
     
     @IBAction func menuDaily(_ sender: NSMenuItem) {
-        guard let theToDo = (mainTableView.view(atColumn: 1, row: mainTableView.clickedRow, makeIfNecessary: false) as? ToDoCellView)?.cellToDo else { return }
+        guard let theToDo = cntlr.getToDo(fromTableView: mainTableView) else { return }
         cntlr.setToDaily(toDo: theToDo, isDaily: !theToDo.daily)
     }
     
@@ -101,21 +100,18 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
         outlineCntlr.addSidebarGroup(groupName: "New Group")
     }
     
+    // Show Info View Controller
     @IBAction func menuGetInfo(_ sender: NSMenuItem) {
         showInfoViewController()
     }
-    
-    // MARK: - Main Table View Delegate Functions
     @objc func doubleClick(sender: AnyObject) {
         showInfoViewController()
     }
-    
     func showInfoViewController() {
         guard mainTableView.clickedRow >= 0 else { return }
         performSegue(withIdentifier: NSStoryboardSegue.Identifier(rawValue: "infoSegue"), sender: self)
     }
 
-    
     func setupPrefs() {
         let notificationName = Notification.Name(rawValue: "PrefsChanged")
         NotificationCenter.default.addObserver(forName: notificationName, object: nil, queue: nil) { (notification) in
@@ -132,7 +128,7 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
     
     override func prepare(for segue: NSStoryboardSegue, sender: Any?) {
         guard let dest = segue.destinationController as? InfoViewController else { return }
-        guard let theToDo = (mainTableView.view(atColumn: 1, row: mainTableView.clickedRow, makeIfNecessary: false) as? ToDoCellView)?.cellToDo else { return }
+        guard let theToDo = cntlr.getToDo(fromTableView: mainTableView) else { return }
         cntlr.setupInfoSegue(dest: dest, withToDo: theToDo)
         dest.infoControllerDelegate = cntlr
     }
@@ -147,7 +143,7 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
     }
     
     func setToDoToDaily(toDoRowIndex: Int) {
-        guard let theToDo = (mainTableView.view(atColumn: 1, row: toDoRowIndex, makeIfNecessary: false) as? ToDoCellView)?.cellToDo else { return }
+        guard let theToDo = cntlr.getToDo(fromTableView: mainTableView) else { return }
         cntlr.setToDaily(toDo: theToDo, isDaily: !theToDo.daily)
     }
     

@@ -16,7 +16,6 @@ protocol MainTableViewDelgate: class {
 //    func addToDoToGroup(toDoRowIndex: Int, group: Group)
     func setToDoToDaily(toDoRowIndex: Int)
     func updateStatusBar(withText text: String)
-    func doubleClick(sender: AnyObject)
     var clickedToDo: ToDo? { get }
 }
 

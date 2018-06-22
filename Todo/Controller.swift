@@ -34,6 +34,10 @@ class MainController: NSObject, NSFetchedResultsControllerDelegate, InfoControll
         return "\(group != nil ? "\(group!) - " : "")\(num == 1  ? "\(num) item" : "\(num) items")"
     }
 
+    func getToDo(fromTableView tableView: NSTableView) -> ToDo? {
+        guard let theToDo = (tableView.view(atColumn: 1, row: tableView.clickedRow, makeIfNecessary: false) as? ToDoCellView)?.cellToDo else { return nil }
+        return theToDo
+    }
     
     func getToDo(moID: NSManagedObjectID?) -> ToDo? {
 //        guard let managedObjectID = moID else { return nil }
