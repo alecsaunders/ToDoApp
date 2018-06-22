@@ -47,12 +47,6 @@ class MainTableViewController: NSObject, NSTableViewDelegate, NSTableViewDataSou
 //        toDoObj.setValue(newToDoTitle, forKey: "title")
 //        dataController.saveMoc()
     }
-    
-//    func getToDo(moID: NSManagedObjectID?) -> ToDo? {
-//        guard let managedObjectID = moID else { return nil }
-//        guard let theToDo = dataController.managedObjectContext.object(with: managedObjectID) as? ToDo else { return nil }
-//        return theToDo
-//    }
 
     
     //MARK: - TableView Delegate Methods

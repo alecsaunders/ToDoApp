@@ -114,5 +114,12 @@ class MainController: NSObject, NSFetchedResultsControllerDelegate, InfoControll
             sender.state = .off
         }
     }
+    
+    
+    func mainTableViewSetAlternatingRows() -> Bool {
+        let userDefaults = NSUserDefaultsController().defaults
+        let alternateBool = userDefaults.bool(forKey: "alternateRows")
+        return alternateBool
+    }
 
 }

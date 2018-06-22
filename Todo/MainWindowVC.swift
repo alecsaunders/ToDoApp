@@ -95,14 +95,15 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
         tvCntlr.mtvdel2 = cntlr.firebaseController
         tvCntlr.mainTableViewDelgate = self
         lblStatusBottom.textColor = NSColor.darkGray
+        
         mainTableView.delegate = tvCntlr
         mainTableView.dataSource = tvCntlr
-        mainTableViewSetAlternatingRows()
+        
         mainTableView.setDraggingSourceOperationMask(NSDragOperation.every, forLocal: false)
         mainTableView.registerForDraggedTypes(tvCntlr.registeredTypes)
         mainTableView.doubleAction = #selector(self.doubleClick)
         mainTableView.reloadData()
-        
+        mainTableView.usesAlternatingRowBackgroundColors = cntlr.mainTableViewSetAlternatingRows()
         outlineCntlr.categoryDelegate = cntlr.firebaseController
         outlineCntlr.mainTableViewDelgate = self
         sourceOutlineView.delegate = outlineCntlr
@@ -124,6 +125,10 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
         }
     }
     
+    func reloadData() {
+        mainTableView.reloadData()
+    }
+    
     override func prepare(for segue: NSStoryboardSegue, sender: Any?) {
         guard let dest = segue.destinationController as? InfoViewController else { return }
         guard let moID = (mainTableView.view(atColumn: 1, row: mainTableView.clickedRow, makeIfNecessary: false) as? ToDoCellView)?.managedObjectID else { return }
@@ -139,13 +144,6 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
         dest.infoControllerDelegate = cntlr
     }
     
-    func mainTableViewSetAlternatingRows() {
-        let userDefaults = NSUserDefaultsController().defaults
-        let alternateBool = userDefaults.bool(forKey: "alternateRows")
-        mainTableView.usesAlternatingRowBackgroundColors = alternateBool
-    }
-    
-    
     func animate(hide: Bool) {
         sourceSidebar.animator().isHidden = hide
         sidebarView.animator().isHidden = hide
@@ -153,30 +151,9 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
     
     // MARK: - Main Table View Delegate Functions
     @objc func doubleClick(sender: AnyObject) {
-//        if mainTableView.clickedRow >= 0 {
-//            performSegue(withIdentifier: NSStoryboardSegue.Identifier(rawValue: "infoSegue"), sender: self)
-//        }
-//        if let v = mainTableView.view(atColumn: 1, row: mainTableView.clickedRow, makeIfNecessary: false) as? ToDoCellView {
-//            if let toDo = cntlr.dataController.managedObjectContext.object(with: v.managedObjectID!) as? ToDo {
-////                let isoDate = "2017-08-25T04:55:00+0000"
-////
-////                let dateFormatter = DateFormatter()
-////                dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
-////                let date = dateFormatter.date(from:isoDate)! as NSDate
-////
-////                toDo.completedDate = date
-//                print(toDo)
-//            }
-//        }
-    }
-    
-    func reloadData() {
-        mainTableView.reloadData()
-    }
-    
-    func toDoManagedObjectID(index: Int) -> NSManagedObjectID? {
-        guard let toDoCellView = mainTableView.view(atColumn: 1, row: index, makeIfNecessary: false) as? ToDoCellView else { return nil }
-        return toDoCellView.managedObjectID
+        if mainTableView.clickedRow >= 0 {
+            performSegue(withIdentifier: NSStoryboardSegue.Identifier(rawValue: "infoSegue"), sender: self)
+        }
     }
     
     func addToDoToGroup(toDoRowIndex: Int, group: Group) {
@@ -190,9 +167,7 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
     }
     
     func reloadSidebar() {
-        outlineCntlr.initializeFetchedGroupsController()
         sourceOutlineView.reloadData()
-        sourceOutlineView?.expandItem(nil, expandChildren: true)
     }
     
     func removeRows(atIndex index: Int) {
