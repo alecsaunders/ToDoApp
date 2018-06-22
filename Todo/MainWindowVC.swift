@@ -115,32 +115,28 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
         outlineCntlr.mainControllerDelegate = cntlr
         
         tvMenu.tvMenuDelegate = cntlr
+
     }
+
     
-    func setupPrefs() {        
+    func setupPrefs() {
         let notificationName = Notification.Name(rawValue: "PrefsChanged")
         NotificationCenter.default.addObserver(forName: notificationName, object: nil, queue: nil) { (notification) in
-            let userDefaults = NSUserDefaultsController().defaults
-            self.mainTableView.usesAlternatingRowBackgroundColors = userDefaults.bool(forKey: "alternateRows")
+            self.mainTableView.usesAlternatingRowBackgroundColors = self.cntlr.mainTableViewSetAlternatingRows()
         }
     }
     
     func reloadData() {
         mainTableView.reloadData()
     }
+    func reloadSidebar() {
+        sourceOutlineView.reloadData()
+    }
     
     override func prepare(for segue: NSStoryboardSegue, sender: Any?) {
         guard let dest = segue.destinationController as? InfoViewController else { return }
-        guard let moID = (mainTableView.view(atColumn: 1, row: mainTableView.clickedRow, makeIfNecessary: false) as? ToDoCellView)?.managedObjectID else { return }
-        guard let theToDo = cntlr.getToDo(moID: moID) else { return }
-        
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd"
-        let clickedCreateDate = theToDo.createdDate //! as Date
-        let clickedCreateDateString = dateFormatter.string(from: clickedCreateDate)
-        dest.infoTitleString = theToDo.title
-        dest.intoCreatedDateString = clickedCreateDateString
-        dest.note = theToDo.note
+        guard let theToDo = (mainTableView.view(atColumn: 1, row: mainTableView.clickedRow, makeIfNecessary: false) as? ToDoCellView)?.cellToDo else { return }
+        cntlr.setupInfoSegue(dest: dest, withToDo: theToDo)
         dest.infoControllerDelegate = cntlr
     }
     
@@ -164,10 +160,6 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
     func setToDoToDaily(toDoRowIndex: Int) {
         guard let theToDo = (mainTableView.view(atColumn: 1, row: toDoRowIndex, makeIfNecessary: false) as? ToDoCellView)?.cellToDo else { return }
         cntlr.setToDaily(toDo: theToDo, isDaily: !theToDo.daily)
-    }
-    
-    func reloadSidebar() {
-        sourceOutlineView.reloadData()
     }
     
     func removeRows(atIndex index: Int) {
@@ -206,9 +198,5 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
     // MARK: - Controller functions
     func updateStatusBar(withText text: String) {
         lblStatusBottom.stringValue = text
-    }
-    
-    override func updateViewConstraints() {
-        super.updateViewConstraints()
     }
 }

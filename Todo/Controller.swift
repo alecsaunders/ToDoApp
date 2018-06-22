@@ -121,5 +121,19 @@ class MainController: NSObject, NSFetchedResultsControllerDelegate, InfoControll
         let alternateBool = userDefaults.bool(forKey: "alternateRows")
         return alternateBool
     }
+    
+    func setupInfoSegue(dest: InfoViewController, withToDo todo: ToDo) {
+        let clickedCreateDateString = getString(fromDate: todo.createdDate, withFormat: "yyyy-MM-dd")
+        dest.infoTitleString = todo.title
+        dest.intoCreatedDateString = clickedCreateDateString
+        dest.note = todo.note
+    }
+    
+    func getString(fromDate date: Date, withFormat format: String) -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = format
+        let clickedCreateDateString = dateFormatter.string(from: date)
+        return clickedCreateDateString
+    }
 
 }
