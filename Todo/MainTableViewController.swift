@@ -13,8 +13,6 @@ import CoreData
 protocol MainTableViewDelgate: class {
     func reloadData()
     func reloadSidebar()
-    func removeRows(atIndex index: Int)
-//    func toDoManagedObjectID(index: Int) -> NSManagedObjectID?
 //    func addToDoToGroup(toDoRowIndex: Int, group: Group)
     func setToDoToDaily(toDoRowIndex: Int)
     func updateStatusBar(withText text: String)

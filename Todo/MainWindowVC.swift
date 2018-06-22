@@ -15,7 +15,6 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
     var clickedToDo: ToDo? {
         get {
             guard let v = mainTableView.view(atColumn: 1, row: mainTableView.clickedRow, makeIfNecessary: false) as? ToDoCellView else { return nil }
-//            guard let moID = v.managedObjectID else { return nil }
             guard let theToDo = cntlr.getToDo(moID: nil) else { return nil }
             return theToDo
         }
@@ -25,55 +24,7 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
     @IBOutlet weak var sourceSidebar: NSScrollView!
     @IBOutlet var sidebarView: NSView!
     @IBOutlet weak var sourceOutlineView: NSOutlineView!
-    @IBAction func btnAddItem(_ sender: NSButton) {
-        if let windowConroller = self.view.window?.windowController as? WindowController {
-            let txt = windowConroller.toDoCreateTextField.stringValue
-            cntlr.save(addedToDoTitle: txt, newToDoSidebarSelection: sourceOutlineView.item(atRow: sourceOutlineView.selectedRow) as? SidebarItem)
-            windowConroller.toDoCreateTextField.stringValue = ""
-        }
-    }
-    @IBAction func btnAddGroup(_ sender: NSButton) {
-        outlineCntlr.addSidebarGroup(groupName: "New Group")
-    }
-    @IBAction func completedCheck(_ sender: NSButton) {
-        cntlr.completedWasChecked(state: sender.state.rawValue, btnIndex: sender.tag)
-    }
     @IBOutlet var tvMenu: TvMenu!
-    @IBAction func markComplete(_ sender: NSMenuItem) {
-        // FIXME: Refactor
-        if let clicked_view = mainTableView.view(atColumn: 0, row: mainTableView.clickedRow, makeIfNecessary: false) as? NSTableCellView {
-            if let button = clicked_view.subviews[0] as? NSButton {
-                switch button.state {
-                    case .on:
-                        button.state = .off
-                    case .off:
-                        button.state = .on
-                    default:
-                        print("default")
-                }
-            }
-        }
-        // END - Refactor
-        cntlr.completedWasChecked(state: sender.state.rawValue, btnIndex: mainTableView.clickedRow)
-    }
-    @IBAction func menuGetInfo(_ sender: NSMenuItem) {
-        if mainTableView.clickedRow >= 0 {
-            performSegue(withIdentifier: NSStoryboardSegue.Identifier(rawValue: "infoSegue"), sender: self)
-        }
-    }
-    @IBAction func menuDaily(_ sender: NSMenuItem) {
-        guard let theToDo = (mainTableView.view(atColumn: 1, row: mainTableView.clickedRow, makeIfNecessary: false) as? ToDoCellView)?.cellToDo else { return }
-        cntlr.setToDaily(toDo: theToDo, isDaily: !theToDo.daily)
-    }
-
-    @IBAction func sidebarMenuDelete(_ sender: NSMenuItem) {
-        guard let sbCatItem = sourceOutlineView.item(atRow: sourceOutlineView.clickedRow) as? SidebarCategoryItem else { return }
-        guard let sbCat = sbCatItem.sbCategory else { return }
-        outlineCntlr.deleteSidebarGroup(group: sbCat)
-        sourceOutlineView.reloadData()
-        sourceOutlineView?.expandItem(nil, expandChildren: true)
-    }
-
     var cntlr: MainController!
     let tvCntlr = MainTableViewController()
     let outlineCntlr = OutlineViewController()
@@ -117,6 +68,52 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
         tvMenu.tvMenuDelegate = cntlr
 
     }
+    
+    @IBAction func sidebarMenuDelete(_ sender: NSMenuItem) {
+        guard let sbCatItem = sourceOutlineView.item(atRow: sourceOutlineView.clickedRow) as? SidebarCategoryItem else { return }
+        guard let sbCat = sbCatItem.sbCategory else { return }
+        outlineCntlr.deleteSidebarGroup(group: sbCat)
+        sourceOutlineView.reloadData()
+        sourceOutlineView?.expandItem(nil, expandChildren: true)
+    }
+    
+    @IBAction func menuDaily(_ sender: NSMenuItem) {
+        guard let theToDo = (mainTableView.view(atColumn: 1, row: mainTableView.clickedRow, makeIfNecessary: false) as? ToDoCellView)?.cellToDo else { return }
+        cntlr.setToDaily(toDo: theToDo, isDaily: !theToDo.daily)
+    }
+    
+    @IBAction func markComplete(_ sender: NSMenuItem) {
+        guard let clicked_view = mainTableView.view(atColumn: 0, row: mainTableView.clickedRow, makeIfNecessary: false) as? NSTableCellView  else { return }
+        guard let button = clicked_view.subviews[0] as? NSButton else { return }
+        completedCheck(button)
+    }
+    @IBAction func completedCheck(_ sender: NSButton) {
+        cntlr.completedWasChecked(atIndex: mainTableView.clickedRow, withState: sender.tag)
+    }
+    
+    @IBAction func btnAddItem(_ sender: NSButton) {
+        guard let windowConroller = self.view.window?.windowController as? WindowController else { return }
+        let txt = windowConroller.toDoCreateTextField.stringValue
+        cntlr.save(addedToDoTitle: txt, newToDoSidebarSelection: sourceOutlineView.item(atRow: sourceOutlineView.selectedRow) as? SidebarItem)
+        windowConroller.toDoCreateTextField.stringValue = ""
+    }
+    @IBAction func btnAddGroup(_ sender: NSButton) {
+        outlineCntlr.addSidebarGroup(groupName: "New Group")
+    }
+    
+    @IBAction func menuGetInfo(_ sender: NSMenuItem) {
+        showInfoViewController()
+    }
+    
+    // MARK: - Main Table View Delegate Functions
+    @objc func doubleClick(sender: AnyObject) {
+        showInfoViewController()
+    }
+    
+    func showInfoViewController() {
+        guard mainTableView.clickedRow >= 0 else { return }
+        performSegue(withIdentifier: NSStoryboardSegue.Identifier(rawValue: "infoSegue"), sender: self)
+    }
 
     
     func setupPrefs() {
@@ -141,15 +138,7 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
     }
     
     func animate(hide: Bool) {
-        sourceSidebar.animator().isHidden = hide
         sidebarView.animator().isHidden = hide
-    }
-    
-    // MARK: - Main Table View Delegate Functions
-    @objc func doubleClick(sender: AnyObject) {
-        if mainTableView.clickedRow >= 0 {
-            performSegue(withIdentifier: NSStoryboardSegue.Identifier(rawValue: "infoSegue"), sender: self)
-        }
     }
     
     func addToDoToGroup(toDoRowIndex: Int, group: Group) {
@@ -162,31 +151,6 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
         cntlr.setToDaily(toDo: theToDo, isDaily: !theToDo.daily)
     }
     
-    func removeRows(atIndex index: Int) {
-        mainTableView.beginUpdates()
-        let removedIndecies = IndexSet.init(integer: index)
-        mainTableView.removeRows(at: removedIndecies, withAnimation: .slideUp)
-        mainTableView.endUpdates()
-        
-        let numOfItems = mainTableView.numberOfRows
-        let sidebarGroup: Group? = nil
-        let statusBarText = "\(sidebarGroup != nil ? "\(sidebarGroup!) - " : "")\(numOfItems == 1  ? "\(numOfItems) item" : "\(numOfItems) items")"
-        updateStatusBar(withText: statusBarText)
-        
-        for index in 0..<mainTableView.numberOfRows {
-            if let tmpView = mainTableView.view(atColumn: 0, row: index, makeIfNecessary: false) as? NSTableCellView {
-                if let completeBtn = tmpView.subviews[0] as? NSButton {
-                    completeBtn.tag = index
-                } else {
-                    mainTableView.reloadData()
-                }
-            } else {
-                mainTableView.reloadData()
-            }
-            
-        }
-    }
-    
     // MARK: - Window Controller Delegate
     func addToDo(toDoText: String) {
         cntlr.save(addedToDoTitle: toDoText, newToDoSidebarSelection: sourceOutlineView.item(atRow: sourceOutlineView.selectedRow) as? SidebarItem)
@@ -196,6 +160,7 @@ class ViewController: NSViewController, MainTableViewDelgate, WindowControllerDe
     }
     
     // MARK: - Controller functions
+    
     func updateStatusBar(withText text: String) {
         lblStatusBottom.stringValue = text
     }

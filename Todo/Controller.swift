@@ -29,6 +29,10 @@ class MainController: NSObject, NSFetchedResultsControllerDelegate, InfoControll
     func reloadUI() {
         mainTableViewDelgate?.reloadData()
     }
+    
+    func getStatusLabel(withNumber num: Int, forGroup group: Group?) -> String {
+        return "\(group != nil ? "\(group!) - " : "")\(num == 1  ? "\(num) item" : "\(num) items")"
+    }
 
     
     func getToDo(moID: NSManagedObjectID?) -> ToDo? {
@@ -69,16 +73,7 @@ class MainController: NSObject, NSFetchedResultsControllerDelegate, InfoControll
     
     
     // MARK: - Update View
-    func completedWasChecked(state: Int, btnIndex index: Int) {
-        switch state {
-        case 1:
-            markCompleted(atIndex: index, complete: true)
-        case 0:
-            markCompleted(atIndex: index, complete: false)
-        default:
-            break
-        }
-    }
+
     
 //    func assigneToDoToGroup(moID: NSManagedObjectID, group: Group) {
 //        guard let theToDo = getToDo(moID: moID) else { return }
@@ -90,6 +85,16 @@ class MainController: NSObject, NSFetchedResultsControllerDelegate, InfoControll
         firebaseController.update(toDo: toDo, property: "daily", with: isDaily)
     }
     
+    func completedWasChecked(atIndex index: Int, withState state: Int) {
+        switch state {
+        case 1:
+            markCompleted(atIndex: index, complete: true)
+        case 0:
+            markCompleted(atIndex: index, complete: false)
+        default:
+            break
+        }
+    }
     
     func markCompleted(atIndex index: Int, complete: Bool) {
         var completedToDo = firebaseController.fetchedToDos[index]
@@ -114,7 +119,6 @@ class MainController: NSObject, NSFetchedResultsControllerDelegate, InfoControll
             sender.state = .off
         }
     }
-    
     
     func mainTableViewSetAlternatingRows() -> Bool {
         let userDefaults = NSUserDefaultsController().defaults
