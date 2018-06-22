@@ -63,6 +63,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         lblStatusBottom.textColor = NSColor.darkGray
 
     }
+    
     func setupPrefs() {
         let notificationName = Notification.Name(rawValue: "PrefsChanged")
         NotificationCenter.default.addObserver(forName: notificationName, object: nil, queue: nil) { (notification) in
@@ -107,10 +108,21 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     @IBAction func markComplete(_ sender: NSMenuItem) {
         guard let clicked_view = mainTableView.view(atColumn: 0, row: mainTableView.clickedRow, makeIfNecessary: false) as? NSTableCellView  else { return }
         guard let button = clicked_view.subviews[0] as? NSButton else { return }
+        changeState(ofButton: button)
         completedCheck(button)
     }
+    func changeState(ofButton button: NSButton) {
+        switch button.state {
+        case .on:
+            button.state = .off
+        case .off:
+            button.state = .on
+        default:
+            print("Cannot change state")
+        }
+    }
     @IBAction func completedCheck(_ sender: NSButton) {
-        cntlr.completedWasChecked(atIndex: mainTableView.clickedRow, withState: sender.tag)
+        cntlr.completedWasChecked(atIndex: sender.tag, withState: sender.state.rawValue)
     }
     
     @IBAction func btnAddItem(_ sender: NSButton) {

@@ -100,7 +100,6 @@ class FirebaseController: MTVDel2, CategoryDelegate {
                 fbItem.child(toDo.id).child(prop).setValue(newValTyped)
             case "completedDate":
                 let newValTyped = (newValUnwrapped as! Date).timeIntervalSince1970
-                print("completed case")
                 // FIXME: - figure out the logic to set multiple values at once
 //                fbItem.child(toDo.id).setValuesForKeys(["isComplete": true, "completedDate": Double(newValTyped)])
                 fbItem.child(toDo.id).child("isComplete").setValue(true)

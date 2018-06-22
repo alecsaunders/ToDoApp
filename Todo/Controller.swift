@@ -88,24 +88,16 @@ class MainController: NSObject, InfoControllerDelegate, TableViewMenuDelegate, M
     }
     
     func completedWasChecked(atIndex index: Int, withState state: Int) {
+        var completedToDo = firebaseController.fetchedToDos[index]
         switch state {
         case 1:
-            markCompleted(atIndex: index, complete: true)
-        case 0:
-            markCompleted(atIndex: index, complete: false)
-        default:
-            break
-        }
-    }
-    
-    func markCompleted(atIndex index: Int, complete: Bool) {
-        var completedToDo = firebaseController.fetchedToDos[index]
-        if complete {
             completedToDo.completedDate = Date()
             completedToDo.isComplete = true
-        } else {
+        case 0:
             completedToDo.completedDate = nil
             completedToDo.isComplete = false
+        default:
+            break
         }
         firebaseController.update(toDo: completedToDo, property: "completedDate", with: completedToDo.completedDate)
     }
