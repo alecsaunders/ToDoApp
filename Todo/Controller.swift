@@ -6,15 +6,13 @@
 //  Copyright © 2017 Alec Saunders. All rights reserved.
 //
 
-import Foundation
 import Cocoa
-import CoreData
 
 protocol MainControllerDelegate {
 //    func assigneToDoToGroup(moID: NSManagedObjectID, group: Group)
 }
 
-class MainController: NSObject, NSFetchedResultsControllerDelegate, InfoControllerDelegate, TableViewMenuDelegate, MainControllerDelegate, FBControllerDelegate {
+class MainController: NSObject, InfoControllerDelegate, TableViewMenuDelegate, MainControllerDelegate, FBControllerDelegate {
     
     var firebaseController: FirebaseController!
     weak var mainTableViewDelgate: MainTableViewDelgate?

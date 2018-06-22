@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		054AD4C820810CBC00EE2BD3 /* MainTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 054AD4C720810CBC00EE2BD3 /* MainTableViewController.swift */; };
 		05FBA107208E4686000FC726 /* FormatMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05FBA106208E4686000FC726 /* FormatMenu.swift */; };
 		4231230E56244E455A7DE75D /* Pods_Todo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E18DB030D5AF00F2A3635FCF /* Pods_Todo.framework */; };
 		7C4A9C54E8366852DFF01BAF /* Pods_TodoTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50A4FE3D0EE751808D95138E /* Pods_TodoTests.framework */; };
@@ -47,7 +46,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		054AD4C720810CBC00EE2BD3 /* MainTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTableViewController.swift; sourceTree = "<group>"; };
 		05FBA106208E4686000FC726 /* FormatMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormatMenu.swift; sourceTree = "<group>"; };
 		50A4FE3D0EE751808D95138E /* Pods_TodoTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TodoTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7CF4ED118833C2C313C66E57 /* Pods-Todo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Todo.release.xcconfig"; path = "Pods/Target Support Files/Pods-Todo/Pods-Todo.release.xcconfig"; sourceTree = "<group>"; };
@@ -211,7 +209,6 @@
 			children = (
 				F2E822901F4895B100EEEA07 /* Controller.swift */,
 				F2E9B4DD20D5A31F00CAB458 /* FirebaseController.swift */,
-				054AD4C720810CBC00EE2BD3 /* MainTableViewController.swift */,
 				F296DD99207A6CF5001519F3 /* OutlineViewController.swift */,
 			);
 			name = Controllers;
@@ -388,7 +385,6 @@
 			files = (
 				F29C4BC720D6B55B002A6C24 /* Group.swift in Sources */,
 				F2E822911F4895B100EEEA07 /* Controller.swift in Sources */,
-				054AD4C820810CBC00EE2BD3 /* MainTableViewController.swift in Sources */,
 				F255491F1F493A2300AE360B /* WindowController.swift in Sources */,
 				F2603DFB1F4DDC0700A57AE0 /* ToDoCellView.swift in Sources */,
 				F2571EEA207171D00007D854 /* SidebarItem.swift in Sources */,
