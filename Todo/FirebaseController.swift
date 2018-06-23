@@ -49,8 +49,8 @@ class FirebaseController: MTVDel2 {
     }
     
     func loadGroupsFromFirebase() {
-        fetchedGroups = []
         fbGroup.observe(.value) { (snapshot) in
+            self.fetchedGroups = []
             for child in self.getAllChildren(fromSnapshot: snapshot) {
                 guard let fbGroupDict = child.value as? [String: String] else { continue }
                 do {
@@ -129,7 +129,7 @@ class FirebaseController: MTVDel2 {
     func saveGroupToFirebase(group: Group) {
         let groupDict: [String: String] = ["groupID": group.groupID, "groupName": group.groupName]
         fbGroup.child(group.groupID).setValue(groupDict)
-        loadDataFromFirebase()
+        loadGroupsFromFirebase()
     }
     
     func delete(item: ToDo) {

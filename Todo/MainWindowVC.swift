@@ -171,6 +171,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     
     func reloadSidebar() {
         guard let mtvd2 = mtvdel2 else { return }
+        sbCategorySection.sbItem = []
         sbCategorySection.sbItem = mapGroupsToSidebarCategories(groupList: mtvd2.fetchedGroups)
         sourceOutlineView.reloadData()
         sourceOutlineView?.expandItem(nil, expandChildren: true)
