@@ -38,13 +38,10 @@ class MainController: NSObject, InfoControllerDelegate, TableViewMenuDelegate, M
     }
 
     func saveNewToDo(withTitle title: String, withSidebarItem sbitem: SidebarItem?) {
-        if title.isEmpty {
-            print("do not add a new to do item")
-        } else {
-            let newKey = firebaseController.getNewKey()
-            let newToDo = ToDo(id: newKey, title: title, note: "", daily: false, createdDate: Date(), isComplete: false, completedDate: nil)
-            firebaseController.saveToDoToFirebase(toDo: newToDo)
-        }
+        guard !title.isEmpty else { return }
+        let newKey = firebaseController.getNewKey()
+        let newToDo = ToDo(id: newKey, title: title, note: "", daily: false, createdDate: Date(), isComplete: false, completedDate: nil)
+        firebaseController.saveToDoToFirebase(toDo: newToDo)
     }
     
     func removeToDoEntityRecord(atIndex: Int) {
