@@ -61,5 +61,6 @@ extension ToDo {
         if let compDateDouble = completedDateDouble {
             completedDate = Date(timeIntervalSince1970: compDateDouble)
         }
+        groupID = try allValues.decodeIfPresent(String.self, forKey: .groupID)
     }
 }
