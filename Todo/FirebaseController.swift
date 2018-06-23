@@ -123,13 +123,11 @@ class FirebaseController: MTVDel2 {
     
     func saveToDoToFirebase(toDo: ToDo) {
         fbItem.child(toDo.id).setValue(toDo.getDictionary())
-        loadDataFromFirebase()
     }
     
     func saveGroupToFirebase(group: Group) {
         let groupDict: [String: String] = ["groupID": group.groupID, "groupName": group.groupName]
         fbGroup.child(group.groupID).setValue(groupDict)
-        loadGroupsFromFirebase()
     }
     
     func delete(item: ToDo) {
