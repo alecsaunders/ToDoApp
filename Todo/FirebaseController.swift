@@ -21,6 +21,7 @@ class FirebaseController: MTVDel2, CategoryDelegate {
     var fbQuery: DatabaseQuery?
     var fbControlDel: FBControllerDelegate?
     var fetchedToDos: [ToDo]
+    var itemsAreComplete = false
     
     init() {
         fetchedToDos = []
@@ -31,7 +32,7 @@ class FirebaseController: MTVDel2, CategoryDelegate {
     }
     
     func loadDataFromFirebase() {
-        var query = fbItem.queryOrdered(byChild: "isComplete").queryEqual(toValue: false)
+        var query = fbItem.queryOrdered(byChild: "createdDate")
         if let newQuery = fbQuery {
             query = newQuery
         }
@@ -48,19 +49,24 @@ class FirebaseController: MTVDel2, CategoryDelegate {
                 }
 
             }
+            self.fetchedToDos = self.fetchedToDos.filter { $0.isComplete == self.itemsAreComplete }
             self.fbControlDel?.reloadUI()
         }
     }
     
     func updateMainView(with sidebarSelection: SidebarItem) {
+        itemsAreComplete = false
         if let sbFilterItem = sidebarSelection as? SidebarFilterItem {
             switch sbFilterItem.sbFilter! {
             case .all:
-                fbQuery = fbItem.queryOrdered(byChild: "isComplete").queryEqual(toValue: false)
+                fbQuery = fbItem.queryOrdered(byChild: "createdDate")
+            case .daily:
+                fbQuery = fbItem.queryOrdered(byChild: "daily").queryEqual(toValue: true)
             case .completed:
+                itemsAreComplete = true
                 fbQuery = fbItem.queryOrdered(byChild: "isComplete").queryEqual(toValue: true)
             default:
-                fbQuery = fbItem.queryOrdered(byChild: "isComplete").queryEqual(toValue: false)
+                fbQuery = fbItem.queryOrdered(byChild: "createdDate")
             }
         }
         loadDataFromFirebase()

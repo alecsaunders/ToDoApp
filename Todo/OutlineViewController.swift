@@ -82,7 +82,6 @@ class OutlineViewController: NSObject, NSFetchedResultsControllerDelegate, NSOut
         catDel.updateMainView(with: sbItem)
     }
     
-    
     func outlineView(_ outlineView: NSOutlineView, numberOfChildrenOfItem item: Any?) -> Int {
         if let item = item {
             switch item {
