@@ -35,7 +35,6 @@ class FirebaseController: MTVDel2, CategoryDelegate {
         if let newQuery = fbQuery {
             query = newQuery
         }
-        print("Load data from Firebase - query: \(query)")
         query.observe(.value) { (snapshot) in
             self.fetchedToDos = []
             for child in snapshot.children.allObjects as! [DataSnapshot] {
