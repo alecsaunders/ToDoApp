@@ -18,6 +18,7 @@ protocol FBControllerDelegate {
 class FirebaseController: MTVDel2 {
     private var ref: DatabaseReference!
     private var fbItem: DatabaseReference!
+    private var fbGroup: DatabaseReference!
     var fbQuery: DatabaseQuery?
     var fbControlDel: FBControllerDelegate?
     var fetchedToDos: [ToDo]
@@ -29,6 +30,7 @@ class FirebaseController: MTVDel2 {
         Database.setLoggingEnabled(true)
         ref = Database.database().reference()
         fbItem = ref.child("item")
+        fbGroup = ref.child("group")
     }
     
     func loadDataFromFirebase() {
@@ -88,12 +90,21 @@ class FirebaseController: MTVDel2 {
         loadDataFromFirebase()
     }
     
-    func getNewKey() -> String {
-        return ref.child("item").childByAutoId().key
+    func getNewToDoKey() -> String {
+        return fbItem.childByAutoId().key
+    }
+    func getNewGroupKey() -> String {
+        return fbGroup.childByAutoId().key
     }
     
     func saveToDoToFirebase(toDo: ToDo) {
         fbItem.child(toDo.id).setValue(toDo.getDictionary())
+        loadDataFromFirebase()
+    }
+    
+    func saveGroupToFirebase(group: Group) {
+        let groupDict: [String: String] = ["groupID": group.groupID, "groupName": group.groupName]
+        fbGroup.child(group.groupID).setValue(groupDict)
         loadDataFromFirebase()
     }
     

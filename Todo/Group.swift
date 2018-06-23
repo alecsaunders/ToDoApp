@@ -9,5 +9,6 @@
 import Foundation
 
 struct Group {
+    var groupID: String
     var groupName: String
 }

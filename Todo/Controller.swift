@@ -39,9 +39,15 @@ class MainController: NSObject, InfoControllerDelegate, TableViewMenuDelegate, M
 
     func saveNewToDo(withTitle title: String, withSidebarItem sbitem: SidebarItem?) {
         guard !title.isEmpty else { return }
-        let newKey = firebaseController.getNewKey()
+        let newKey = firebaseController.getNewToDoKey()
         let newToDo = ToDo(id: newKey, title: title, note: "", daily: false, createdDate: Date(), isComplete: false, completedDate: nil)
         firebaseController.saveToDoToFirebase(toDo: newToDo)
+    }
+    
+    func saveNewGroup(withName name: String) {
+        let newKey = firebaseController.getNewGroupKey()
+        let newGroup = Group(groupID: newKey, groupName: name)
+        firebaseController.saveGroupToFirebase(group: newGroup)
     }
     
     func removeToDoEntityRecord(atIndex: Int) {

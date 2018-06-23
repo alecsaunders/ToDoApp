@@ -139,7 +139,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     }
     
     @IBAction func btnAddGroup(_ sender: NSButton) {
-        addSidebarGroup(groupName: "New Group")
+        cntlr.saveNewGroup(withName: "New Group")
     }
     
     // Show Info View Controller
@@ -387,10 +387,6 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     }
     
     // MARK: - Other Methods
-    func addSidebarGroup(groupName: String) {
-        let newGroup = Group(groupName: groupName)
-    }
-    
     func deleteSidebarGroup(group: Group) {
         //        dataController.managedObjectContext.delete(group)
         //        dataController.saveMoc()
