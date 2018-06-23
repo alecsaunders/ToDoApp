@@ -32,27 +32,38 @@ class FirebaseController: MTVDel2, CategoryDelegate {
     }
     
     func loadDataFromFirebase() {
-        if fbQuery == nil {
-            fbQuery = fbItem.queryOrdered(byChild: "createdDate")
-        }
-        fbQuery!.observe(.value) { (snapshot) in
-            print("observing values")
-            self.fetchedToDos = []
-            for child in snapshot.children.allObjects as! [DataSnapshot] {
-                guard let fbChildToDoDict = child.value as? [String: Any] else { return }
-                do {
-                    let toDoData = try JSONSerialization.data(withJSONObject: fbChildToDoDict, options: [])
-                    let decodedToDo = try JSONDecoder().decode(ToDo.self, from: toDoData)
-                    if decodedToDo.isComplete == self.itemsAreComplete {
-                        self.fetchedToDos.append(decodedToDo)
-                    }
-                } catch {
-                    print("Error decoding to do: \(error.localizedDescription)")
-                }
-
-            }
+        let query = setFirebaseQuery()
+        query.observe(.value) { (snapshot) in
+            self.parseFirebaseResults(snapshot)
             self.fbControlDel?.reloadUI()
         }
+    }
+    
+    func setFirebaseQuery() -> DatabaseQuery {
+        guard let query = fbQuery else { return fbItem.queryOrdered(byChild: "createdDate") }
+        return query
+    }
+    
+    func parseFirebaseResults(_ snapshot: (DataSnapshot)) {
+        self.fetchedToDos = []
+        for child in snapshot.children.allObjects as! [DataSnapshot] {
+            guard let fbChildToDoDict = child.value as? [String: Any] else { return }
+            guard let decToDo = decodeFirebaseDictionary(fbChildToDoDict) else { return }
+            fetchedToDos.append(decToDo)
+        }
+    }
+    
+    func decodeFirebaseDictionary(_ dict: [String : Any]) -> ToDo? {
+        do {
+            let toDoData = try JSONSerialization.data(withJSONObject: dict, options: [])
+            let decodedToDo = try JSONDecoder().decode(ToDo.self, from: toDoData)
+            if decodedToDo.isComplete == self.itemsAreComplete {
+                return decodedToDo
+            }
+        } catch {
+            print("Error decoding ToDo: \(error)")
+        }
+        return nil
     }
     
     func updateMainView(with sidebarSelection: SidebarItem) {
