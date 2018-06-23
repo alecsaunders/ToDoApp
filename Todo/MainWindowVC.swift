@@ -54,7 +54,6 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         return SidebarSection(name: "Filters", sbItem: filters)
     }
     var sbCategorySection: SidebarSection = SidebarSection(name: "Categories", sbItem: [])
-    var sbCatArray: [SidebarCategoryItem] = []
     
     override func viewWillAppear() {
         if let windowConroller = self.view.window?.windowController as? WindowController {
@@ -169,13 +168,10 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     func reloadData() {
         mainTableView.reloadData()
     }
+    
     func reloadSidebar() {
         guard let mtvd2 = mtvdel2 else { return }
-        print("reload sidebar")
-        print("Fetched Groups count: \(mtvd2.fetchedGroups.count)")
-        sbCatArray = mapGroupsToSidebarCategories(groupList: mtvd2.fetchedGroups)
-        print("SbCatArray count: \(sbCatArray.count)")
-        sbCategorySection.sbItem = sbCatArray
+        sbCategorySection.sbItem = mapGroupsToSidebarCategories(groupList: mtvd2.fetchedGroups)
         sourceOutlineView.reloadData()
     }
     
@@ -274,13 +270,6 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     
     // --------------------------- \\
     // MARK: - OutlineView Methods
-    func outlineView(_ outlineView: NSOutlineView, shouldSelectItem item: Any) -> Bool {
-        if let _ = item as? SidebarSection {
-            return false
-        }
-        return true
-    }
-    
     func outlineView(_ outlineView: NSOutlineView, numberOfChildrenOfItem item: Any?) -> Int {
         if let item = item {
             switch item {
@@ -294,20 +283,14 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         }
     }
     
-    func outlineView(_ outlineView: NSOutlineView, isItemExpandable item: Any) -> Bool {
-        switch item {
-        case let sbSection as SidebarSection:
-            return (sbSection.sbItem.count > 0) ? true : false
-        default:
-            return false
-        }
-    }
-    
     func outlineView(_ outlineView: NSOutlineView, child index: Int, ofItem item: Any?) -> Any {
+        print("Child of item")
         if let item = item {
             switch item {
             case let sbSection as SidebarSection:
-                return sbSection.sbItem[index]
+                let child = sbSection.sbItem[index]
+                print(child.sidebarTitle)
+                return child
             default:
                 return self
             }
@@ -315,19 +298,12 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
             switch index {
             case 0:
                 return sbFilterSection
+            case 1:
+                return sbCategorySection
             default:
-                print("item is cat section")
                 return sbCategorySection
             }
         }
-    }
-    
-    func outlineView(_ outlineView: NSOutlineView, shouldExpandItem item: Any) -> Bool {
-        return true
-    }
-    
-    func outlineView(_ outlineView: NSOutlineView, shouldCollapseItem item: Any) -> Bool {
-        return false
     }
     
     func outlineView(_ outlineView: NSOutlineView, viewFor tableColumn: NSTableColumn?, item: Any) -> NSView? {
@@ -343,7 +319,10 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
             view.textField?.stringValue = sbItem.sidebarTitle
             return view
         case let sbCat as SidebarCategoryItem:
-            guard let group = sbCat.sbCategory else { return nil }
+            guard let group = sbCat.sbCategory else {
+                print("failed to get group from sbcat")
+                return nil
+            }
             let view = outlineView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "DataCell"), owner: self) as! GroupCellView
             view.groupID = group.groupID
             view.groupCellViewDelegate = self
@@ -353,8 +332,36 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
             }
             return view
         default:
+            print("Default")
             return nil
         }
+    }
+    
+    func outlineView(_ outlineView: NSOutlineView, isItemExpandable item: Any) -> Bool {
+        //        print("Is item expandable")
+        //        return true
+        //        switch item {
+        //        case let sbSection as SidebarSection:
+        //            return (sbSection.sbItem.count > 0) ? true : false
+        //        default:
+        //            return false
+        //        }
+        return true
+    }
+    
+    func outlineView(_ outlineView: NSOutlineView, shouldExpandItem item: Any) -> Bool {
+        return true
+    }
+    
+    func outlineView(_ outlineView: NSOutlineView, shouldCollapseItem item: Any) -> Bool {
+        return false
+    }
+    
+    func outlineView(_ outlineView: NSOutlineView, shouldSelectItem item: Any) -> Bool {
+        if let _ = item as? SidebarSection {
+            return false
+        }
+        return true
     }
     
     func outlineViewSelectionDidChange(_ notification: Notification) {
