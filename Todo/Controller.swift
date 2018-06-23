@@ -75,11 +75,8 @@ class MainController: NSObject, InfoControllerDelegate, TableViewMenuDelegate, F
 
     
     func assignToDo(withID id: String, toGroup group: Group) {
-        print("ToDo ID: \(id)")
-        print("Group: \(group)")
-//        guard let theToDo = getToDo(moID: moID) else { return }
-//        theToDo.group = group
-//        dataController.saveMoc()
+        guard let toDoId = firebaseController.getToDo(fromId: id) else { return }
+        firebaseController.update(toDo: toDoId, property: "groupID", with: group.groupID)
     }
     
     func setToDaily(toDo: ToDo, isDaily: Bool) {

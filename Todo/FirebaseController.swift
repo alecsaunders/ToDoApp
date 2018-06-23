@@ -168,9 +168,7 @@ class FirebaseController: MTVDel2 {
 //                fbItem.child(toDo.id).setValuesForKeys(["isComplete": true, "completedDate": Double(newValTyped)])
                 fbItem.child(toDo.id).child("isComplete").setValue(true)
                 fbItem.child(toDo.id).child(prop).setValue(newValTyped)
-            case "group":
-                // FIXME: - This is not yet tested
-                print("This is not yet tested")
+            case "groupID":
                 let newValTyped = newValUnwrapped as! String
                 fbItem.child(toDo.id).child(prop).setValue(newValTyped)
             default:
@@ -197,6 +195,19 @@ class FirebaseController: MTVDel2 {
             return filteredGroups[0]
         } else {
             print("ERROR: More than one group was returned for id '\(id)'")
+            return nil
+        }
+    }
+    
+    func getToDo(fromId id: String) -> ToDo? {
+        let filteredToDos = fetchedToDos.filter { $0.id == id }
+        if filteredToDos.count == 0 {
+            print("ERROR: No match found for id '\(id)'")
+            return nil
+        } else if filteredToDos.count == 1 {
+            return filteredToDos[0]
+        } else {
+            print("ERROR: More than one ToDo was returned for id '\(id)'")
             return nil
         }
     }
