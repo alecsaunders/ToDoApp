@@ -24,7 +24,7 @@ protocol MTVDel2 {
     var fetchedGroups: [Group] { get set }
 }
 
-class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSource, NSOutlineViewDataSource, NSOutlineViewDelegate, MainTableViewDelgate, WindowControllerDelegate, GroupCellViewDelegate {
+class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSource, NSOutlineViewDataSource, NSOutlineViewDelegate, MainTableViewDelgate, WindowControllerDelegate {
     @IBOutlet var mainTableView: NSTableView!
     @IBOutlet var lblStatusBottom: NSTextField!
     @IBOutlet weak var sourceSidebar: NSScrollView!
@@ -325,7 +325,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
             }
             let view = outlineView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "DataCell"), owner: self) as! GroupCellView
             view.groupID = group.groupID
-            view.groupCellViewDelegate = self
+            view.groupCellViewDelegate = cntlr
             if let textField = view.txtGroup {
                 textField.isEditable = true
                 textField.stringValue = group.groupName
@@ -414,14 +414,6 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     // MARK: - Other Methods
     func deleteSidebarGroup(group: Group) {
         //        dataController.managedObjectContext.delete(group)
-        //        dataController.saveMoc()
-        //        initializeFetchedGroupsController()
-        //        mainTableViewDelgate?.reloadSidebar()
-    }
-    
-    func changeSidebarTitle(newTitle: String, moID: NSManagedObjectID) {
-        //        let groupObj = dataController.managedObjectContext.object(with: moID)
-        //        groupObj.setValue(newTitle, forKey: "groupName")
         //        dataController.saveMoc()
         //        initializeFetchedGroupsController()
         //        mainTableViewDelgate?.reloadSidebar()

@@ -173,5 +173,22 @@ class FirebaseController: MTVDel2 {
             }
         }
     }
+    
+    func update(group: Group, forProperty prop: String, withNewVal val: String) {
+        fbGroup.child(group.groupID).child(prop).setValue(val)
+    }
+    
+    func getGroup(fromId id: String) -> Group? {
+        let filteredGroups = fetchedGroups.filter { $0.groupID == id }
+        if filteredGroups.count == 0 {
+            print("ERROR: No match found for id '\(id)'")
+            return nil
+        } else if filteredGroups.count == 1 {
+            return filteredGroups[0]
+        } else {
+            print("ERROR: More than one group was returned for id '\(id)'")
+            return nil
+        }
+    }
 }
 

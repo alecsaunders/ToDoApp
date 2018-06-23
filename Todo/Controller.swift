@@ -12,7 +12,7 @@ protocol MainControllerDelegate {
 //    func assigneToDoToGroup(moID: NSManagedObjectID, group: Group)
 }
 
-class MainController: NSObject, InfoControllerDelegate, TableViewMenuDelegate, MainControllerDelegate, FBControllerDelegate, ToDoCellViewDelegate {
+class MainController: NSObject, InfoControllerDelegate, TableViewMenuDelegate, MainControllerDelegate, FBControllerDelegate, ToDoCellViewDelegate, GroupCellViewDelegate {
     
     var firebaseController: FirebaseController!
     weak var mainTableViewDelgate: MainTableViewDelgate?
@@ -133,6 +133,11 @@ class MainController: NSObject, InfoControllerDelegate, TableViewMenuDelegate, M
         dateFormatter.dateFormat = format
         let clickedCreateDateString = dateFormatter.string(from: date)
         return clickedCreateDateString
+    }
+    
+    func changeSidebarTitle(newTitle title: String, forGroupID id: String) {
+        guard let theGroup = firebaseController.getGroup(fromId: id) else { return }
+        firebaseController.update(group: theGroup, forProperty: "groupName", withNewVal: title)
     }
 
 }
