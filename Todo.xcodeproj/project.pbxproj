@@ -19,7 +19,6 @@
 		F2603DFB1F4DDC0700A57AE0 /* ToDoCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2603DFA1F4DDC0700A57AE0 /* ToDoCellView.swift */; };
 		F2871668207160B80090A694 /* SidebarFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2871667207160B80090A694 /* SidebarFilter.swift */; };
 		F287166A2071639D0090A694 /* SidebarCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = F28716692071639D0090A694 /* SidebarCategory.swift */; };
-		F296DD9A207A6CF5001519F3 /* OutlineViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F296DD99207A6CF5001519F3 /* OutlineViewController.swift */; };
 		F29C4BC720D6B55B002A6C24 /* Group.swift in Sources */ = {isa = PBXBuildFile; fileRef = F29C4BC620D6B55B002A6C24 /* Group.swift */; };
 		F29C4BE920D742AA002A6C24 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = F29C4BE820D742AA002A6C24 /* GoogleService-Info.plist */; };
 		F2C462A11F58E8860014E5F4 /* GroupCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2C462A01F58E8860014E5F4 /* GroupCellView.swift */; };
@@ -61,7 +60,6 @@
 		F2603DFA1F4DDC0700A57AE0 /* ToDoCellView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ToDoCellView.swift; sourceTree = "<group>"; };
 		F2871667207160B80090A694 /* SidebarFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarFilter.swift; sourceTree = "<group>"; };
 		F28716692071639D0090A694 /* SidebarCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarCategory.swift; sourceTree = "<group>"; };
-		F296DD99207A6CF5001519F3 /* OutlineViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutlineViewController.swift; sourceTree = "<group>"; };
 		F29C4BC620D6B55B002A6C24 /* Group.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Group.swift; sourceTree = "<group>"; };
 		F29C4BE820D742AA002A6C24 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		F2C462A01F58E8860014E5F4 /* GroupCellView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GroupCellView.swift; sourceTree = "<group>"; };
@@ -209,7 +207,6 @@
 			children = (
 				F2E822901F4895B100EEEA07 /* Controller.swift */,
 				F2E9B4DD20D5A31F00CAB458 /* FirebaseController.swift */,
-				F296DD99207A6CF5001519F3 /* OutlineViewController.swift */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -389,7 +386,6 @@
 				F2603DFB1F4DDC0700A57AE0 /* ToDoCellView.swift in Sources */,
 				F2571EEA207171D00007D854 /* SidebarItem.swift in Sources */,
 				F22601951F5DA1120087D2FB /* SidebarSection.swift in Sources */,
-				F296DD9A207A6CF5001519F3 /* OutlineViewController.swift in Sources */,
 				F287166A2071639D0090A694 /* SidebarCategory.swift in Sources */,
 				F2E9B4DC20D5A1D900CAB458 /* ToDo.swift in Sources */,
 				F2C8A26A1F41428500E246F7 /* MainWindowVC.swift in Sources */,

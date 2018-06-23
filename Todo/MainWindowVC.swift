@@ -135,13 +135,11 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     
     @IBAction func btnAddItem(_ sender: NSButton) {
         guard let windowConroller = self.view.window?.windowController as? WindowController else { return }
-        let txt = windowConroller.toDoCreateTextField.stringValue
-        cntlr.save(addedToDoTitle: txt, newToDoSidebarSelection: sourceOutlineView.item(atRow: sourceOutlineView.selectedRow) as? SidebarItem)
-        windowConroller.toDoCreateTextField.stringValue = ""
+        addToDo(toDoText: windowConroller.toDoCreateTextField.stringValue)
     }
+    
     @IBAction func btnAddGroup(_ sender: NSButton) {
-        print("add group button")
-//        outlineCntlr.addSidebarGroup(groupName: "New Group")
+        addSidebarGroup(groupName: "New Group")
     }
     
     // Show Info View Controller
@@ -250,7 +248,8 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     
     // MARK: - Window Controller Delegate
     func addToDo(toDoText: String) {
-        cntlr.save(addedToDoTitle: toDoText, newToDoSidebarSelection: sourceOutlineView.item(atRow: sourceOutlineView.selectedRow) as? SidebarItem)
+        cntlr.save(addedToDoTitle: toDoText, newToDoSidebarSelection: nil)
+//        cntlr.saveNewToDo(withTitle: toDoText, withSidebarItem: sourceOutlineView.item(atRow: sourceOutlineView.selectedRow) as? SidebarItem)
     }
     
     // MARK: - Controller functions
@@ -391,12 +390,6 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     // MARK: - Other Methods
     func addSidebarGroup(groupName: String) {
         let newGroup = Group(groupName: groupName)
-        
-        //        guard let newGroup = NSEntityDescription.insertNewObject(forEntityName: "Group", into: dataController.managedObjectContext) as? Group else { return }
-        //        newGroup.groupName = groupName
-        //        dataController.saveMoc()
-        //        initializeFetchedGroupsController()
-        //        mainTableViewDelgate?.reloadSidebar()
     }
     
     func deleteSidebarGroup(group: Group) {
