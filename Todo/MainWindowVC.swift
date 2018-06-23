@@ -181,25 +181,20 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
         guard let mtv2 = mtvdel2 else { return nil }
         let theToDo = mtv2.fetchedToDos[row]
-        
         if tableColumn == tableView.tableColumns[0] {
-            guard let cell = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "col_complete"), owner: nil) as? NSTableCellView else { return nil }
-            if let completeBtn = cell.subviews[0] as? NSButton {
-                if let _ = theToDo.completedDate {
-                    completeBtn.state = NSControl.StateValue.on
-                } else {
-                    completeBtn.state = NSControl.StateValue.off
-                }
-                completeBtn.tag = row
-            }
+            guard let cell = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "col_complete"),
+                                                owner: nil) as? NSTableCellView else { return nil }
+            guard let completeBtn = cell.subviews[0] as? NSButton else { return nil }
+            completeBtn.tag = row
+            completeBtn.state = theToDo.completedDate != nil ? .on : .off
             return cell
         }
         if tableColumn == tableView.tableColumns[1] {
-            guard let cell = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "col_toDoText"), owner: nil) as? ToDoCellView else { return nil }
+            guard let cell = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "col_toDoText"),
+                                                owner: nil) as? ToDoCellView else { return nil }
             cell.cellToDo = theToDo
             cell.textField?.stringValue = cell.cellToDo!.title
             cell.toDoCellViewDelegate = self
-            
             return cell
         }
         return nil
