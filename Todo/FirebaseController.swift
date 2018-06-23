@@ -32,24 +32,25 @@ class FirebaseController: MTVDel2, CategoryDelegate {
     }
     
     func loadDataFromFirebase() {
-        var query = fbItem.queryOrdered(byChild: "createdDate")
-        if let newQuery = fbQuery {
-            query = newQuery
+        if fbQuery == nil {
+            fbQuery = fbItem.queryOrdered(byChild: "createdDate")
         }
-        query.observe(.value) { (snapshot) in
+        fbQuery!.observe(.value) { (snapshot) in
+            print("observing values")
             self.fetchedToDos = []
             for child in snapshot.children.allObjects as! [DataSnapshot] {
                 guard let fbChildToDoDict = child.value as? [String: Any] else { return }
                 do {
                     let toDoData = try JSONSerialization.data(withJSONObject: fbChildToDoDict, options: [])
                     let decodedToDo = try JSONDecoder().decode(ToDo.self, from: toDoData)
-                    self.fetchedToDos.append(decodedToDo)
+                    if decodedToDo.isComplete == self.itemsAreComplete {
+                        self.fetchedToDos.append(decodedToDo)
+                    }
                 } catch {
                     print("Error decoding to do: \(error.localizedDescription)")
                 }
 
             }
-            self.fetchedToDos = self.fetchedToDos.filter { $0.isComplete == self.itemsAreComplete }
             self.fbControlDel?.reloadUI()
         }
     }
@@ -65,8 +66,6 @@ class FirebaseController: MTVDel2, CategoryDelegate {
             case .completed:
                 itemsAreComplete = true
                 fbQuery = fbItem.queryOrdered(byChild: "isComplete").queryEqual(toValue: true)
-            default:
-                fbQuery = fbItem.queryOrdered(byChild: "createdDate")
             }
         }
         loadDataFromFirebase()
