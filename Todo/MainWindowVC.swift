@@ -173,6 +173,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         guard let mtvd2 = mtvdel2 else { return }
         sbCategorySection.sbItem = mapGroupsToSidebarCategories(groupList: mtvd2.fetchedGroups)
         sourceOutlineView.reloadData()
+        sourceOutlineView?.expandItem(nil, expandChildren: true)
     }
     
     func mapGroupsToSidebarCategories(groupList list: [Group]) -> [SidebarCategoryItem] {
@@ -284,12 +285,10 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     }
     
     func outlineView(_ outlineView: NSOutlineView, child index: Int, ofItem item: Any?) -> Any {
-        print("Child of item")
         if let item = item {
             switch item {
             case let sbSection as SidebarSection:
                 let child = sbSection.sbItem[index]
-                print(child.sidebarTitle)
                 return child
             default:
                 return self
