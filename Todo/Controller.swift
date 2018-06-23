@@ -12,7 +12,7 @@ protocol MainControllerDelegate {
 //    func assigneToDoToGroup(moID: NSManagedObjectID, group: Group)
 }
 
-class MainController: NSObject, InfoControllerDelegate, TableViewMenuDelegate, MainControllerDelegate, FBControllerDelegate {
+class MainController: NSObject, InfoControllerDelegate, TableViewMenuDelegate, MainControllerDelegate, FBControllerDelegate, ToDoCellViewDelegate {
     
     var firebaseController: FirebaseController!
     weak var mainTableViewDelgate: MainTableViewDelgate?
@@ -65,6 +65,11 @@ class MainController: NSObject, InfoControllerDelegate, TableViewMenuDelegate, M
 //        dataController.managedObjectContext.delete(object)
 //        dataController.saveMoc()
 //        mainTableViewDelgate?.reloadData()
+    }
+    
+    // MARK: - To Do Table View Delegate Methods
+    func changeText(forToDo toDo: ToDo, withText text: String) {
+        firebaseController.update(toDo: toDo, property: "title", with: text)
     }
     
     func updateNote(newNote: String, moID: NSManagedObjectID?) {

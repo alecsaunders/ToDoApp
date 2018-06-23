@@ -9,6 +9,7 @@
 import Cocoa
 
 protocol ToDoCellViewDelegate: class {
+    func changeText(forToDo toDo: ToDo, withText text: String)
 //    func changeText(newToDoTitle: String, moID: NSManagedObjectID)
 }
 
@@ -18,18 +19,13 @@ class ToDoCellView: NSTableCellView, NSTextFieldDelegate {
     var managedObjectID: NSManagedObjectID?
     @IBOutlet weak var toDoItemText: NSTextField!
     @IBAction func toDoItemTextAction(_ sender: NSTextField) {
-        let newText = toDoItemText.stringValue
-        if let toDoDel = toDoCellViewDelegate {
-            guard let moID = managedObjectID else { return }
-//            toDoDel.changeText(newToDoTitle: newText, moID: moID)
-        }
+        guard let toDoDel = toDoCellViewDelegate else { return }
+        guard let selfToDo = cellToDo else { return }
+        toDoDel.changeText(forToDo: selfToDo, withText: toDoItemText.stringValue)
     }
     
     override func draw(_ dirtyRect: NSRect) {
         super.draw(dirtyRect)
         toDoItemText.isEditable = true
-//        
-//        let font = NSFont(name: "Optima", size: 13)
-//        toDoItemText.font = font
     }
 }

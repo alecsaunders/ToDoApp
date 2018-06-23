@@ -23,7 +23,7 @@ protocol MTVDel2 {
     var fetchedToDos: [ToDo] { get set }
 }
 
-class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSource, MainTableViewDelgate, WindowControllerDelegate, ToDoCellViewDelegate {
+class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSource, MainTableViewDelgate, WindowControllerDelegate {
     let registeredTypes = [NSPasteboard.PasteboardType.string]
     var clickedToDo: ToDo? {
         get {
@@ -165,13 +165,6 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         sourceOutlineView.reloadData()
     }
     
-    // MARK: - To Do Table View Delegate Methods
-    func changeText(newToDoTitle: String) {
-        //        guard let toDoObj = getToDo(moID: moID) else { return }
-        //        toDoObj.setValue(newToDoTitle, forKey: "title")
-        //        dataController.saveMoc()
-    }
-    
     func numberOfRows(in tableView: NSTableView) -> Int {
         guard let mtv2 = mtvdel2 else { return 0 }
         updateStatusBar(withText: cntlr.getStatusLabel(withNumber: mtv2.fetchedToDos.count, forGroup: nil))
@@ -194,7 +187,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
                                                 owner: nil) as? ToDoCellView else { return nil }
             cell.cellToDo = theToDo
             cell.textField?.stringValue = cell.cellToDo!.title
-            cell.toDoCellViewDelegate = self
+            cell.toDoCellViewDelegate = cntlr
             return cell
         }
         return nil
