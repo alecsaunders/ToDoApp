@@ -46,12 +46,17 @@ class FirebaseController: MTVDel2 {
     
     func parseFirebaseResults(_ snapshot: (DataSnapshot)) {
         self.fetchedToDos = []
-        // FIXME: - Not returning all objects
-        for child in snapshot.children.allObjects as! [DataSnapshot] {
-            guard let fbChildToDoDict = child.value as? [String: Any] else { return }
-            guard let decToDo = decodeFirebaseDictionary(fbChildToDoDict) else { return }
+        for child in getAllChildren(fromSnapshot: snapshot) {
+            guard let val = child.value else { continue }
+            guard let fbChildToDoDict = val as? [String: Any] else { continue }
+            guard let decToDo = decodeFirebaseDictionary(fbChildToDoDict) else { continue }
             fetchedToDos.append(decToDo)
         }
+    }
+    
+    func getAllChildren(fromSnapshot snapshot: (DataSnapshot)) -> [DataSnapshot] {
+        guard let allChildren = snapshot.children.allObjects as? [DataSnapshot] else { return [] }
+        return allChildren
     }
     
     func decodeFirebaseDictionary(_ dict: [String : Any]) -> ToDo? {
