@@ -228,8 +228,8 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     }
     
     func addToDoToGroup(toDoRowIndex: Int, group: Group) {
-//        guard let moID = (mainTableView.view(atColumn: 1, row: toDoRowIndex, makeIfNecessary: false) as? ToDoCellView)?.managedObjectID else { return }
-//        cntlr.assigneToDoToGroup(moID: moID, group: group)
+        guard let toDo = cntlr.getToDo(fromTableView: mainTableView) else { return }
+        cntlr.firebaseController.update(toDo: toDo, property: "group", with: group.groupName)
     }
     
     func setToDoToDaily(toDoRowIndex: Int) {

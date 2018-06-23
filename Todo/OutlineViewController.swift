@@ -198,6 +198,8 @@ class OutlineViewController: NSObject, NSFetchedResultsControllerDelegate, NSOut
     
     // MARK: - Other Methods
     func addSidebarGroup(groupName: String) {
+        let newGroup = Group(groupName: groupName)
+        
 //        guard let newGroup = NSEntityDescription.insertNewObject(forEntityName: "Group", into: dataController.managedObjectContext) as? Group else { return }
 //        newGroup.groupName = groupName
 //        dataController.saveMoc()

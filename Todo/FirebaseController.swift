@@ -119,6 +119,11 @@ class FirebaseController: MTVDel2, CategoryDelegate {
 //                fbItem.child(toDo.id).setValuesForKeys(["isComplete": true, "completedDate": Double(newValTyped)])
                 fbItem.child(toDo.id).child("isComplete").setValue(true)
                 fbItem.child(toDo.id).child(prop).setValue(newValTyped)
+            case "group":
+                // FIXME: - This is not yet tested
+                print("This is not yet tested")
+                let newValTyped = newValUnwrapped as! String
+                fbItem.child(toDo.id).child(prop).setValue(newValTyped)
             default:
                 print("nothing to do")
             }
