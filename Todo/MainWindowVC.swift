@@ -243,12 +243,8 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     func addToDo(toDoText: String) {
         cntlr.save(addedToDoTitle: toDoText, newToDoSidebarSelection: sourceOutlineView.item(atRow: sourceOutlineView.selectedRow) as? SidebarItem)
     }
-    func clearToDoTextField(sender: NSTextField) {
-        sender.stringValue = ""
-    }
     
     // MARK: - Controller functions
-    
     func updateStatusBar(withText text: String) {
         lblStatusBottom.stringValue = text
     }
