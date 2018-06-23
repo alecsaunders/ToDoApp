@@ -47,20 +47,6 @@ class MainController: NSObject, InfoControllerDelegate, TableViewMenuDelegate, M
         }
     }
     
-    func save(addedToDoTitle: String, newToDoSidebarSelection: SidebarItem?) {
-        if addedToDoTitle.isEmpty {
-            print("do not add a new to do item")
-        } else {
-            let newKey = firebaseController.getNewKey()
-            let newToDo = ToDo(id: newKey, title: addedToDoTitle, note: "", daily: false, createdDate: Date(), isComplete: false, completedDate: nil)
-            firebaseController.saveToDoToFirebase(toDo: newToDo)
-//            if let sbCat = (newToDoSidebarSelection as? SidebarCategoryItem)?.sbCategory {
-//                theToDo.group = sbCat
-//            }
-//            mainTableViewDelgate?.reloadData()
-        }
-    }
-    
     func removeToDoEntityRecord(atIndex: Int) {
         print("removing to do record")
 //        guard let fetchedObjs = toDoFetchedResultsController.fetchedObjects else { return }

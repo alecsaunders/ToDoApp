@@ -248,8 +248,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     
     // MARK: - Window Controller Delegate
     func addToDo(toDoText: String) {
-        cntlr.save(addedToDoTitle: toDoText, newToDoSidebarSelection: nil)
-//        cntlr.saveNewToDo(withTitle: toDoText, withSidebarItem: sourceOutlineView.item(atRow: sourceOutlineView.selectedRow) as? SidebarItem)
+        cntlr.saveNewToDo(withTitle: toDoText, withSidebarItem: sourceOutlineView.item(atRow: sourceOutlineView.selectedRow) as? SidebarItem)
     }
     
     // MARK: - Controller functions
