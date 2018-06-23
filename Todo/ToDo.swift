@@ -16,6 +16,7 @@ struct ToDo: Codable {
     var createdDate: Date
     var isComplete: Bool
     var completedDate: Date?
+    var groupID: String?
     
     enum CodingKeys: String, CodingKey {
         case id
@@ -25,12 +26,13 @@ struct ToDo: Codable {
         case createdDate
         case isComplete
         case completedDate
+        case groupID
     }
 }
 
 extension ToDo {
     func getDictionary() -> [String: Any] {
-        return [
+        var toDoDict = [
             "id": id,
             "title": title,
             "note": note,
@@ -39,6 +41,10 @@ extension ToDo {
             "isComplete": isComplete,
             "completedDate": completedDate?.timeIntervalSince1970 as Any,
         ]
+        if let gID = groupID {
+            toDoDict["groupID"] = gID
+        }
+        return toDoDict
     }
 }
 

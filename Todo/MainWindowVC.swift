@@ -239,13 +239,11 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     }
     
     func tableView(_ tableView: NSTableView, pasteboardWriterForRow row: Int) -> NSPasteboardWriting? {
-        //        let pbItem = NSPasteboardItem()
-        //        guard let moID = mainTableViewDelgate?.toDoManagedObjectID(index: row) else { return nil }
-        //
-        //        pbItem.setString(moID.uriRepresentation().absoluteString, forType: .string)
-        //        pbItem.setData(moID.uriRepresentation().dataRepresentation, forType: .URL)
-        //        return pbItem
-        return nil
+        let pbItem = NSPasteboardItem()
+        guard let cellView = mainTableView.view(atColumn: 1, row: row, makeIfNecessary: false) as? ToDoCellView else { return nil }
+        guard let toDoID = cellView.cellToDo?.id else { return nil }
+        pbItem.setString(toDoID, forType: .string)
+        return pbItem
     }
     
     func addToDoToGroup(toDoRowIndex: Int, group: Group) {
@@ -394,15 +392,12 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     }
     
     func outlineView(_ outlineView: NSOutlineView, acceptDrop info: NSDraggingInfo, item: Any?, childIndex index: Int) -> Bool {
-        //        let pboard = info.draggingPasteboard()
-        //        guard let pbItem = pboard.pasteboardItems?[0] else { return false }
-        //        guard let managedObjectIDURLString = pbItem.string(forType: .string) else { return false }
-        //        guard let objectID = URL(string: managedObjectIDURLString) else { return false }
-        //        guard let managedObjectID = dataController.persistentContainer.persistentStoreCoordinator.managedObjectID(forURIRepresentation: objectID) else { return false }
-        //        guard let sbCat = (item as? SidebarCategoryItem)?.sbCategory else { return false }
-        //        mainControllerDelegate?.assigneToDoToGroup(moID: managedObjectID, group: sbCat)
-        //        return true
-        return false // placeholder value
+        let pboard = info.draggingPasteboard()
+        guard let pbItem = pboard.pasteboardItems?[0] else { return false }
+        guard let toDoID = pbItem.string(forType: .string) else { return false }
+        guard let sbCat = (item as? SidebarCategoryItem)?.sbCategory else { return false }
+        cntlr.assignToDo(withID: toDoID, toGroup: sbCat)
+        return true
     }
     
     func outlineView(_ outlineView: NSOutlineView, shouldShowOutlineCellForItem item: Any) -> Bool {

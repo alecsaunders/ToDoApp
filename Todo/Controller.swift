@@ -8,11 +8,8 @@
 
 import Cocoa
 
-protocol MainControllerDelegate {
-//    func assigneToDoToGroup(moID: NSManagedObjectID, group: Group)
-}
 
-class MainController: NSObject, InfoControllerDelegate, TableViewMenuDelegate, MainControllerDelegate, FBControllerDelegate, ToDoCellViewDelegate, GroupCellViewDelegate {
+class MainController: NSObject, InfoControllerDelegate, TableViewMenuDelegate, FBControllerDelegate, ToDoCellViewDelegate, GroupCellViewDelegate {
     
     var firebaseController: FirebaseController!
     weak var mainTableViewDelgate: MainTableViewDelgate?
@@ -45,7 +42,7 @@ class MainController: NSObject, InfoControllerDelegate, TableViewMenuDelegate, M
     func saveNewToDo(withTitle title: String, withSidebarItem sbitem: SidebarItem?) {
         guard !title.isEmpty else { return }
         let newKey = firebaseController.getNewToDoKey()
-        let newToDo = ToDo(id: newKey, title: title, note: "", daily: false, createdDate: Date(), isComplete: false, completedDate: nil)
+        let newToDo = ToDo(id: newKey, title: title, note: "", daily: false, createdDate: Date(), isComplete: false, completedDate: nil, groupID: nil)
         firebaseController.saveToDoToFirebase(toDo: newToDo)
     }
     
@@ -77,11 +74,13 @@ class MainController: NSObject, InfoControllerDelegate, TableViewMenuDelegate, M
     // MARK: - Update View
 
     
-//    func assigneToDoToGroup(moID: NSManagedObjectID, group: Group) {
+    func assignToDo(withID id: String, toGroup group: Group) {
+        print("ToDo ID: \(id)")
+        print("Group: \(group)")
 //        guard let theToDo = getToDo(moID: moID) else { return }
 //        theToDo.group = group
 //        dataController.saveMoc()
-//    }
+    }
     
     func setToDaily(toDo: ToDo, isDaily: Bool) {
         firebaseController.update(toDo: toDo, property: "daily", with: isDaily)
