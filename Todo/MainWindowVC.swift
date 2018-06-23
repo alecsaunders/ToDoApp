@@ -21,6 +21,7 @@ protocol MainTableViewDelgate: class {
 
 protocol MTVDel2 {
     var fetchedToDos: [ToDo] { get set }
+    var fetchedGroups: [Group] { get set }
 }
 
 class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSource, NSOutlineViewDataSource, NSOutlineViewDelegate, MainTableViewDelgate, WindowControllerDelegate, GroupCellViewDelegate {
@@ -102,10 +103,10 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     }
     
     @IBAction func sidebarMenuDelete(_ sender: NSMenuItem) {
-        guard let sbCatItem = sourceOutlineView.item(atRow: sourceOutlineView.clickedRow) as? SidebarCategoryItem else { return }
-        guard let sbCat = sbCatItem.sbCategory else { return }
-        sourceOutlineView.reloadData()
-        sourceOutlineView?.expandItem(nil, expandChildren: true)
+//        guard let sbCatItem = sourceOutlineView.item(atRow: sourceOutlineView.clickedRow) as? SidebarCategoryItem else { return }
+//        guard let sbCat = sbCatItem.sbCategory else { return }
+//        sourceOutlineView.reloadData()
+//        sourceOutlineView?.expandItem(nil, expandChildren: true)
     }
     
     @IBAction func menuDaily(_ sender: NSMenuItem) {
@@ -169,7 +170,22 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         mainTableView.reloadData()
     }
     func reloadSidebar() {
+        guard let mtvd2 = mtvdel2 else { return }
+        print("reload sidebar")
+        print("Fetched Groups count: \(mtvd2.fetchedGroups.count)")
+        sbCatArray = mapGroupsToSidebarCategories(groupList: mtvd2.fetchedGroups)
+        print("SbCatArray count: \(sbCatArray.count)")
+        sbCategorySection.sbItem = sbCatArray
         sourceOutlineView.reloadData()
+    }
+    
+    func mapGroupsToSidebarCategories(groupList list: [Group]) -> [SidebarCategoryItem] {
+        let sidebarCategories = list.map { (g) -> SidebarCategoryItem in
+            let newSbCatItem = SidebarCategoryItem(withTitle: g.groupName)
+            newSbCatItem.sbCategory = g
+            return newSbCatItem
+        }
+        return sidebarCategories
     }
     
     func numberOfRows(in tableView: NSTableView) -> Int {
@@ -265,12 +281,6 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         return true
     }
     
-    func outlineViewSelectionDidChange(_ notification: Notification) {
-        guard let sidebarView = notification.object as? NSOutlineView else { return }
-        guard let sbItem = sidebarView.item(atRow: sidebarView.selectedRow) as? SidebarItem  else { return }
-        cntlr.firebaseController.updateMainView(with: sbItem)
-    }
-    
     func outlineView(_ outlineView: NSOutlineView, numberOfChildrenOfItem item: Any?) -> Int {
         if let item = item {
             switch item {
@@ -306,6 +316,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
             case 0:
                 return sbFilterSection
             default:
+                print("item is cat section")
                 return sbCategorySection
             }
         }
@@ -332,17 +343,24 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
             view.textField?.stringValue = sbItem.sidebarTitle
             return view
         case let sbCat as SidebarCategoryItem:
+            guard let group = sbCat.sbCategory else { return nil }
             let view = outlineView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "DataCell"), owner: self) as! GroupCellView
-            //            view.groupID = sbCat.sbCategory!.objectID
+            view.groupID = group.groupID
             view.groupCellViewDelegate = self
             if let textField = view.txtGroup {
                 textField.isEditable = true
-                textField.stringValue = "fixme: Static Group name"
+                textField.stringValue = group.groupName
             }
             return view
         default:
             return nil
         }
+    }
+    
+    func outlineViewSelectionDidChange(_ notification: Notification) {
+        guard let sidebarView = notification.object as? NSOutlineView else { return }
+        guard let sbItem = sidebarView.item(atRow: sidebarView.selectedRow) as? SidebarItem  else { return }
+        cntlr.firebaseController.updateMainView(with: sbItem)
     }
     
     func outlineView(_ outlineView: NSOutlineView, validateDrop info: NSDraggingInfo, proposedItem item: Any?, proposedChildIndex index: Int) -> NSDragOperation {

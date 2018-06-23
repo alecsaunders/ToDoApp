@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct Group {
+struct Group: Codable {
     var groupID: String
     var groupName: String
 }

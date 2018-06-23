@@ -11,3 +11,4 @@ import Foundation
 struct SidebarFilters {
     let groups = ["All", "Daily", "Completed"]
 }
+

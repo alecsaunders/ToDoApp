@@ -13,6 +13,7 @@ import FirebaseAuth
 
 protocol FBControllerDelegate {
     func reloadUI()
+    func reloadSidebarUI()
 }
 
 class FirebaseController: MTVDel2 {
@@ -21,11 +22,12 @@ class FirebaseController: MTVDel2 {
     private var fbGroup: DatabaseReference!
     var fbQuery: DatabaseQuery?
     var fbControlDel: FBControllerDelegate?
-    var fetchedToDos: [ToDo]
     var itemsAreComplete = false
     
+    var fetchedToDos: [ToDo] = []
+    var fetchedGroups: [Group] = []
+    
     init() {
-        fetchedToDos = []
         FirebaseApp.configure()
         Database.setLoggingEnabled(true)
         ref = Database.database().reference()
@@ -33,11 +35,33 @@ class FirebaseController: MTVDel2 {
         fbGroup = ref.child("group")
     }
     
+    func loadAllFromFirebase() {
+        loadDataFromFirebase()
+        loadGroupsFromFirebase()
+    }
+    
     func loadDataFromFirebase() {
         let query = setFirebaseQuery()
         query.observe(.value) { (snapshot) in
             self.parseFirebaseResults(snapshot)
             self.fbControlDel?.reloadUI()
+        }
+    }
+    
+    func loadGroupsFromFirebase() {
+        fetchedGroups = []
+        fbGroup.observe(.value) { (snapshot) in
+            for child in self.getAllChildren(fromSnapshot: snapshot) {
+                guard let fbGroupDict = child.value as? [String: String] else { continue }
+                do {
+                    let groupData = try JSONSerialization.data(withJSONObject: fbGroupDict, options: [])
+                    let decodedGroup = try JSONDecoder().decode(Group.self, from: groupData)
+                    self.fetchedGroups.append(decodedGroup)
+                } catch {
+                    print("Error decoding group: \(error)")
+                }
+            }
+            self.fbControlDel?.reloadSidebarUI()
         }
     }
     

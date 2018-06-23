@@ -21,11 +21,16 @@ class MainController: NSObject, InfoControllerDelegate, TableViewMenuDelegate, M
         firebaseController = FirebaseController()
         super.init()
         firebaseController.fbControlDel = self
-        firebaseController?.loadDataFromFirebase()
+        firebaseController?.loadAllFromFirebase()
     }
     
     func reloadUI() {
         mainTableViewDelgate?.reloadData()
+    }
+    
+    func reloadSidebarUI() {
+        mainTableViewDelgate?.reloadSidebar()
+
     }
     
     func getStatusLabel(withNumber num: Int, forGroup group: Group?) -> String {
