@@ -89,6 +89,7 @@ class FirebaseController: MTVDel2 {
     
     func saveToDoToFirebase(toDo: ToDo) {
         fbItem.child(toDo.id).setValue(toDo.getDictionary())
+        loadDataFromFirebase()
     }
     
     func delete(item: ToDo) {
