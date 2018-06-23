@@ -9,14 +9,9 @@
 import Foundation
 import Cocoa
 
-protocol CategoryDelegate {
-    func updateMainView(with sidebarSelection: SidebarItem)
-}
-
 class OutlineViewController: NSObject, NSFetchedResultsControllerDelegate, NSOutlineViewDataSource, NSOutlineViewDelegate, GroupCellViewDelegate {
     weak var mainTableViewDelgate: MainTableViewDelgate?
     var mainControllerDelegate: MainControllerDelegate?
-    var categoryDelegate: CategoryDelegate?
 
     var sbFilterSection: SidebarSection {
         var filters: [SidebarItem] = []
@@ -37,16 +32,6 @@ class OutlineViewController: NSObject, NSFetchedResultsControllerDelegate, NSOut
     override init() {
         super.init()
         initializeFetchedGroupsController()
-    }
-    
-    //REPLACE THIS FUNCTION IS A SUBCLASS OF fetchedGroupsController
-    func mapFetchedGroupsToSidebarCategory(groupArray: [Group]) -> [SidebarCategoryItem] {
-        let sbCatArray: [SidebarCategoryItem] = groupArray.map { (theGroup) -> SidebarCategoryItem in
-            let sbCat = SidebarCategoryItem(withTitle: theGroup.groupName)
-            sbCat.sbCategory = theGroup
-            return sbCat
-        }
-        return sbCatArray
     }
     
     func initializeFetchedGroupsController() {
@@ -78,8 +63,8 @@ class OutlineViewController: NSObject, NSFetchedResultsControllerDelegate, NSOut
     func outlineViewSelectionDidChange(_ notification: Notification) {
         guard let sidebarView = notification.object as? NSOutlineView else { return }
         guard let sbItem = sidebarView.item(atRow: sidebarView.selectedRow) as? SidebarItem  else { return }
-        guard let catDel = categoryDelegate else { return }
-        catDel.updateMainView(with: sbItem)
+//        guard let catDel = categoryDelegate else { return }
+//        catDel.updateMainView(with: sbItem)
     }
     
     func outlineView(_ outlineView: NSOutlineView, numberOfChildrenOfItem item: Any?) -> Int {
@@ -181,7 +166,7 @@ class OutlineViewController: NSObject, NSFetchedResultsControllerDelegate, NSOut
         return nil
     }
     
-//    func outlineView(_ outlineView: NSOutlineView, acceptDrop info: NSDraggingInfo, item: Any?, childIndex index: Int) -> Bool {
+    func outlineView(_ outlineView: NSOutlineView, acceptDrop info: NSDraggingInfo, item: Any?, childIndex index: Int) -> Bool {
 //        let pboard = info.draggingPasteboard()
 //        guard let pbItem = pboard.pasteboardItems?[0] else { return false }
 //        guard let managedObjectIDURLString = pbItem.string(forType: .string) else { return false }
@@ -190,7 +175,8 @@ class OutlineViewController: NSObject, NSFetchedResultsControllerDelegate, NSOut
 //        guard let sbCat = (item as? SidebarCategoryItem)?.sbCategory else { return false }
 //        mainControllerDelegate?.assigneToDoToGroup(moID: managedObjectID, group: sbCat)
 //        return true
-//    }
+        return false // placeholder value
+    }
     
     func outlineView(_ outlineView: NSOutlineView, shouldShowOutlineCellForItem item: Any) -> Bool {
         return false

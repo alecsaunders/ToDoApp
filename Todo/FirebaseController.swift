@@ -15,7 +15,7 @@ protocol FBControllerDelegate {
     func reloadUI()
 }
 
-class FirebaseController: MTVDel2, CategoryDelegate {
+class FirebaseController: MTVDel2 {
     private var ref: DatabaseReference!
     private var fbItem: DatabaseReference!
     var fbQuery: DatabaseQuery?

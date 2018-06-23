@@ -23,23 +23,37 @@ protocol MTVDel2 {
     var fetchedToDos: [ToDo] { get set }
 }
 
-class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSource, MainTableViewDelgate, WindowControllerDelegate {
-    let registeredTypes = [NSPasteboard.PasteboardType.string]
-    var clickedToDo: ToDo? {
-        get {
-            return cntlr.getToDo(fromTableView: mainTableView)
-        }
-    }
+class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSource, NSOutlineViewDataSource, NSOutlineViewDelegate, MainTableViewDelgate, WindowControllerDelegate, GroupCellViewDelegate {
     @IBOutlet var mainTableView: NSTableView!
     @IBOutlet var lblStatusBottom: NSTextField!
     @IBOutlet weak var sourceSidebar: NSScrollView!
     @IBOutlet var sidebarView: NSView!
     @IBOutlet weak var sourceOutlineView: NSOutlineView!
     @IBOutlet var tvMenu: TvMenu!
-    
+    let registeredTypes = [NSPasteboard.PasteboardType.string]
+    var clickedToDo: ToDo? {
+        get {
+            return cntlr.getToDo(fromTableView: mainTableView)
+        }
+    }
     var mtvdel2: MTVDel2?
     var cntlr: MainController!
-    let outlineCntlr = OutlineViewController()
+    
+    var sbFilterSection: SidebarSection {
+        var filters: [SidebarItem] = []
+        let allFilter = SidebarFilterItem(withTitle: "All")
+        allFilter.sbFilter = .all
+        let dailyFilter = SidebarFilterItem(withTitle: "Daily")
+        dailyFilter.sbFilter = .daily
+        let completedFilter = SidebarFilterItem(withTitle: "Completed")
+        completedFilter.sbFilter = .completed
+        filters.append(allFilter)
+        filters.append(dailyFilter)
+        filters.append(completedFilter)
+        return SidebarSection(name: "Filters", sbItem: filters)
+    }
+    var sbCategorySection: SidebarSection = SidebarSection(name: "Categories", sbItem: [])
+    var sbCatArray: [SidebarCategoryItem] = []
     
     override func viewWillAppear() {
         if let windowConroller = self.view.window?.windowController as? WindowController {
@@ -80,20 +94,16 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     }
     
     func setupSourceOutlineView() {
-        outlineCntlr.categoryDelegate = cntlr.firebaseController
-        outlineCntlr.mainTableViewDelgate = self
-        sourceOutlineView.delegate = outlineCntlr
-        sourceOutlineView.dataSource = outlineCntlr
+        sourceOutlineView.delegate = self
+        sourceOutlineView.dataSource = self
         sourceOutlineView.setDraggingSourceOperationMask(NSDragOperation.every, forLocal: true)
         sourceOutlineView.registerForDraggedTypes([.string])
         sourceOutlineView?.expandItem(nil, expandChildren: true)
-        outlineCntlr.mainControllerDelegate = cntlr
     }
     
     @IBAction func sidebarMenuDelete(_ sender: NSMenuItem) {
         guard let sbCatItem = sourceOutlineView.item(atRow: sourceOutlineView.clickedRow) as? SidebarCategoryItem else { return }
         guard let sbCat = sbCatItem.sbCategory else { return }
-        outlineCntlr.deleteSidebarGroup(group: sbCat)
         sourceOutlineView.reloadData()
         sourceOutlineView?.expandItem(nil, expandChildren: true)
     }
@@ -130,7 +140,8 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         windowConroller.toDoCreateTextField.stringValue = ""
     }
     @IBAction func btnAddGroup(_ sender: NSButton) {
-        outlineCntlr.addSidebarGroup(groupName: "New Group")
+        print("add group button")
+//        outlineCntlr.addSidebarGroup(groupName: "New Group")
     }
     
     // Show Info View Controller
@@ -245,5 +256,161 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     // MARK: - Controller functions
     func updateStatusBar(withText text: String) {
         lblStatusBottom.stringValue = text
+    }
+    
+    // --------------------------- \\
+    // MARK: - OutlineView Methods
+    func outlineView(_ outlineView: NSOutlineView, shouldSelectItem item: Any) -> Bool {
+        if let _ = item as? SidebarSection {
+            return false
+        }
+        return true
+    }
+    
+    func outlineViewSelectionDidChange(_ notification: Notification) {
+        guard let sidebarView = notification.object as? NSOutlineView else { return }
+        guard let sbItem = sidebarView.item(atRow: sidebarView.selectedRow) as? SidebarItem  else { return }
+        cntlr.firebaseController.updateMainView(with: sbItem)
+    }
+    
+    func outlineView(_ outlineView: NSOutlineView, numberOfChildrenOfItem item: Any?) -> Int {
+        if let item = item {
+            switch item {
+            case let sbSection as SidebarSection:
+                return sbSection.sbItem.count
+            default:
+                return 0
+            }
+        } else {
+            return 2 //Filters , Categories
+        }
+    }
+    
+    func outlineView(_ outlineView: NSOutlineView, isItemExpandable item: Any) -> Bool {
+        switch item {
+        case let sbSection as SidebarSection:
+            return (sbSection.sbItem.count > 0) ? true : false
+        default:
+            return false
+        }
+    }
+    
+    func outlineView(_ outlineView: NSOutlineView, child index: Int, ofItem item: Any?) -> Any {
+        if let item = item {
+            switch item {
+            case let sbSection as SidebarSection:
+                return sbSection.sbItem[index]
+            default:
+                return self
+            }
+        } else {
+            switch index {
+            case 0:
+                return sbFilterSection
+            default:
+                return sbCategorySection
+            }
+        }
+    }
+    
+    func outlineView(_ outlineView: NSOutlineView, shouldExpandItem item: Any) -> Bool {
+        return true
+    }
+    
+    func outlineView(_ outlineView: NSOutlineView, shouldCollapseItem item: Any) -> Bool {
+        return false
+    }
+    
+    func outlineView(_ outlineView: NSOutlineView, viewFor tableColumn: NSTableColumn?, item: Any) -> NSView? {
+        switch item {
+        case let sbSection as SidebarSection:
+            let view = outlineView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "HeaderCell"), owner: self) as! NSTableCellView
+            if let textField = view.textField {
+                textField.stringValue = sbSection.name
+            }
+            return view
+        case let sbItem as SidebarFilterItem:
+            let view = outlineView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "DataCell"), owner: self) as! NSTableCellView
+            view.textField?.stringValue = sbItem.sidebarTitle
+            return view
+        case let sbCat as SidebarCategoryItem:
+            let view = outlineView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "DataCell"), owner: self) as! GroupCellView
+            //            view.groupID = sbCat.sbCategory!.objectID
+            view.groupCellViewDelegate = self
+            if let textField = view.txtGroup {
+                textField.isEditable = true
+                textField.stringValue = "fixme: Static Group name"
+            }
+            return view
+        default:
+            return nil
+        }
+    }
+    
+    func outlineView(_ outlineView: NSOutlineView, validateDrop info: NSDraggingInfo, proposedItem item: Any?, proposedChildIndex index: Int) -> NSDragOperation {
+        //        if let sbItem = item as? SidebarItem {
+        //            if let sbFilterItem = sbItem as? SidebarFilterItem {
+        //                if sbFilterItem.sbFilter == SidebarFilter.all {
+        //                    return NSDragOperation(rawValue: UInt(0))
+        //                }
+        //            }
+        //            return .move
+        //        }
+        
+        if let _ = item as? SidebarCategoryItem {
+            return .move
+        }
+        
+        return NSDragOperation(rawValue: UInt(0))
+    }
+    
+    func outlineView(_ outlineView: NSOutlineView, writeItems items: [Any], to pasteboard: NSPasteboard) -> Bool {
+        return true
+    }
+    
+    func outlineView(_ outlineView: NSOutlineView, pasteboardWriterForItem item: Any) -> NSPasteboardWriting? {
+        return nil
+    }
+    
+    func outlineView(_ outlineView: NSOutlineView, acceptDrop info: NSDraggingInfo, item: Any?, childIndex index: Int) -> Bool {
+        //        let pboard = info.draggingPasteboard()
+        //        guard let pbItem = pboard.pasteboardItems?[0] else { return false }
+        //        guard let managedObjectIDURLString = pbItem.string(forType: .string) else { return false }
+        //        guard let objectID = URL(string: managedObjectIDURLString) else { return false }
+        //        guard let managedObjectID = dataController.persistentContainer.persistentStoreCoordinator.managedObjectID(forURIRepresentation: objectID) else { return false }
+        //        guard let sbCat = (item as? SidebarCategoryItem)?.sbCategory else { return false }
+        //        mainControllerDelegate?.assigneToDoToGroup(moID: managedObjectID, group: sbCat)
+        //        return true
+        return false // placeholder value
+    }
+    
+    func outlineView(_ outlineView: NSOutlineView, shouldShowOutlineCellForItem item: Any) -> Bool {
+        return false
+    }
+    
+    // MARK: - Other Methods
+    func addSidebarGroup(groupName: String) {
+        let newGroup = Group(groupName: groupName)
+        
+        //        guard let newGroup = NSEntityDescription.insertNewObject(forEntityName: "Group", into: dataController.managedObjectContext) as? Group else { return }
+        //        newGroup.groupName = groupName
+        //        dataController.saveMoc()
+        //        initializeFetchedGroupsController()
+        //        mainTableViewDelgate?.reloadSidebar()
+    }
+    
+    func deleteSidebarGroup(group: Group) {
+        //        dataController.managedObjectContext.delete(group)
+        //        dataController.saveMoc()
+        //        initializeFetchedGroupsController()
+        //        mainTableViewDelgate?.reloadSidebar()
+    }
+    
+    func changeSidebarTitle(newTitle: String, moID: NSManagedObjectID) {
+        //        let groupObj = dataController.managedObjectContext.object(with: moID)
+        //        groupObj.setValue(newTitle, forKey: "groupName")
+        //        dataController.saveMoc()
+        //        initializeFetchedGroupsController()
+        //        mainTableViewDelgate?.reloadSidebar()
     }
 }
