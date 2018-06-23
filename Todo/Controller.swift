@@ -72,10 +72,8 @@ class MainController: NSObject, InfoControllerDelegate, TableViewMenuDelegate, M
         firebaseController.update(toDo: toDo, property: "title", with: text)
     }
     
-    func updateNote(newNote: String, moID: NSManagedObjectID?) {
-//        guard let theToDo = getToDo(moID: moID) else { return }
-//        theToDo.note = newNote
-//        dataController.saveMoc()
+    func updateNote(forToDo toDo: ToDo, withNewNote note: String) {
+        firebaseController.update(toDo: toDo, property: "note", with: note)
     }
     
     
@@ -127,6 +125,7 @@ class MainController: NSObject, InfoControllerDelegate, TableViewMenuDelegate, M
     
     func setupInfoSegue(dest: InfoViewController, withToDo todo: ToDo) {
         let clickedCreateDateString = getString(fromDate: todo.createdDate, withFormat: "yyyy-MM-dd")
+        dest.infoToDo = todo
         dest.infoTitleString = todo.title
         dest.intoCreatedDateString = clickedCreateDateString
         dest.note = todo.note

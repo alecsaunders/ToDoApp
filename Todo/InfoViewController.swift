@@ -9,11 +9,11 @@
 import Cocoa
 
 protocol InfoControllerDelegate: class {
-    func updateNote(newNote: String, moID: NSManagedObjectID?)
+    func updateNote(forToDo toDo: ToDo, withNewNote note: String)
 }
 
 class InfoViewController: NSViewController {
-    var managedObjectID: NSManagedObjectID?
+    var infoToDo: ToDo?
     var infoTitleString: String?
     var intoCreatedDateString: String?
     var note: String?
@@ -35,7 +35,8 @@ class InfoViewController: NSViewController {
     
     
     override func viewDidDisappear() {
-        infoControllerDelegate?.updateNote(newNote: infoNote.string, moID: managedObjectID)
+        guard let itd = infoToDo else { return }
+        infoControllerDelegate?.updateNote(forToDo: itd, withNewNote: infoNote.string)
     }
     
 }
