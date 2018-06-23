@@ -36,13 +36,6 @@ class MainController: NSObject, InfoControllerDelegate, TableViewMenuDelegate, M
         guard let theToDo = (tableView.view(atColumn: 1, row: tableView.clickedRow, makeIfNecessary: false) as? ToDoCellView)?.cellToDo else { return nil }
         return theToDo
     }
-    
-    func getToDo(moID: NSManagedObjectID?) -> ToDo? {
-//        guard let managedObjectID = moID else { return nil }
-//        guard let theToDo = dataController.managedObjectContext.object(with: managedObjectID) as? ToDo else { return nil }
-        let theToDo = ToDo(id: "id", title: "title", note: "", daily: false, createdDate: Date(), isComplete: false, completedDate: nil)
-        return theToDo
-    }
 
     func save(addedToDoTitle: String, newToDoSidebarSelection: SidebarItem?) {
         if addedToDoTitle.isEmpty {

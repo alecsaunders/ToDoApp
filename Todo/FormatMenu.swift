@@ -26,6 +26,7 @@ class FormatMenu: NSMenu {
     }
     
     override func awakeFromNib() {
+        print("Format Menu awakeFromNib")
         let alternate = userDefaults.bool(forKey: "alternateRows")
         if alternate {
             menuAlternateRows.state = .on

@@ -17,7 +17,7 @@ class TvMenu: NSMenu {
     @IBOutlet var menuDaily: NSMenuItem!
 
     override func awakeFromNib() {
-        
+        print("TVMenu awakeFromNib")
     }
     
     override func update() {

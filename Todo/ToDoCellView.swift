@@ -10,7 +10,6 @@ import Cocoa
 
 protocol ToDoCellViewDelegate: class {
     func changeText(forToDo toDo: ToDo, withText text: String)
-//    func changeText(newToDoTitle: String, moID: NSManagedObjectID)
 }
 
 class ToDoCellView: NSTableCellView, NSTextFieldDelegate {

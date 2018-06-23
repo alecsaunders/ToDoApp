@@ -13,7 +13,7 @@ import CoreData
 protocol MainTableViewDelgate: class {
     func reloadData()
     func reloadSidebar()
-    // func addToDoToGroup(toDoRowIndex: Int, group: Group)
+    func addToDoToGroup(toDoRowIndex: Int, group: Group)
     func setToDoToDaily(toDoRowIndex: Int)
     func updateStatusBar(withText text: String)
     var clickedToDo: ToDo? { get }
@@ -27,9 +27,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     let registeredTypes = [NSPasteboard.PasteboardType.string]
     var clickedToDo: ToDo? {
         get {
-            guard let v = mainTableView.view(atColumn: 1, row: mainTableView.clickedRow, makeIfNecessary: false) as? ToDoCellView else { return nil }
-            guard let theToDo = cntlr.getToDo(moID: nil) else { return nil }
-            return theToDo
+            return cntlr.getToDo(fromTableView: mainTableView)
         }
     }
     @IBOutlet var mainTableView: NSTableView!
