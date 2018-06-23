@@ -139,5 +139,10 @@ class MainController: NSObject, InfoControllerDelegate, TableViewMenuDelegate, M
         guard let theGroup = firebaseController.getGroup(fromId: id) else { return }
         firebaseController.update(group: theGroup, forProperty: "groupName", withNewVal: title)
     }
+    
+    func deleteSidebarCategory(withCategoryItem item: SidebarCategoryItem) {
+        guard let deletedGroup = item.sbCategory else { return }
+        firebaseController.delete(group: deletedGroup)
+    }
 
 }

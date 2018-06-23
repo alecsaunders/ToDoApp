@@ -140,6 +140,16 @@ class FirebaseController: MTVDel2 {
         })
     }
     
+    func delete(group: Group) {
+        fbGroup.child(group.groupID).removeValue(completionBlock: { (error, ref) in
+            if let err = error {
+                print(err.localizedDescription)
+            } else {
+                print("Deleted Group")
+            }
+        })
+    }
+    
     func update(toDo: ToDo, property prop: String, with newVal: Any?) {
         if let newValUnwrapped = newVal {
             switch prop {

@@ -102,10 +102,8 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     }
     
     @IBAction func sidebarMenuDelete(_ sender: NSMenuItem) {
-//        guard let sbCatItem = sourceOutlineView.item(atRow: sourceOutlineView.clickedRow) as? SidebarCategoryItem else { return }
-//        guard let sbCat = sbCatItem.sbCategory else { return }
-//        sourceOutlineView.reloadData()
-//        sourceOutlineView?.expandItem(nil, expandChildren: true)
+        guard let sbCatItem = sourceOutlineView.item(atRow: sourceOutlineView.clickedRow) as? SidebarCategoryItem else { return }
+        cntlr.deleteSidebarCategory(withCategoryItem: sbCatItem)
     }
     
     @IBAction func menuDaily(_ sender: NSMenuItem) {
@@ -409,13 +407,5 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     
     func outlineView(_ outlineView: NSOutlineView, shouldShowOutlineCellForItem item: Any) -> Bool {
         return false
-    }
-    
-    // MARK: - Other Methods
-    func deleteSidebarGroup(group: Group) {
-        //        dataController.managedObjectContext.delete(group)
-        //        dataController.saveMoc()
-        //        initializeFetchedGroupsController()
-        //        mainTableViewDelgate?.reloadSidebar()
     }
 }
