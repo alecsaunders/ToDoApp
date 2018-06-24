@@ -44,6 +44,7 @@ class FirebaseController: MTVDel2 {
         let query = setFirebaseQuery()
         query.observe(.value) { (snapshot) in
             self.parseFirebaseResults(snapshot)
+            self.deleteOutOfDateToDos()
             self.fbControlDel?.reloadUI()
         }
     }
@@ -152,6 +153,27 @@ class FirebaseController: MTVDel2 {
                 print("Deleted Group")
             }
         })
+    }
+    
+    func deleteOutOfDateToDos() {
+        for t in fetchedToDos {
+            if shouldDelete(toDo: t) {
+                delete(item: t)
+            }
+        }
+    }
+    
+    func shouldDelete(toDo: ToDo) -> Bool {
+        guard let completedDate = toDo.completedDate else { return false }
+        let defaults = NSUserDefaultsController().defaults
+        guard let retention = defaults.value(forKey: "completeRetention") as? Int else { return false }
+        guard let retentionDateTime = Calendar.current.date(byAdding: .day, value: -retention, to: Date()) else { return false }
+        
+        if completedDate < retentionDateTime {
+            return true
+        } else {
+            return false
+        }
     }
     
     func update(toDo: ToDo, property prop: String, with newVal: Any?) {
