@@ -212,30 +212,11 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         return nil
     }
     
-    func tableView(_ tableView: NSTableView, validateDrop info: NSDraggingInfo, proposedRow row: Int, proposedDropOperation dropOperation: NSTableView.DropOperation) -> NSDragOperation {
-        if dropOperation == .above {
-            return .move
-        }
-        
-        return NSDragOperation(rawValue: UInt(0))
-    }
-    
     func tableView(_ tableView: NSTableView, writeRowsWith rowIndexes: IndexSet, to pboard: NSPasteboard) -> Bool {
         let data = NSKeyedArchiver.archivedData(withRootObject: rowIndexes)
         pboard.declareTypes(registeredTypes, owner: self)
         pboard.setData(data, forType: .string)
         return true
-    }
-    
-    func tableView(_ tableView: NSTableView, acceptDrop info: NSDraggingInfo, row: Int, dropOperation: NSTableView.DropOperation) -> Bool {
-        let dragData = info.draggingPasteboard().data(forType: .string)!
-        let rowIndexes: IndexSet? = NSKeyedUnarchiver.unarchiveObject(with: dragData) as? IndexSet
-        guard let ri: IndexSet = rowIndexes else { return true }
-        let dragOrigin = ri.first!
-        let dragDest = row
-        print(dragOrigin)
-        print(dragDest)
-        return false
     }
     
     func tableView(_ tableView: NSTableView, pasteboardWriterForRow row: Int) -> NSPasteboardWriting? {
@@ -333,30 +314,12 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         }
     }
     
-    func outlineView(_ outlineView: NSOutlineView, isItemExpandable item: Any) -> Bool {
-        //        print("Is item expandable")
-        //        return true
-        //        switch item {
-        //        case let sbSection as SidebarSection:
-        //            return (sbSection.sbItem.count > 0) ? true : false
-        //        default:
-        //            return false
-        //        }
-        return true
-    }
-    
-    func outlineView(_ outlineView: NSOutlineView, shouldExpandItem item: Any) -> Bool {
-        return true
-    }
-    
-    func outlineView(_ outlineView: NSOutlineView, shouldCollapseItem item: Any) -> Bool {
-        return false
-    }
-    
+    func outlineView(_ outlineView: NSOutlineView, shouldShowOutlineCellForItem item: Any) -> Bool { return false }
+    func outlineView(_ outlineView: NSOutlineView, isItemExpandable item: Any) -> Bool { return true }
+    func outlineView(_ outlineView: NSOutlineView, shouldExpandItem item: Any) -> Bool { return true }
+    func outlineView(_ outlineView: NSOutlineView, shouldCollapseItem item: Any) -> Bool { return false }
     func outlineView(_ outlineView: NSOutlineView, shouldSelectItem item: Any) -> Bool {
-        if let _ = item as? SidebarSection {
-            return false
-        }
+        if let _ = item as? SidebarSection { return false }
         return true
     }
     
@@ -367,28 +330,8 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     }
     
     func outlineView(_ outlineView: NSOutlineView, validateDrop info: NSDraggingInfo, proposedItem item: Any?, proposedChildIndex index: Int) -> NSDragOperation {
-        //        if let sbItem = item as? SidebarItem {
-        //            if let sbFilterItem = sbItem as? SidebarFilterItem {
-        //                if sbFilterItem.sbFilter == SidebarFilter.all {
-        //                    return NSDragOperation(rawValue: UInt(0))
-        //                }
-        //            }
-        //            return .move
-        //        }
-        
-        if let _ = item as? SidebarCategoryItem {
-            return .move
-        }
-        
+        if let _ = item as? SidebarCategoryItem { return .move }
         return NSDragOperation(rawValue: UInt(0))
-    }
-    
-    func outlineView(_ outlineView: NSOutlineView, writeItems items: [Any], to pasteboard: NSPasteboard) -> Bool {
-        return true
-    }
-    
-    func outlineView(_ outlineView: NSOutlineView, pasteboardWriterForItem item: Any) -> NSPasteboardWriting? {
-        return nil
     }
     
     func outlineView(_ outlineView: NSOutlineView, acceptDrop info: NSDraggingInfo, item: Any?, childIndex index: Int) -> Bool {
@@ -398,9 +341,5 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         guard let sbCat = (item as? SidebarCategoryItem)?.sbCategory else { return false }
         cntlr.assignToDo(withID: toDoID, toGroup: sbCat)
         return true
-    }
-    
-    func outlineView(_ outlineView: NSOutlineView, shouldShowOutlineCellForItem item: Any) -> Bool {
-        return false
     }
 }
