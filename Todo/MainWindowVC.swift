@@ -202,6 +202,8 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
             return cell
         }
         if tableColumn == tableView.tableColumns[1] {
+            tableColumn?.headerCell.stringValue = "Name"
+            tableColumn?.headerCell.identifier = NSUserInterfaceItemIdentifier.init("Name")
             guard let cell = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "col_toDoText"),
                                                 owner: nil) as? ToDoCellView else { return nil }
             cell.cellToDo = theToDo
@@ -210,6 +212,13 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
             return cell
         }
         return nil
+    }
+    
+    func tableView(_ tableView: NSTableView, mouseDownInHeaderOf tableColumn: NSTableColumn) {
+        guard let headerIdentifer = tableColumn.headerCell.identifier else { return }
+        guard headerIdentifer.rawValue == "Name" else { return }
+        print(headerIdentifer)
+        // FIXME: Insert sort tableView logic
     }
     
     func tableView(_ tableView: NSTableView, writeRowsWith rowIndexes: IndexSet, to pboard: NSPasteboard) -> Bool {
