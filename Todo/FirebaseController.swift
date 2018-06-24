@@ -109,7 +109,7 @@ class FirebaseController: MTVDel2 {
                 fbQuery = fbItem.queryOrdered(byChild: "daily").queryEqual(toValue: true)
             case .completed:
                 itemsAreComplete = true
-                fbQuery = fbItem.queryOrdered(byChild: "isComplete").queryEqual(toValue: true)
+                fbQuery = fbItem.queryOrdered(byChild: "completedDate")
             }
         }
         if let sbCatItem = sidebarSelection as? SidebarCategoryItem {
