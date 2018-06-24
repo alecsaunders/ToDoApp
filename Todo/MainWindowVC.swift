@@ -330,8 +330,12 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     }
     
     func outlineView(_ outlineView: NSOutlineView, validateDrop info: NSDraggingInfo, proposedItem item: Any?, proposedChildIndex index: Int) -> NSDragOperation {
-        if let _ = item as? SidebarCategoryItem { return .move }
-        return NSDragOperation(rawValue: UInt(0))
+        if index < 0 {
+            if let _ = item as? SidebarCategoryItem {
+                return .move
+            }
+        }
+        return []
     }
     
     func outlineView(_ outlineView: NSOutlineView, acceptDrop info: NSDraggingInfo, item: Any?, childIndex index: Int) -> Bool {
