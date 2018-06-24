@@ -1101,10 +1101,16 @@
                 </menu>
                 <menu id="UGg-PZ-e1X" userLabel="SidebarMenu">
                     <items>
-                        <menuItem title="Delete Group" id="9wQ-YQ-KnS" userLabel="Delete Group">
+                        <menuItem title="Rename" id="9wQ-YQ-KnS" userLabel="Rename">
                             <modifierMask key="keyEquivalentModifierMask"/>
                             <connections>
-                                <action selector="sidebarMenuDelete:" target="XfG-lQ-9wD" id="kXV-0s-xjx"/>
+                                <action selector="sidebarRename:" target="XfG-lQ-9wD" id="HwC-tC-UPk"/>
+                            </connections>
+                        </menuItem>
+                        <menuItem title="Delete Group" id="de3-XC-hDA" userLabel="Delete Group">
+                            <modifierMask key="keyEquivalentModifierMask"/>
+                            <connections>
+                                <action selector="sidebarMenuDelete:" target="XfG-lQ-9wD" id="CIN-Je-rsa"/>
                             </connections>
                         </menuItem>
                     </items>

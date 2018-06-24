@@ -105,6 +105,10 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         guard let sbCatItem = sourceOutlineView.item(atRow: sourceOutlineView.clickedRow) as? SidebarCategoryItem else { return }
         cntlr.deleteSidebarCategory(withCategoryItem: sbCatItem)
     }
+    @IBAction func sidebarRename(_ sender: NSMenuItem) {
+        guard let gCellView = sourceOutlineView.view(atColumn: 0, row: sourceOutlineView.clickedRow, makeIfNecessary: false) as? GroupCellView else { return }
+        gCellView.setFocus()
+    }
     
     @IBAction func menuDaily(_ sender: NSMenuItem) {
         guard let theToDo = cntlr.getToDo(fromTableView: mainTableView) else { return }
@@ -117,6 +121,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         changeState(ofButton: button)
         completedCheck(button)
     }
+    
     func changeState(ofButton button: NSButton) {
         switch button.state {
         case .on:

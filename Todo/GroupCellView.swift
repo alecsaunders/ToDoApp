@@ -25,4 +25,8 @@ class GroupCellView: NSTableCellView {
     override func draw(_ dirtyRect: NSRect) {
         super.draw(dirtyRect)
     }
+    
+    func setFocus() {
+        sidebarGroupTitle.becomeFirstResponder()
+    }
 }

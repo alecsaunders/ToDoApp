@@ -194,10 +194,10 @@
 		F2E8228F1F48959100EEEA07 /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				F20B42DF1F7D9ADE0088EE33 /* PreferencesViewController.swift */,
-				F255491E1F493A2300AE360B /* WindowController.swift */,
 				F2C8A2691F41428500E246F7 /* MainWindowVC.swift */,
+				F255491E1F493A2300AE360B /* WindowController.swift */,
 				F2CAAD921F563DFB007DECD6 /* InfoViewController.swift */,
+				F20B42DF1F7D9ADE0088EE33 /* PreferencesViewController.swift */,
 			);
 			name = "View Controllers";
 			sourceTree = "<group>";
