@@ -111,6 +111,10 @@ class FirebaseController: MTVDel2 {
                 fbQuery = fbItem.queryOrdered(byChild: "isComplete").queryEqual(toValue: true)
             }
         }
+        if let sbCatItem = sidebarSelection as? SidebarCategoryItem {
+            guard let group = sbCatItem.sbCategory else { return }
+            fbQuery = fbItem.queryOrdered(byChild: "groupID").queryEqual(toValue: group.groupID)
+        }
         loadDataFromFirebase()
     }
     
