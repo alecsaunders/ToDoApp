@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="arb-FG-XAO">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14113"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Window Controller-->
+        <scene sceneID="oDC-sO-nEf">
+            <objects>
+                <windowController storyboardIdentifier="Login" id="arb-FG-XAO" sceneMemberID="viewController">
+                    <window key="window" title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" showsToolbarButton="NO" frameAutosaveName="" animationBehavior="default" titlebarAppearsTransparent="YES" titleVisibility="hidden" id="WRj-CG-F0l">
+                        <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" fullSizeContentView="YES"/>
+                        <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
+                        <rect key="contentRect" x="1734" y="259" width="480" height="270"/>
+                        <rect key="screenRect" x="1440" y="-55" width="1920" height="1058"/>
+                        <connections>
+                            <outlet property="delegate" destination="arb-FG-XAO" id="9AI-TH-fGn"/>
+                        </connections>
+                    </window>
+                    <connections>
+                        <segue destination="fzL-Q6-Ofr" kind="relationship" relationship="window.shadowedContentViewController" id="jbl-BZ-gsR"/>
+                    </connections>
+                </windowController>
+                <customObject id="KjS-66-hEz" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="30" y="89"/>
+        </scene>
+        <!--Login View Controller-->
+        <scene sceneID="b5Q-yx-AqC">
+            <objects>
+                <viewController id="fzL-Q6-Ofr" customClass="LoginViewController" customModule="Todo" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" id="30V-FI-7u8">
+                        <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <subviews>
+                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Zcd-ht-w0d">
+                                <rect key="frame" x="14" y="176" width="134" height="32"/>
+                                <buttonCell key="cell" type="push" title="Create Account" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="DXh-bT-PKz">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="btnCreateAccount:" target="fzL-Q6-Ofr" id="dEX-4C-KeZ"/>
+                                </connections>
+                            </button>
+                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="dCT-Vf-xbx">
+                                <rect key="frame" x="14" y="13" width="81" height="32"/>
+                                <buttonCell key="cell" type="push" title="Button" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="w4I-YT-MxT">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <segue destination="Qua-j4-vhV" kind="show" id="eOD-Yk-vbX"/>
+                                </connections>
+                            </button>
+                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="bNu-Gv-2Z6">
+                                <rect key="frame" x="14" y="209" width="146" height="32"/>
+                                <buttonCell key="cell" type="push" title="Sign in with email" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="U7a-TF-u8G">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="btnSignIn:" target="fzL-Q6-Ofr" id="puY-Lb-fKJ"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <constraints>
+                            <constraint firstItem="dCT-Vf-xbx" firstAttribute="leading" secondItem="30V-FI-7u8" secondAttribute="leading" constant="20" id="E3q-MV-UcN"/>
+                            <constraint firstItem="Zcd-ht-w0d" firstAttribute="top" secondItem="bNu-Gv-2Z6" secondAttribute="bottom" constant="12" id="EPn-Om-pSC"/>
+                            <constraint firstItem="bNu-Gv-2Z6" firstAttribute="leading" secondItem="30V-FI-7u8" secondAttribute="leading" constant="20" id="YKq-8X-PLw"/>
+                            <constraint firstAttribute="bottom" secondItem="dCT-Vf-xbx" secondAttribute="bottom" constant="20" id="uTM-ne-vMS"/>
+                            <constraint firstItem="bNu-Gv-2Z6" firstAttribute="top" secondItem="30V-FI-7u8" secondAttribute="top" constant="33" id="vMn-HY-FBM"/>
+                            <constraint firstItem="Zcd-ht-w0d" firstAttribute="leading" secondItem="30V-FI-7u8" secondAttribute="leading" constant="20" id="vcq-oc-Mam"/>
+                        </constraints>
+                    </view>
+                </viewController>
+                <customObject id="OWa-xj-Zer" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="648" y="89"/>
+        </scene>
+        <!--Main-->
+        <scene sceneID="Pcf-0v-y9p">
+            <objects>
+                <controllerPlaceholder storyboardIdentifier="MainStoryboard" storyboardName="Main" id="Qua-j4-vhV" userLabel="Main" sceneMemberID="viewController"/>
+                <customObject id="wPF-7H-f9y" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1110" y="45"/>
+        </scene>
+    </scenes>
+</document>

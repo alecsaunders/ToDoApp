@@ -12,6 +12,9 @@ import Cocoa
 class AppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
+        let mainStoryBoard = NSStoryboard(name: NSStoryboard.Name(rawValue: "login"), bundle: nil)
+        print(mainStoryBoard)
+        
         let userDefaults = NSUserDefaultsController().defaults
         
         if userDefaults.value(forKey: "completeRetention") == nil {
