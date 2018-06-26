@@ -7,10 +7,13 @@
 //
 
 import Cocoa
+import FirebaseAuth
 
 class LoginViewController: NSViewController {
     var userIsLoggedIn: Bool = false
     @IBOutlet weak var btnContinue: NSButton!
+    @IBOutlet weak var txtEmail: NSTextField!
+    @IBOutlet weak var txtPassword1: NSSecureTextField!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,7 +25,12 @@ class LoginViewController: NSViewController {
         userIsLoggedIn = true
     }
     @IBAction func btnCreateAccount(_ sender: NSButton) {
-        print("btnCreateAccount")
+        let email = txtEmail.stringValue
+        let password = txtPassword1.stringValue
+        Auth.auth().createUser(withEmail: email, password: password) { (authResult, error) in
+            print("Auth result: \(authResult)")
+            print("Auth result: \(error)")
+        }
         btnContinue.isEnabled = true
         userIsLoggedIn = true
     }
