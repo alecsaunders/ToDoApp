@@ -27,7 +27,7 @@
 	<key>NSHumanReadableCopyright</key>
 	<string>Copyright © 2017 Alec Saunders. All rights reserved.</string>
 	<key>NSMainStoryboardFile</key>
-	<string>Login</string>
+	<string>Main</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
 </dict>
