@@ -7,8 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0540845420E1556300909173 /* Login.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0540845320E1556300909173 /* Login.storyboard */; };
-		0540845620E155E900909173 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0540845520E155E900909173 /* LoginViewController.swift */; };
+		0534687320E2A30600A26490 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0534687220E2A30600A26490 /* LoginViewController.swift */; };
 		05FBA107208E4686000FC726 /* FormatMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05FBA106208E4686000FC726 /* FormatMenu.swift */; };
 		4231230E56244E455A7DE75D /* Pods_Todo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E18DB030D5AF00F2A3635FCF /* Pods_Todo.framework */; };
 		7C4A9C54E8366852DFF01BAF /* Pods_TodoTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50A4FE3D0EE751808D95138E /* Pods_TodoTests.framework */; };
@@ -47,8 +46,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		0540845320E1556300909173 /* Login.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Login.storyboard; sourceTree = "<group>"; };
-		0540845520E155E900909173 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		0534687220E2A30600A26490 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		05FBA106208E4686000FC726 /* FormatMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormatMenu.swift; sourceTree = "<group>"; };
 		50A4FE3D0EE751808D95138E /* Pods_TodoTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TodoTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7CF4ED118833C2C313C66E57 /* Pods-Todo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Todo.release.xcconfig"; path = "Pods/Target Support Files/Pods-Todo/Pods-Todo.release.xcconfig"; sourceTree = "<group>"; };
@@ -199,7 +197,7 @@
 		F2E8228F1F48959100EEEA07 /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				0540845520E155E900909173 /* LoginViewController.swift */,
+				0534687220E2A30600A26490 /* LoginViewController.swift */,
 				F2C8A2691F41428500E246F7 /* MainWindowVC.swift */,
 				F255491E1F493A2300AE360B /* WindowController.swift */,
 				F2CAAD921F563DFB007DECD6 /* InfoViewController.swift */,
@@ -395,7 +393,7 @@
 				F22601951F5DA1120087D2FB /* SidebarSection.swift in Sources */,
 				F287166A2071639D0090A694 /* SidebarCategory.swift in Sources */,
 				F2E9B4DC20D5A1D900CAB458 /* ToDo.swift in Sources */,
-				0540845620E155E900909173 /* LoginViewController.swift in Sources */,
+				0534687320E2A30600A26490 /* LoginViewController.swift in Sources */,
 				F2C8A26A1F41428500E246F7 /* MainWindowVC.swift in Sources */,
 				F20B42DE1F7D661A0088EE33 /* SidebarOutlineView.swift in Sources */,
 				F2D232101F60778B00C0D3F4 /* SidebarFilters.swift in Sources */,

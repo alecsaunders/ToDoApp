@@ -2,7 +2,7 @@
 //  LoginViewController.swift
 //  Todo
 //
-//  Created by Alec Saunders on 6/25/18.
+//  Created by Alec Saunders on 6/26/18.
 //  Copyright © 2018 Alec Saunders. All rights reserved.
 //
 
@@ -17,6 +17,6 @@ class LoginViewController: NSViewController {
     }
     @IBAction func btnCreateAccount(_ sender: NSButton) {
         print("btnCreateAccount")
+
     }
-    
 }
