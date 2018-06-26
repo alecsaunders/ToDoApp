@@ -25,6 +25,7 @@ protocol MTVDel2 {
 }
 
 class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSource, NSOutlineViewDataSource, NSOutlineViewDelegate, MainTableViewDelgate, WindowControllerDelegate {
+    var userIsLoggedIn: Bool = false
     @IBOutlet var mainTableView: NSTableView!
     @IBOutlet var lblStatusBottom: NSTextField!
     @IBOutlet weak var sourceSidebar: NSScrollView!
@@ -58,6 +59,10 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     override func viewWillAppear() {
         if let windowConroller = self.view.window?.windowController as? WindowController {
             windowConroller.windowControllerDelegate = self
+        }
+        
+        if !userIsLoggedIn {
+            performSegue(withIdentifier: NSStoryboardSegue.Identifier(rawValue: "loginSegue"), sender: nil)
         }
     }
     

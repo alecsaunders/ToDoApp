@@ -1068,6 +1068,7 @@
                         <outlet property="sourceSidebar" destination="Ewb-OW-ylW" id="jZe-mR-LnJ"/>
                         <outlet property="tvMenu" destination="ZoB-XI-zlI" id="KEe-D0-47u"/>
                         <segue destination="KUD-Z6-EEq" kind="popover" identifier="infoSegue" popoverAnchorView="m2S-Jp-Qdl" popoverBehavior="t" preferredEdge="maxY" id="e1n-un-Twi"/>
+                        <segue destination="qLp-Vt-84j" kind="sheet" identifier="loginSegue" id="PR8-wa-7Be"/>
                     </connections>
                 </viewController>
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
@@ -1118,6 +1119,71 @@
                 </menu>
             </objects>
             <point key="canvasLocation" x="74" y="940.5"/>
+        </scene>
+        <!--Login View Controller-->
+        <scene sceneID="4F2-cj-MeG">
+            <objects>
+                <viewController id="qLp-Vt-84j" customClass="LoginViewController" customModule="Todo" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" id="7aB-wL-Rfn">
+                        <rect key="frame" x="0.0" y="0.0" width="450" height="300"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <subviews>
+                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="7dm-P1-Sof">
+                                <rect key="frame" x="14" y="13" width="95" height="32"/>
+                                <buttonCell key="cell" type="push" title="Continue" bezelStyle="rounded" alignment="center" enabled="NO" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="LQr-lM-cQu">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="btnContine:" target="qLp-Vt-84j" id="z0R-r5-Ran"/>
+                                </connections>
+                            </button>
+                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="VXe-t6-yLE">
+                                <rect key="frame" x="14" y="252" width="216" height="32"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="204" id="5Ye-TK-GXA"/>
+                                </constraints>
+                                <buttonCell key="cell" type="push" title="Sign in with email" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="0Bx-j4-awP">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="btnSignIn:" target="qLp-Vt-84j" id="ItL-bH-Q0J"/>
+                                </connections>
+                            </button>
+                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Xl7-it-oE6">
+                                <rect key="frame" x="14" y="219" width="216" height="32"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="204" id="YCC-FZ-wmV"/>
+                                </constraints>
+                                <buttonCell key="cell" type="push" title="Create new user" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Bs1-9g-GHX">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="btnCreateAccount:" target="qLp-Vt-84j" id="X7L-hu-1gQ"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <constraints>
+                            <constraint firstItem="7dm-P1-Sof" firstAttribute="leading" secondItem="7aB-wL-Rfn" secondAttribute="leading" constant="20" id="4ns-Y9-6UU"/>
+                            <constraint firstItem="Xl7-it-oE6" firstAttribute="leading" secondItem="7aB-wL-Rfn" secondAttribute="leading" constant="20" id="7Zv-i9-eKn"/>
+                            <constraint firstItem="VXe-t6-yLE" firstAttribute="leading" secondItem="7aB-wL-Rfn" secondAttribute="leading" constant="20" id="7xf-kh-WPc"/>
+                            <constraint firstAttribute="bottom" secondItem="7dm-P1-Sof" secondAttribute="bottom" constant="20" id="evW-C6-QNu"/>
+                            <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="7dm-P1-Sof" secondAttribute="trailing" constant="20" symbolic="YES" id="f0S-Gj-ahh"/>
+                            <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="VXe-t6-yLE" secondAttribute="trailing" constant="20" symbolic="YES" id="fQb-Ht-jEf"/>
+                            <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="Xl7-it-oE6" secondAttribute="trailing" constant="20" symbolic="YES" id="ov2-v1-B0f"/>
+                            <constraint firstItem="VXe-t6-yLE" firstAttribute="top" secondItem="7aB-wL-Rfn" secondAttribute="top" constant="20" id="vIx-vo-zUY"/>
+                            <constraint firstItem="Xl7-it-oE6" firstAttribute="top" secondItem="7aB-wL-Rfn" secondAttribute="top" constant="53" id="yKA-8A-OtH"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="btnContinue" destination="7dm-P1-Sof" id="N7u-7Q-Hys"/>
+                    </connections>
+                </viewController>
+                <customObject id="ufY-rE-Z2k" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="74" y="1480"/>
         </scene>
         <!--Preferences Controller-->
         <scene sceneID="9Ib-Al-amR">
