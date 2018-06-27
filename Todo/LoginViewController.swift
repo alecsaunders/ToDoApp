@@ -28,8 +28,18 @@ class LoginViewController: NSViewController {
         let email = txtEmail.stringValue
         let password = txtPassword1.stringValue
         Auth.auth().createUser(withEmail: email, password: password) { (authResult, error) in
-            print("Auth result: \(authResult)")
-            print("Auth result: \(error)")
+            if error == nil {
+                if let user = authResult?.user {
+                    let defaults = NSUserDefaultsController().defaults
+                    defaults.setValue(user.uid, forKey: "firebase_uid")
+                    defaults.setValue(user.email, forKey: "firebase_email")
+                    self.userIsLoggedIn = true
+                } else {
+                    print("Could not downcast uid")
+                }
+            } else {
+                print("Auth Error: \(error!.localizedDescription)")
+            }
         }
         btnContinue.isEnabled = true
         userIsLoggedIn = true

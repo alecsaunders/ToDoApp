@@ -61,7 +61,10 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
             windowConroller.windowControllerDelegate = self
         }
         
-        if !userIsLoggedIn {
+        let defaults = NSUserDefaultsController().defaults
+        if let uid = defaults.value(forKey: "firebase_uid") as? String {
+            cntlr.authenticateFirebaseUser(withUid: uid)
+        } else {
             performSegue(withIdentifier: NSStoryboardSegue.Identifier(rawValue: "loginSegue"), sender: nil)
         }
     }

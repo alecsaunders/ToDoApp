@@ -18,6 +18,10 @@ class MainController: NSObject, InfoControllerDelegate, TableViewMenuDelegate, F
         firebaseController = FirebaseController()
         super.init()
         firebaseController.fbControlDel = self
+    }
+    
+    func authenticateFirebaseUser(withUid uid: String) {
+        firebaseController.getCurrentUser()
         firebaseController?.loadAllFromFirebase()
     }
     

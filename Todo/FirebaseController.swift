@@ -17,6 +17,7 @@ protocol FBControllerDelegate {
 }
 
 class FirebaseController: MTVDel2 {
+    private var user: User?
     private var ref: DatabaseReference!
     private var fbItem: DatabaseReference!
     private var fbGroup: DatabaseReference!
@@ -33,6 +34,16 @@ class FirebaseController: MTVDel2 {
         ref = Database.database().reference()
         fbItem = ref.child("item")
         fbGroup = ref.child("group")
+    }
+    
+    func getCurrentUser() {
+        if let curUser = Auth.auth().currentUser {
+            user = curUser
+            fbItem = ref.child(curUser.uid).child("item")
+            fbGroup = ref.child(curUser.uid).child("group")
+        } else {
+            print("firebase cnt, could not get user")
+        }
     }
     
     func loadAllFromFirebase() {
