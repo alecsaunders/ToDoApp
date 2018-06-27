@@ -63,7 +63,11 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         
         let defaults = NSUserDefaultsController().defaults
         if let uid = defaults.value(forKey: "firebase_uid") as? String {
-            cntlr.authenticateFirebaseUser(withUid: uid)
+            if !cntlr.authenticateFirebaseUser(withUid: uid) {
+                performSegue(withIdentifier: NSStoryboardSegue.Identifier(rawValue: "loginSegue"), sender: "authError")
+            } else {
+                print("User successfully authenticated")
+            }
         } else {
             performSegue(withIdentifier: NSStoryboardSegue.Identifier(rawValue: "loginSegue"), sender: nil)
         }
@@ -166,6 +170,12 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     }
     
     override func prepare(for segue: NSStoryboardSegue, sender: Any?) {
+        if let segId = segue.identifier?.rawValue {
+            if segId == "loginSegue" {
+                print("segue.identifier: \(segId)")
+            }
+        }
+        
         guard let dest = segue.destinationController as? InfoViewController else { return }
         guard let theToDo = cntlr.getToDo(fromTableView: mainTableView) else { return }
         cntlr.setupInfoSegue(dest: dest, withToDo: theToDo)

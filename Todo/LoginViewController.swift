@@ -14,6 +14,7 @@ class LoginViewController: NSViewController {
     @IBOutlet weak var btnContinue: NSButton!
     @IBOutlet weak var txtEmail: NSTextField!
     @IBOutlet weak var txtPassword1: NSSecureTextField!
+    @IBOutlet weak var lblAuthError: NSTextField!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,15 +29,16 @@ class LoginViewController: NSViewController {
         
         Auth.auth().signIn(withEmail: email, password: password) { (authResult, error) in
             if error == nil {
+                self.lblAuthError.isHidden = true
                 print("logged in")
+                
+                self.view.window?.close()
             } else {
-                print("Error signing in: \(error!.localizedDescription)")
+                self.lblAuthError.stringValue = error!.localizedDescription
+                self.lblAuthError.isHidden = false
             }
             
         }
-        
-        btnContinue.isEnabled = true
-        userIsLoggedIn = true
     }
     @IBAction func btnCreateAccount(_ sender: NSButton) {
         let email = txtEmail.stringValue
@@ -47,21 +49,15 @@ class LoginViewController: NSViewController {
                     let defaults = NSUserDefaultsController().defaults
                     defaults.setValue(user.uid, forKey: "firebase_uid")
                     defaults.setValue(user.email, forKey: "firebase_email")
-                    self.userIsLoggedIn = true
+                    self.view.window?.close()
                 } else {
                     print("Could not downcast uid")
                 }
             } else {
-                print("Auth Error: \(error!.localizedDescription)")
+                self.lblAuthError.stringValue = error!.localizedDescription
+                self.lblAuthError.isHidden = false
             }
         }
-        btnContinue.isEnabled = true
-        userIsLoggedIn = true
     }
-    
-    @IBAction func btnContine(_ sender: NSButton) {
-        if userIsLoggedIn {
-            self.view.window?.close()
-        }
-    }
+
 }
