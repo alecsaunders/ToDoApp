@@ -20,7 +20,21 @@ class LoginViewController: NSViewController {
     }
     
     @IBAction func btnSignIn(_ sender: NSButton) {
-        print("btnSignIn")
+        let email = txtEmail.stringValue
+        let password = txtPassword1.stringValue
+        
+        guard !email.isEmpty else { return }
+        guard !password.isEmpty else { return }
+        
+        Auth.auth().signIn(withEmail: email, password: password) { (authResult, error) in
+            if error == nil {
+                print("logged in")
+            } else {
+                print("Error signing in: \(error!.localizedDescription)")
+            }
+            
+        }
+        
         btnContinue.isEnabled = true
         userIsLoggedIn = true
     }
