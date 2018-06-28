@@ -63,10 +63,10 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         
         let defaults = NSUserDefaultsController().defaults
         if let uid = defaults.value(forKey: "firebase_uid") as? String {
-            if !cntlr.authenticateFirebaseUser(withUid: uid) {
-                performSegue(withIdentifier: NSStoryboardSegue.Identifier(rawValue: "loginSegue"), sender: "authError")
+            if FirebaseAuthController().isUserValidated() {
+                print("user was validated")
             } else {
-                print("User successfully authenticated")
+                performSegue(withIdentifier: NSStoryboardSegue.Identifier(rawValue: "loginSegue"), sender: "authError")
             }
         } else {
             performSegue(withIdentifier: NSStoryboardSegue.Identifier(rawValue: "loginSegue"), sender: nil)

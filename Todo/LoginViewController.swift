@@ -30,8 +30,14 @@ class LoginViewController: NSViewController {
         Auth.auth().signIn(withEmail: email, password: password) { (authResult, error) in
             if error == nil {
                 self.lblAuthError.isHidden = true
-                print("logged in")
-                
+                if let authRes = authResult {
+                    let usr = authRes.user
+                    usr.reload(completion: { (error) in
+                        if let err = error {
+                            print(err.localizedDescription)
+                        }
+                    })
+                }
                 self.view.window?.close()
             } else {
                 self.lblAuthError.stringValue = error!.localizedDescription

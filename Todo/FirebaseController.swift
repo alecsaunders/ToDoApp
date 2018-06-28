@@ -36,21 +36,6 @@ class FirebaseController: MTVDel2 {
         fbGroup = ref.child("group")
     }
     
-    func validateCurrentUser() -> Bool {
-        if let curUser = Auth.auth().currentUser {
-            if curUser.isEmailVerified {
-                user = curUser
-                fbItem = ref.child(curUser.uid).child("item")
-                fbGroup = ref.child(curUser.uid).child("group")
-                return true
-            }
-            print("email is not verified")
-            return false
-        }
-        print("firebase cnt, could not get user")
-        return false
-    }
-    
     func loadAllFromFirebase() {
         loadDataFromFirebase()
         loadGroupsFromFirebase()

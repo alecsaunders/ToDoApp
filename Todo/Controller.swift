@@ -19,18 +19,7 @@ class MainController: NSObject, InfoControllerDelegate, TableViewMenuDelegate, F
         super.init()
         firebaseController.fbControlDel = self
     }
-    
-    func authenticateFirebaseUser(withUid uid: String) -> Bool {
-        print("Controller: authenticateFirebaseUser begin")
-        if firebaseController.validateCurrentUser() {
-            firebaseController?.loadAllFromFirebase()
-            return true
-        } else {
-            print("Could not validate current user")
-            return false
-        }
-    }
-    
+
     func reloadUI() {
         mainTableViewDelgate?.reloadData()
     }
