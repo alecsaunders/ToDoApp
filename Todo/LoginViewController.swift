@@ -32,13 +32,11 @@ class LoginViewController: NSViewController {
                 self.lblAuthError.isHidden = true
                 if let authRes = authResult {
                     let usr = authRes.user
-                    usr.reload(completion: { (error) in
-                        if let err = error {
-                            print(err.localizedDescription)
-                        }
-                    })
+                    self.view.window?.close()
+                } else {
+                    self.lblAuthError.stringValue = "Could not authenticate user. Try again."
+                    self.lblAuthError.isHidden = false
                 }
-                self.view.window?.close()
             } else {
                 self.lblAuthError.stringValue = error!.localizedDescription
                 self.lblAuthError.isHidden = false
