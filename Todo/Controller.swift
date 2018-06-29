@@ -9,7 +9,7 @@
 import Cocoa
 
 
-class MainController: NSObject, InfoControllerDelegate, TableViewMenuDelegate, FBControllerDelegate, ToDoCellViewDelegate, GroupCellViewDelegate {
+class MainController: NSObject, InfoControllerDelegate, TableViewMenuDelegate, ToDoCellViewDelegate, GroupCellViewDelegate {
     
     var firebaseController: FirebaseController!
     weak var mainTableViewDelgate: MainTableViewDelgate?
@@ -17,16 +17,6 @@ class MainController: NSObject, InfoControllerDelegate, TableViewMenuDelegate, F
     override init() {
         firebaseController = FirebaseController()
         super.init()
-        firebaseController.fbControlDel = self
-    }
-
-    func reloadUI() {
-        mainTableViewDelgate?.reloadData()
-    }
-    
-    func reloadSidebarUI() {
-        mainTableViewDelgate?.reloadSidebar()
-
     }
     
     func getStatusLabel(withNumber num: Int, forGroup group: Group?) -> String {
