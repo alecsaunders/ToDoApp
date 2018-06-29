@@ -139,6 +139,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     @IBAction func markComplete(_ sender: NSMenuItem) {
         guard let clicked_view = mainTableView.view(atColumn: 0, row: mainTableView.clickedRow, makeIfNecessary: false) as? NSTableCellView  else { return }
         guard let button = clicked_view.subviews[0] as? NSButton else { return }
+        button.tag = mainTableView.clickedRow
         changeState(ofButton: button)
         completedCheck(button)
     }
@@ -154,7 +155,11 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         }
     }
     @IBAction func completedCheck(_ sender: NSButton) {
-        cntlr.completedWasChecked(inTableView: mainTableView, withState: sender.state.rawValue)
+        print("completd was checked")
+        print(sender.state)
+        print("Btn Tag: \(sender.tag)")
+        print("Clicked row \(mainTableView.clickedRow)")
+        cntlr.completedWasChecked(inTableView: mainTableView, atIndex: sender.tag, withState: sender.state.rawValue)
     }
     
     @IBAction func btnAddItem(_ sender: NSButton) {

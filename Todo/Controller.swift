@@ -71,8 +71,8 @@ class MainController: NSObject, InfoControllerDelegate, TableViewMenuDelegate, T
         modelAccessorDel?.update(item: toDo, property: "daily", with: isDaily)
     }
     
-    func completedWasChecked(inTableView tableView: NSTableView, withState state: Int) {
-        guard var completedToDo = getToDo(fromTableView: tableView, atIndex: tableView.clickedRow) else { return }
+    func completedWasChecked(inTableView tableView: NSTableView, atIndex index: Int, withState state: Int) {
+        guard var completedToDo = getToDo(fromTableView: tableView, atIndex: index) else { return }
         switch state {
         case 1:
             completedToDo.completedDate = Date()
@@ -83,6 +83,7 @@ class MainController: NSObject, InfoControllerDelegate, TableViewMenuDelegate, T
         default:
             break
         }
+        print("cntr update")
         modelAccessorDel?.update(item: completedToDo, property: "completedDate", with: completedToDo.completedDate)
     }
     

@@ -176,6 +176,7 @@ class FirebaseController: MTVDel2, ModelAccessorDelegate {
     }
     
     func update(item: ToDo, property prop: String, with newVal: Any?) {
+        print("firebase update")
         if let newValUnwrapped = newVal {
             switch prop {
             case "id", "title", "note":
