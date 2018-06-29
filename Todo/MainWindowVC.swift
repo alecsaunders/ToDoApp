@@ -105,13 +105,6 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     func setupUINotifications() {
         let reloadTableViewUINotify = Notification.Name(rawValue: "reloadTableViewUINotify")
         NotificationCenter.default.addObserver(forName: reloadTableViewUINotify, object: nil, queue: nil) { (notification) in
-            print("update tv")
-            if let mt2 = self.mtvdel2 {
-                print("mt2.fetchedToDos")
-                print(mt2.fetchedToDos)
-            } else {
-                print("Could not cast mtv del 2")
-            }
             self.mainTableView.reloadData()
         }
         
@@ -155,10 +148,6 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         }
     }
     @IBAction func completedCheck(_ sender: NSButton) {
-        print("completd was checked")
-        print(sender.state)
-        print("Btn Tag: \(sender.tag)")
-        print("Clicked row \(mainTableView.clickedRow)")
         cntlr.completedWasChecked(inTableView: mainTableView, atIndex: sender.tag, withState: sender.state.rawValue)
     }
     
