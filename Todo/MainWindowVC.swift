@@ -33,7 +33,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     let registeredTypes = [NSPasteboard.PasteboardType.string]
     var clickedToDo: ToDo? {
         get {
-            return cntlr.getToDo(fromTableView: mainTableView)
+            return cntlr.getToDo(fromTableView: mainTableView, atIndex: mainTableView.clickedRow)
         }
     }
     var mtvdel2: MTVDel2?
@@ -136,7 +136,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     }
     
     @IBAction func menuDaily(_ sender: NSMenuItem) {
-        guard let theToDo = cntlr.getToDo(fromTableView: mainTableView) else { return }
+        guard let theToDo = cntlr.getToDo(fromTableView: mainTableView, atIndex: mainTableView.clickedRow) else { return }
         cntlr.setToDaily(toDo: theToDo, isDaily: !theToDo.daily)
     }
     
@@ -158,7 +158,9 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         }
     }
     @IBAction func completedCheck(_ sender: NSButton) {
-        cntlr.completedWasChecked(atIndex: sender.tag, withState: sender.state.rawValue)
+        guard let completedToDo = cntlr.getToDo(fromTableView: mainTableView, atIndex: mainTableView.clickedRow) else { return }
+        var compToDoItem = completedToDo
+        cntlr.completedWasChecked(forCompletedToDo: compToDoItem, withState: sender.state.rawValue)
     }
     
     @IBAction func btnAddItem(_ sender: NSButton) {
@@ -190,7 +192,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         }
         
         guard let dest = segue.destinationController as? InfoViewController else { return }
-        guard let theToDo = cntlr.getToDo(fromTableView: mainTableView) else { return }
+        guard let theToDo = cntlr.getToDo(fromTableView: mainTableView, atIndex: mainTableView.clickedRow) else { return }
         cntlr.setupInfoSegue(dest: dest, withToDo: theToDo)
         dest.infoControllerDelegate = cntlr
     }
@@ -273,12 +275,12 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     }
     
     func addToDoToGroup(toDoRowIndex: Int, group: Group) {
-        guard let toDo = cntlr.getToDo(fromTableView: mainTableView) else { return }
-        cntlr.firebaseController.update(toDo: toDo, property: "group", with: group.groupName)
+        guard let toDo = cntlr.getToDo(fromTableView: mainTableView, atIndex: mainTableView.clickedRow) else { return }
+        cntlr.modelAccessorDel?.update(item: toDo, property: "group", with: group.groupName)
     }
     
     func setToDoToDaily(toDoRowIndex: Int) {
-        guard let theToDo = cntlr.getToDo(fromTableView: mainTableView) else { return }
+        guard let theToDo = cntlr.getToDo(fromTableView: mainTableView, atIndex: mainTableView.clickedRow) else { return }
         cntlr.setToDaily(toDo: theToDo, isDaily: !theToDo.daily)
     }
     
