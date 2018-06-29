@@ -10,14 +10,8 @@ import Cocoa
 
 
 class MainController: NSObject, InfoControllerDelegate, TableViewMenuDelegate, ToDoCellViewDelegate, GroupCellViewDelegate {
-    var firebaseController: FirebaseController!
     weak var mainTableViewDelgate: MainTableViewDelgate?
     var modelAccessorDel: ModelAccessorDelegate?
-    
-    override init() {
-        firebaseController = FirebaseController()
-        super.init()
-    }
     
     func getStatusLabel(withNumber num: Int, forGroup group: Group?) -> String {
         return "\(group != nil ? "\(group!) - " : "")\(num == 1  ? "\(num) item" : "\(num) items")"
@@ -64,6 +58,9 @@ class MainController: NSObject, InfoControllerDelegate, TableViewMenuDelegate, T
     
     // MARK: - Update View
 
+    func updateMainView(withSidebarItem sidebarItem: SidebarItem) {
+        modelAccessorDel?.updateMainView(withSidebarItem: sidebarItem)
+    }
     
     func assignToDo(withID id: String, toGroup group: Group) {
         guard let toDoId = modelAccessorDel?.getItem(fromUniqueID: id) else { return }
@@ -74,18 +71,19 @@ class MainController: NSObject, InfoControllerDelegate, TableViewMenuDelegate, T
         modelAccessorDel?.update(item: toDo, property: "daily", with: isDaily)
     }
     
-    func completedWasChecked(forCompletedToDo compToDo: ToDo, withState state: Int) {
+    func completedWasChecked(inTableView tableView: NSTableView, withState state: Int) {
+        guard var completedToDo = getToDo(fromTableView: tableView, atIndex: tableView.clickedRow) else { return }
         switch state {
         case 1:
-            compToDo.completedDate = Date()
-            compToDo.isComplete = true
+            completedToDo.completedDate = Date()
+            completedToDo.isComplete = true
         case 0:
-            compToDo.completedDate = nil
-            compToDo.isComplete = false
+            completedToDo.completedDate = nil
+            completedToDo.isComplete = false
         default:
             break
         }
-        modelAccessorDel?.update(item: compToDo, property: "completedDate", with: completedToDo.completedDate)
+        modelAccessorDel?.update(item: completedToDo, property: "completedDate", with: completedToDo.completedDate)
     }
     
     //MARK: - Table View Menu Delegate Functions

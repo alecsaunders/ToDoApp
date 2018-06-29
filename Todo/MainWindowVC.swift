@@ -23,6 +23,7 @@ protocol MTVDel2 {
 }
 
 class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSource, NSOutlineViewDataSource, NSOutlineViewDelegate, MainTableViewDelgate, WindowControllerDelegate {
+    let firebaseAuthController = FirebaseAuthController()
     var userIsLoggedIn: Bool = false
     @IBOutlet var mainTableView: NSTableView!
     @IBOutlet var lblStatusBottom: NSTextField!
@@ -58,24 +59,13 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         if let windowConroller = self.view.window?.windowController as? WindowController {
             windowConroller.windowControllerDelegate = self
         }
-        
-        let defaults = NSUserDefaultsController().defaults
-        if let uid = defaults.value(forKey: "firebase_uid") as? String {
-            if FirebaseAuthController().isUserValidated() {
-                print("user was validated")
-            } else {
-                performSegue(withIdentifier: NSStoryboardSegue.Identifier(rawValue: "loginSegue"), sender: "authError")
-            }
-        } else {
-            performSegue(withIdentifier: NSStoryboardSegue.Identifier(rawValue: "loginSegue"), sender: nil)
-        }
+        performSegue(withIdentifier: NSStoryboardSegue.Identifier(rawValue: "loginSegue"), sender: nil)
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         cntlr = MainController()
         cntlr.mainTableViewDelgate = self
-        mtvdel2 = cntlr.firebaseController
         
         setupPrefs()
         setupMainTableView()
@@ -115,13 +105,11 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     func setupUINotifications() {
         let reloadTableViewUINotify = Notification.Name(rawValue: "reloadTableViewUINotify")
         NotificationCenter.default.addObserver(forName: reloadTableViewUINotify, object: nil, queue: nil) { (notification) in
-            print("Notification Center: Reload Main Table View")
             self.mainTableView.reloadData()
         }
         
         let reloadSidebarUINotify = Notification.Name(rawValue: "reloadSidebarUINotify")
         NotificationCenter.default.addObserver(forName: reloadSidebarUINotify, object: nil, queue: nil) { (notification) in
-            print("Notification Center: Reload Source Outline View")
             self.sourceOutlineView.reloadData()
         }
     }
@@ -158,9 +146,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         }
     }
     @IBAction func completedCheck(_ sender: NSButton) {
-        guard let completedToDo = cntlr.getToDo(fromTableView: mainTableView, atIndex: mainTableView.clickedRow) else { return }
-        var compToDoItem = completedToDo
-        cntlr.completedWasChecked(forCompletedToDo: compToDoItem, withState: sender.state.rawValue)
+        cntlr.completedWasChecked(inTableView: mainTableView, withState: sender.state.rawValue)
     }
     
     @IBAction func btnAddItem(_ sender: NSButton) {
@@ -185,9 +171,11 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     }
     
     override func prepare(for segue: NSStoryboardSegue, sender: Any?) {
-        if let segId = segue.identifier?.rawValue {
-            if segId == "loginSegue" {
-                print("segue.identifier: \(segId)")
+        if let _ = segue.destinationController as? LoginViewController {
+            let firebaseAuthenticated = Notification.Name(rawValue: "FirebaseAuthenticated")
+            NotificationCenter.default.addObserver(forName: firebaseAuthenticated, object: nil, queue: nil) { (notification) in
+                self.firebaseAuthController.setUser(with: notification.object)
+                self.firebaseWasAuthenticated()
             }
         }
         
@@ -195,6 +183,12 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         guard let theToDo = cntlr.getToDo(fromTableView: mainTableView, atIndex: mainTableView.clickedRow) else { return }
         cntlr.setupInfoSegue(dest: dest, withToDo: theToDo)
         dest.infoControllerDelegate = cntlr
+    }
+    
+    func firebaseWasAuthenticated() {
+        guard let usr = firebaseAuthController.user else { return }
+        let firebaseConroller = FirebaseController(usr: usr)
+        cntlr.modelAccessorDel = firebaseConroller
     }
     
     func animate(hide: Bool) {
@@ -373,7 +367,8 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     func outlineViewSelectionDidChange(_ notification: Notification) {
         guard let sidebarView = notification.object as? NSOutlineView else { return }
         guard let sbItem = sidebarView.item(atRow: sidebarView.selectedRow) as? SidebarItem  else { return }
-        cntlr.firebaseController.updateMainView(with: sbItem)
+        
+        cntlr.updateMainView(withSidebarItem: sbItem)
     }
     
     func outlineView(_ outlineView: NSOutlineView, validateDrop info: NSDraggingInfo, proposedItem item: Any?, proposedChildIndex index: Int) -> NSDragOperation {

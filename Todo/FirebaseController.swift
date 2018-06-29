@@ -12,7 +12,7 @@ import FirebaseDatabase
 import FirebaseAuth
 
 class FirebaseController: MTVDel2, ModelAccessorDelegate {
-    private var user: User?
+    private var user: User
     private var ref: DatabaseReference!
     private var fbItem: DatabaseReference!
     private var fbGroup: DatabaseReference!
@@ -22,12 +22,11 @@ class FirebaseController: MTVDel2, ModelAccessorDelegate {
     var fetchedToDos: [ToDo] = []
     var fetchedGroups: [Group] = []
     
-    init() {
-        FirebaseApp.configure()
-        Database.setLoggingEnabled(true)
+    init(usr: User) {
         ref = Database.database().reference()
-        fbItem = ref.child("item")
-        fbGroup = ref.child("group")
+        user = usr
+        fbItem = ref.child(usr.uid).child("item")
+        fbGroup = ref.child(usr.uid).child("group")
     }
     
     func loadAllFromFirebase() {
@@ -96,9 +95,9 @@ class FirebaseController: MTVDel2, ModelAccessorDelegate {
         return nil
     }
     
-    func updateMainView(with sidebarSelection: SidebarItem) {
+    func updateMainView(withSidebarItem sbItem: SidebarItem) {
         itemsAreComplete = false
-        if let sbFilterItem = sidebarSelection as? SidebarFilterItem {
+        if let sbFilterItem = sbItem as? SidebarFilterItem {
             switch sbFilterItem.sbFilter! {
             case .all:
                 fbQuery = fbItem.queryOrdered(byChild: "createdDate")
@@ -109,7 +108,7 @@ class FirebaseController: MTVDel2, ModelAccessorDelegate {
                 fbQuery = fbItem.queryOrdered(byChild: "completedDate")
             }
         }
-        if let sbCatItem = sidebarSelection as? SidebarCategoryItem {
+        if let sbCatItem = sbItem as? SidebarCategoryItem {
             guard let group = sbCatItem.sbCategory else { return }
             fbQuery = fbItem.queryOrdered(byChild: "groupID").queryEqual(toValue: group.groupID)
         }

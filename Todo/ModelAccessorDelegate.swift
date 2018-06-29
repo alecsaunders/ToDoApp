@@ -19,6 +19,7 @@ protocol ModelAccessorDelegate {
     func getNewCategoryKey() -> String
     func getItem(fromUniqueID id: String) -> ToDo?
     func getCategory(fromUniqueID id: String) -> Group?
+    func updateMainView(withSidebarItem sbItem: SidebarItem)
 //    func loadItems()
 //    func loadCategories()
 }

@@ -30,9 +30,8 @@ class LoginViewController: NSViewController {
         Auth.auth().signIn(withEmail: email, password: password) { (authResult, error) in
             if error == nil {
                 self.lblAuthError.isHidden = true
-                if let authRes = authResult {
-                    let usr = authRes.user
-                    self.view.window?.close()
+                if let auth = authResult {
+                    self.authenticateAndDismissSheet(withUser: auth.user)
                 } else {
                     self.lblAuthError.stringValue = "Could not authenticate user. Try again."
                     self.lblAuthError.isHidden = false
@@ -53,7 +52,7 @@ class LoginViewController: NSViewController {
                     let defaults = NSUserDefaultsController().defaults
                     defaults.setValue(user.uid, forKey: "firebase_uid")
                     defaults.setValue(user.email, forKey: "firebase_email")
-                    self.view.window?.close()
+                    self.authenticateAndDismissSheet(withUser: user)
                 } else {
                     print("Could not downcast uid")
                 }
@@ -62,6 +61,11 @@ class LoginViewController: NSViewController {
                 self.lblAuthError.isHidden = false
             }
         }
+    }
+    
+    func authenticateAndDismissSheet(withUser user: User) {
+        NotificationCenter.default.post(name: Notification.Name(rawValue: "FirebaseAuthenticated"), object: user)
+        view.window?.close()
     }
 
 }

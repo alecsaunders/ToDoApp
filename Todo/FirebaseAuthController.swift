@@ -7,14 +7,20 @@
 //
 
 import Foundation
+import FirebaseCore
 import FirebaseAuth
 
 class FirebaseAuthController {
     var user: User?
-    var isEmailVerified = false
     
     init() {
-        print("init firebase auth controller")
+        FirebaseApp.configure()
+    }
+    
+    func setUser(with object: Any?) {
+        if let usr = object as? User {
+            user = usr
+        }
     }
     
     func getCurrentUser() -> User? {
@@ -22,14 +28,11 @@ class FirebaseAuthController {
     }
     
     func isUserValidated() -> Bool {
-        print("fb auth cntl: isUserValidated")
         if let curUser = Auth.auth().currentUser {
-            print(curUser.uid)
             if curUser.isEmailVerified {
                 user = curUser
                 return true
             } else {
-                print("email is not verified")
                 return false
             }
         } else {
