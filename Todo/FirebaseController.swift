@@ -27,6 +27,7 @@ class FirebaseController: MTVDel2, ModelAccessorDelegate {
         user = usr
         fbItem = ref.child(usr.uid).child("item")
         fbGroup = ref.child(usr.uid).child("group")
+        loadAllFromFirebase()
     }
     
     func loadAllFromFirebase() {
@@ -35,16 +36,18 @@ class FirebaseController: MTVDel2, ModelAccessorDelegate {
     }
     
     func loadItems() {
+        print("Load Items")
         let query = setFirebaseQuery()
         query.observe(.value) { (snapshot) in
             self.parseFirebaseResults(snapshot)
             self.deleteOutOfDateToDos()
-            //self.fbControlDel?.reloadUI()
+            print("post reload tv notification")
             NotificationCenter.default.post(name: Notification.Name(rawValue: "reloadTableViewUINotify"), object: nil)
         }
     }
     
     func loadCategories() {
+        print("Load Categories")
         fbGroup.observe(.value) { (snapshot) in
             self.fetchedGroups = []
             for child in self.getAllChildren(fromSnapshot: snapshot) {
@@ -57,7 +60,6 @@ class FirebaseController: MTVDel2, ModelAccessorDelegate {
                     print("Error decoding group: \(error)")
                 }
             }
-            //self.fbControlDel?.reloadSidebarUI()
             NotificationCenter.default.post(name: Notification.Name(rawValue: "reloadSidebarUINotify"), object: nil)
         }
     }

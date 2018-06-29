@@ -105,11 +105,19 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     func setupUINotifications() {
         let reloadTableViewUINotify = Notification.Name(rawValue: "reloadTableViewUINotify")
         NotificationCenter.default.addObserver(forName: reloadTableViewUINotify, object: nil, queue: nil) { (notification) in
+            print("update tv")
+            if let mt2 = self.mtvdel2 {
+                print("mt2.fetchedToDos")
+                print(mt2.fetchedToDos)
+            } else {
+                print("Could not cast mtv del 2")
+            }
             self.mainTableView.reloadData()
         }
         
         let reloadSidebarUINotify = Notification.Name(rawValue: "reloadSidebarUINotify")
         NotificationCenter.default.addObserver(forName: reloadSidebarUINotify, object: nil, queue: nil) { (notification) in
+            print("Update sidebar")
             self.sourceOutlineView.reloadData()
         }
     }
@@ -188,6 +196,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     func firebaseWasAuthenticated() {
         guard let usr = firebaseAuthController.user else { return }
         let firebaseConroller = FirebaseController(usr: usr)
+        mtvdel2 = firebaseConroller
         cntlr.modelAccessorDel = firebaseConroller
     }
     
