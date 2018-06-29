@@ -11,18 +11,12 @@ import FirebaseCore
 import FirebaseDatabase
 import FirebaseAuth
 
-protocol FBControllerDelegate {
-    func reloadUI()
-    func reloadSidebarUI()
-}
-
 class FirebaseController: MTVDel2 {
     private var user: User?
     private var ref: DatabaseReference!
     private var fbItem: DatabaseReference!
     private var fbGroup: DatabaseReference!
     var fbQuery: DatabaseQuery?
-    var fbControlDel: FBControllerDelegate?
     var itemsAreComplete = false
     
     var fetchedToDos: [ToDo] = []
@@ -46,7 +40,8 @@ class FirebaseController: MTVDel2 {
         query.observe(.value) { (snapshot) in
             self.parseFirebaseResults(snapshot)
             self.deleteOutOfDateToDos()
-            self.fbControlDel?.reloadUI()
+            //self.fbControlDel?.reloadUI()
+            NotificationCenter.default.post(name: Notification.Name(rawValue: "reloadTableViewUINotify"), object: nil)
         }
     }
     
@@ -63,7 +58,8 @@ class FirebaseController: MTVDel2 {
                     print("Error decoding group: \(error)")
                 }
             }
-            self.fbControlDel?.reloadSidebarUI()
+            //self.fbControlDel?.reloadSidebarUI()
+            NotificationCenter.default.post(name: Notification.Name(rawValue: "reloadSidebarUINotify"), object: nil)
         }
     }
     
