@@ -11,8 +11,6 @@ import CoreData
 
 
 protocol MainTableViewDelgate: class {
-    func reloadData()
-    func reloadSidebar()
     func addToDoToGroup(toDoRowIndex: Int, group: Group)
     func setToDoToDaily(toDoRowIndex: Int)
     func updateStatusBar(withText text: String)
@@ -82,6 +80,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         setupPrefs()
         setupMainTableView()
         setupSourceOutlineView()
+        setupUINotifications()
 
         tvMenu.tvMenuDelegate = cntlr
         lblStatusBottom.textColor = NSColor.darkGray
@@ -111,6 +110,20 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         sourceOutlineView.setDraggingSourceOperationMask(NSDragOperation.every, forLocal: true)
         sourceOutlineView.registerForDraggedTypes([.string])
         sourceOutlineView?.expandItem(nil, expandChildren: true)
+    }
+    
+    func setupUINotifications() {
+        let reloadTableViewUINotify = Notification.Name(rawValue: "reloadTableViewUINotify")
+        NotificationCenter.default.addObserver(forName: reloadTableViewUINotify, object: nil, queue: nil) { (notification) in
+            print("Notification Center: Reload Main Table View")
+            self.mainTableView.reloadData()
+        }
+        
+        let reloadSidebarUINotify = Notification.Name(rawValue: "reloadSidebarUINotify")
+        NotificationCenter.default.addObserver(forName: reloadSidebarUINotify, object: nil, queue: nil) { (notification) in
+            print("Notification Center: Reload Source Outline View")
+            self.sourceOutlineView.reloadData()
+        }
     }
     
     @IBAction func sidebarMenuDelete(_ sender: NSMenuItem) {
