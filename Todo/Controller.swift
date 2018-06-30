@@ -83,8 +83,11 @@ class MainController: NSObject, InfoControllerDelegate, TableViewMenuDelegate, T
         default:
             break
         }
-        print("cntr update")
-        modelAccessorDel?.update(item: completedToDo, property: "completedDate", with: completedToDo.completedDate)
+        updateForCompletion(item: completedToDo, withCompletedDate: completedToDo.completedDate)
+    }
+    
+    func updateForCompletion(item: ToDo, withCompletedDate complDate: Date?) {
+        modelAccessorDel?.update(item: item, property: "completedDate", with: complDate)
     }
     
     //MARK: - Table View Menu Delegate Functions

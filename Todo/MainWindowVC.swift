@@ -373,6 +373,11 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     
     func outlineView(_ outlineView: NSOutlineView, validateDrop info: NSDraggingInfo, proposedItem item: Any?, proposedChildIndex index: Int) -> NSDragOperation {
         if index < 0 {
+            if let filter = item as? SidebarFilterItem {
+                if filter.sbFilter != .all {
+                    return .move
+                }
+            }
             if let _ = item as? SidebarCategoryItem {
                 return .move
             }
@@ -384,8 +389,20 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         let pboard = info.draggingPasteboard()
         guard let pbItem = pboard.pasteboardItems?[0] else { return false }
         guard let toDoID = pbItem.string(forType: .string) else { return false }
-        guard let sbCat = (item as? SidebarCategoryItem)?.sbCategory else { return false }
-        cntlr.assignToDo(withID: toDoID, toGroup: sbCat)
+        if let sbCat = (item as? SidebarCategoryItem)?.sbCategory {
+            cntlr.assignToDo(withID: toDoID, toGroup: sbCat)
+        } else if let sbFilItem = (item as? SidebarFilterItem) {
+            guard let draggedToDoArray = mtvdel2?.fetchedToDos else { return false }
+            var draggedToDo = (draggedToDoArray.filter { $0.id == toDoID })[0]
+            if sbFilItem.sbFilter == .daily {
+                cntlr.setToDaily(toDo: draggedToDo, isDaily: true)
+            } else if sbFilItem.sbFilter == .completed {
+                print("Should mark completed")
+                draggedToDo.completedDate = Date()
+                draggedToDo.isComplete = true
+                cntlr.updateForCompletion(item: draggedToDo, withCompletedDate: draggedToDo.completedDate)
+            }
+        }
         return true
     }
 }
