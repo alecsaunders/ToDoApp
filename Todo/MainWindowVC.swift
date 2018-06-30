@@ -403,7 +403,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
             } else if sbFilItem.sbFilter == .completed {
                 draggedToDo.completedDate = Date()
                 draggedToDo.isComplete = true
-                cntlr.updateForCompletion(item: draggedToDo, withCompletedDate: draggedToDo.completedDate)
+                cntlr.updateCompletedDate(forItem: draggedToDo)
             }
         }
         return true
