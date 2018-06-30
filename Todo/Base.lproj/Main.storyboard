@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14113"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="13771"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
         <capability name="stacking Non-gravity area distributions on NSStackView" minToolsVersion="7.0" minSystemVersion="10.11"/>
     </dependencies>
@@ -809,7 +809,7 @@
                                                                             <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                                             <prototypeCellViews>
                                                                                 <tableCellView identifier="HeaderCell" id="X9g-Pl-mQr">
-                                                                                    <rect key="frame" x="1" y="1" width="128" height="17"/>
+                                                                                    <rect key="frame" x="1" y="1" width="127" height="17"/>
                                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                                     <subviews>
                                                                                         <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Kgr-rX-xLH">
@@ -831,11 +831,11 @@
                                                                                     </connections>
                                                                                 </tableCellView>
                                                                                 <tableCellView identifier="DataCell" id="cdk-CV-ZQM" customClass="GroupCellView" customModule="Todo" customModuleProvider="target">
-                                                                                    <rect key="frame" x="1" y="20" width="128" height="17"/>
+                                                                                    <rect key="frame" x="1" y="20" width="127" height="17"/>
                                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                                     <subviews>
                                                                                         <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="jhJ-CP-nlo">
-                                                                                            <rect key="frame" x="-2" y="0.0" width="132" height="17"/>
+                                                                                            <rect key="frame" x="-2" y="0.0" width="131" height="17"/>
                                                                                             <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="EMj-eH-ggf">
                                                                                                 <font key="font" metaFont="system"/>
                                                                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -954,7 +954,7 @@
                                                                             <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                                             <prototypeCellViews>
                                                                                 <tableCellView identifier="col_toDoText" id="3fH-sY-Kbd" customClass="ToDoCellView" customModule="Todo" customModuleProvider="target">
-                                                                                    <rect key="frame" x="26" y="1" width="478" height="17"/>
+                                                                                    <rect key="frame" x="26" y="1" width="477" height="17"/>
                                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                                     <subviews>
                                                                                         <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="yWY-uE-fX0">
@@ -1068,6 +1068,7 @@
                         <outlet property="sourceSidebar" destination="Ewb-OW-ylW" id="jZe-mR-LnJ"/>
                         <outlet property="tvMenu" destination="ZoB-XI-zlI" id="KEe-D0-47u"/>
                         <segue destination="KUD-Z6-EEq" kind="popover" identifier="infoSegue" popoverAnchorView="m2S-Jp-Qdl" popoverBehavior="t" preferredEdge="maxY" id="e1n-un-Twi"/>
+                        <segue destination="qLp-Vt-84j" kind="sheet" identifier="loginSegue" id="PR8-wa-7Be"/>
                     </connections>
                 </viewController>
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
@@ -1118,6 +1119,118 @@
                 </menu>
             </objects>
             <point key="canvasLocation" x="74" y="940.5"/>
+        </scene>
+        <!--Login View Controller-->
+        <scene sceneID="4F2-cj-MeG">
+            <objects>
+                <viewController id="qLp-Vt-84j" customClass="LoginViewController" customModule="Todo" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" id="7aB-wL-Rfn">
+                        <rect key="frame" x="0.0" y="0.0" width="450" height="203"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <subviews>
+                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="VXe-t6-yLE">
+                                <rect key="frame" x="14" y="95" width="216" height="32"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="204" id="5Ye-TK-GXA"/>
+                                </constraints>
+                                <buttonCell key="cell" type="push" title="Sign in with email" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="0Bx-j4-awP">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="btnSignIn:" target="qLp-Vt-84j" id="ItL-bH-Q0J"/>
+                                </connections>
+                            </button>
+                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Xl7-it-oE6">
+                                <rect key="frame" x="14" y="62" width="216" height="32"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="204" id="YCC-FZ-wmV"/>
+                                </constraints>
+                                <buttonCell key="cell" type="push" title="Create new user" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Bs1-9g-GHX">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="btnCreateAccount:" target="qLp-Vt-84j" id="X7L-hu-1gQ"/>
+                                </connections>
+                            </button>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="6qx-HV-V8Y">
+                                <rect key="frame" x="18" y="134" width="66" height="17"/>
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Password:" id="M1V-3Z-wgp">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <secureTextField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="4DX-iL-1g8">
+                                <rect key="frame" x="90" y="131" width="202" height="22"/>
+                                <secureTextFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" usesSingleLineMode="YES" id="LID-ME-lIB">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                    <allowedInputSourceLocales>
+                                        <string>NSAllRomanInputSourcesLocaleIdentifier</string>
+                                    </allowedInputSourceLocales>
+                                </secureTextFieldCell>
+                            </secureTextField>
+                            <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="WuD-AA-Q7d">
+                                <rect key="frame" x="88" y="163" width="204" height="22"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="204" id="ApD-15-PWi"/>
+                                </constraints>
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="9hD-TG-Qer">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <textField hidden="YES" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="VsJ-j0-Q6u">
+                                <rect key="frame" x="18" y="44" width="141" height="17"/>
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Unknown sign in error!" id="Qsi-UA-Z3u">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="systemRedColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="EBn-ee-EfG">
+                                <rect key="frame" x="18" y="166" width="41" height="17"/>
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Email:" id="w3B-m7-NC8">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                        </subviews>
+                        <constraints>
+                            <constraint firstItem="VXe-t6-yLE" firstAttribute="top" secondItem="6qx-HV-V8Y" secondAttribute="bottom" constant="11" id="5Go-W6-7oa"/>
+                            <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="VsJ-j0-Q6u" secondAttribute="trailing" constant="20" symbolic="YES" id="6Uj-iV-iof"/>
+                            <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="Xl7-it-oE6" secondAttribute="trailing" constant="20" symbolic="YES" id="IDx-2B-lmd"/>
+                            <constraint firstItem="WuD-AA-Q7d" firstAttribute="baseline" secondItem="EBn-ee-EfG" secondAttribute="baseline" id="KIh-27-0sM"/>
+                            <constraint firstItem="4DX-iL-1g8" firstAttribute="baseline" secondItem="6qx-HV-V8Y" secondAttribute="baseline" id="QFY-cs-wLw"/>
+                            <constraint firstItem="VsJ-j0-Q6u" firstAttribute="top" secondItem="Xl7-it-oE6" secondAttribute="bottom" constant="8" id="VOR-Vd-czl"/>
+                            <constraint firstItem="Xl7-it-oE6" firstAttribute="leading" secondItem="7aB-wL-Rfn" secondAttribute="leading" constant="20" id="a9o-ph-Dba"/>
+                            <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="VXe-t6-yLE" secondAttribute="trailing" constant="20" symbolic="YES" id="cBR-N6-B6o"/>
+                            <constraint firstItem="VXe-t6-yLE" firstAttribute="leading" secondItem="7aB-wL-Rfn" secondAttribute="leading" constant="20" id="clu-Zc-8oN"/>
+                            <constraint firstItem="WuD-AA-Q7d" firstAttribute="trailing" secondItem="4DX-iL-1g8" secondAttribute="trailing" id="fky-aO-5ob"/>
+                            <constraint firstItem="EBn-ee-EfG" firstAttribute="top" secondItem="7aB-wL-Rfn" secondAttribute="top" constant="20" id="iaL-Jy-GSv"/>
+                            <constraint firstItem="6qx-HV-V8Y" firstAttribute="top" secondItem="7aB-wL-Rfn" secondAttribute="top" constant="52" id="m7o-1J-jYg"/>
+                            <constraint firstItem="EBn-ee-EfG" firstAttribute="leading" secondItem="7aB-wL-Rfn" secondAttribute="leading" constant="20" id="mYn-uT-VZd"/>
+                            <constraint firstItem="VsJ-j0-Q6u" firstAttribute="leading" secondItem="7aB-wL-Rfn" secondAttribute="leading" constant="20" id="oKU-gq-Mnc"/>
+                            <constraint firstItem="4DX-iL-1g8" firstAttribute="leading" secondItem="6qx-HV-V8Y" secondAttribute="trailing" constant="8" id="ooz-7U-Meu"/>
+                            <constraint firstItem="6qx-HV-V8Y" firstAttribute="leading" secondItem="7aB-wL-Rfn" secondAttribute="leading" constant="20" id="xGU-dh-6nu"/>
+                            <constraint firstItem="WuD-AA-Q7d" firstAttribute="leading" secondItem="EBn-ee-EfG" secondAttribute="trailing" constant="31" id="xUg-es-Mgh"/>
+                            <constraint firstItem="Xl7-it-oE6" firstAttribute="top" secondItem="VXe-t6-yLE" secondAttribute="bottom" constant="12" id="y7Y-Kq-5GM"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="lblAuthError" destination="VsJ-j0-Q6u" id="fko-HN-uAA"/>
+                        <outlet property="txtEmail" destination="WuD-AA-Q7d" id="eSc-cI-hOf"/>
+                        <outlet property="txtPassword1" destination="4DX-iL-1g8" id="FZr-tF-lbZ"/>
+                    </connections>
+                </viewController>
+                <customObject id="ufY-rE-Z2k" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="74" y="1480"/>
         </scene>
         <!--Preferences Controller-->
         <scene sceneID="9Ib-Al-amR">

@@ -8,7 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		0534687320E2A30600A26490 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0534687220E2A30600A26490 /* LoginViewController.swift */; };
+		05C4C89F20E548DE00718E14 /* FirebaseAuthController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05C4C89E20E548DE00718E14 /* FirebaseAuthController.swift */; };
 		05FBA107208E4686000FC726 /* FormatMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05FBA106208E4686000FC726 /* FormatMenu.swift */; };
+		05FD1F9E20E690BD00E8383B /* ModelAccessorDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05FD1F9D20E690BD00E8383B /* ModelAccessorDelegate.swift */; };
 		4231230E56244E455A7DE75D /* Pods_Todo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E18DB030D5AF00F2A3635FCF /* Pods_Todo.framework */; };
 		7C4A9C54E8366852DFF01BAF /* Pods_TodoTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50A4FE3D0EE751808D95138E /* Pods_TodoTests.framework */; };
 		F20B42DE1F7D661A0088EE33 /* SidebarOutlineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F20B42DD1F7D661A0088EE33 /* SidebarOutlineView.swift */; };
@@ -47,7 +49,9 @@
 
 /* Begin PBXFileReference section */
 		0534687220E2A30600A26490 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		05C4C89E20E548DE00718E14 /* FirebaseAuthController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseAuthController.swift; sourceTree = "<group>"; };
 		05FBA106208E4686000FC726 /* FormatMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormatMenu.swift; sourceTree = "<group>"; };
+		05FD1F9D20E690BD00E8383B /* ModelAccessorDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelAccessorDelegate.swift; sourceTree = "<group>"; };
 		50A4FE3D0EE751808D95138E /* Pods_TodoTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TodoTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7CF4ED118833C2C313C66E57 /* Pods-Todo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Todo.release.xcconfig"; path = "Pods/Target Support Files/Pods-Todo/Pods-Todo.release.xcconfig"; sourceTree = "<group>"; };
 		BE9F915CB835C0265CF3ADA4 /* Pods-TodoTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TodoTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-TodoTests/Pods-TodoTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -102,6 +106,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		05FD1F9F20E690C400E8383B /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+				05FD1F9D20E690BD00E8383B /* ModelAccessorDelegate.swift */,
+			);
+			name = Protocols;
+			sourceTree = "<group>";
+		};
 		7475C3E114F5D3DECE9C9C6D /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -162,8 +174,8 @@
 				F2E8228F1F48959100EEEA07 /* View Controllers */,
 				F2E822921F4895B700EEEA07 /* Controllers */,
 				F2E8228E1F48916F00EEEA07 /* Models */,
+				05FD1F9F20E690C400E8383B /* Protocols */,
 				F2C8A26E1F41428500E246F7 /* Assets.xcassets */,
-				0540845320E1556300909173 /* Login.storyboard */,
 				F2C8A2701F41428500E246F7 /* Main.storyboard */,
 				F2C8A2731F41428500E246F7 /* Info.plist */,
 				F29C4BE820D742AA002A6C24 /* GoogleService-Info.plist */,
@@ -211,6 +223,7 @@
 			children = (
 				F2E822901F4895B100EEEA07 /* Controller.swift */,
 				F2E9B4DD20D5A31F00CAB458 /* FirebaseController.swift */,
+				05C4C89E20E548DE00718E14 /* FirebaseAuthController.swift */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -303,7 +316,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0540845420E1556300909173 /* Login.storyboard in Resources */,
 				F2C8A26F1F41428500E246F7 /* Assets.xcassets in Resources */,
 				F2C8A2721F41428500E246F7 /* Main.storyboard in Resources */,
 				F29C4BE920D742AA002A6C24 /* GoogleService-Info.plist in Resources */,
@@ -389,6 +401,7 @@
 				F2E822911F4895B100EEEA07 /* Controller.swift in Sources */,
 				F255491F1F493A2300AE360B /* WindowController.swift in Sources */,
 				F2603DFB1F4DDC0700A57AE0 /* ToDoCellView.swift in Sources */,
+				05C4C89F20E548DE00718E14 /* FirebaseAuthController.swift in Sources */,
 				F2571EEA207171D00007D854 /* SidebarItem.swift in Sources */,
 				F22601951F5DA1120087D2FB /* SidebarSection.swift in Sources */,
 				F287166A2071639D0090A694 /* SidebarCategory.swift in Sources */,
@@ -399,6 +412,7 @@
 				F2D232101F60778B00C0D3F4 /* SidebarFilters.swift in Sources */,
 				F2CAAD931F563DFB007DECD6 /* InfoViewController.swift in Sources */,
 				F2871668207160B80090A694 /* SidebarFilter.swift in Sources */,
+				05FD1F9E20E690BD00E8383B /* ModelAccessorDelegate.swift in Sources */,
 				F20B42E01F7D9ADE0088EE33 /* PreferencesViewController.swift in Sources */,
 				05FBA107208E4686000FC726 /* FormatMenu.swift in Sources */,
 				F243B71E1F7C030B0089764F /* TvMenu.swift in Sources */,

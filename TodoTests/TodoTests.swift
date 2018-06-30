@@ -11,6 +11,7 @@ import XCTest
 
 
 class TodoTests: XCTestCase {
+    let cntrl = MainController()
 
     override func setUp() {
         super.setUp()
@@ -35,15 +36,35 @@ class TodoTests: XCTestCase {
     }
     
     func test_mainController_getStatusLabel() {
-        let cntrl = MainController()
-        XCTAssertEqual(1, 1)
+        let status_label1 = cntrl.getStatusLabel(withNumber: 1, forGroup: nil)
+        let status_label2 = cntrl.getStatusLabel(withNumber: 2, forGroup: nil)
+        let test_group = Group(groupID: "groupID", groupName: "test group")
+        let status_label3 = cntrl.getStatusLabel(withNumber: 3, forGroup: test_group)
+        XCTAssertEqual(status_label1, "1 item")
+        XCTAssertEqual(status_label2, "2 items")
+        XCTAssertEqual(status_label3, "test group - 3 items")
+    }
+    
+    func test_mainController_getDailyState() {
+        XCTAssertEqual(cntrl.getDailyState(withDailyBoolVal: true), .on)
+        XCTAssertEqual(cntrl.getDailyState(withDailyBoolVal: false), .off)
+    }
+    
+    func test_mainController_getString() {
+        let isoDate = "2112-12-21T21:12:00+0000"
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+        let date = dateFormatter.date(from: isoDate)!
+        
+        XCTAssertEqual(cntrl.getString(fromDate: date, withFormat: "yyyy-MM-dd'T'HH:mm:ssZ"), "2112-12-21T21:12:00+0000")
+        XCTAssertEqual(cntrl.getString(fromDate: date, withFormat: "yyyy-MM-dd"), "2112-12-21")
     }
     
     func testPerformanceExample() {
         // This is an example of a performance test case.
-//        self.measure {
-//            // Put the code you want to measure the time of here.
-//        }
+        self.measure {
+            // Put the code you want to measure the time of here.
+        }
     }
     
 }

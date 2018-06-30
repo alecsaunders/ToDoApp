@@ -11,8 +11,6 @@ import CoreData
 
 
 protocol MainTableViewDelgate: class {
-    func reloadData()
-    func reloadSidebar()
     func addToDoToGroup(toDoRowIndex: Int, group: Group)
     func setToDoToDaily(toDoRowIndex: Int)
     func updateStatusBar(withText text: String)
@@ -25,6 +23,8 @@ protocol MTVDel2 {
 }
 
 class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSource, NSOutlineViewDataSource, NSOutlineViewDelegate, MainTableViewDelgate, WindowControllerDelegate {
+    let firebaseAuthController = FirebaseAuthController()
+    var userIsLoggedIn: Bool = false
     @IBOutlet var mainTableView: NSTableView!
     @IBOutlet var lblStatusBottom: NSTextField!
     @IBOutlet weak var sourceSidebar: NSScrollView!
@@ -34,7 +34,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     let registeredTypes = [NSPasteboard.PasteboardType.string]
     var clickedToDo: ToDo? {
         get {
-            return cntlr.getToDo(fromTableView: mainTableView)
+            return cntlr.getToDo(fromTableView: mainTableView, atIndex: mainTableView.clickedRow)
         }
     }
     var mtvdel2: MTVDel2?
@@ -59,17 +59,23 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         if let windowConroller = self.view.window?.windowController as? WindowController {
             windowConroller.windowControllerDelegate = self
         }
+        
+        if firebaseAuthController.isUserValidated() {
+            firebaseWasAuthenticated()
+        } else {
+            performSegue(withIdentifier: NSStoryboardSegue.Identifier(rawValue: "loginSegue"), sender: nil)
+        }
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         cntlr = MainController()
         cntlr.mainTableViewDelgate = self
-        mtvdel2 = cntlr.firebaseController
         
         setupPrefs()
         setupMainTableView()
         setupSourceOutlineView()
+        setupUINotifications()
 
         tvMenu.tvMenuDelegate = cntlr
         lblStatusBottom.textColor = NSColor.darkGray
@@ -101,6 +107,18 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         sourceOutlineView?.expandItem(nil, expandChildren: true)
     }
     
+    func setupUINotifications() {
+        let reloadTableViewUINotify = Notification.Name(rawValue: "reloadTableViewUINotify")
+        NotificationCenter.default.addObserver(forName: reloadTableViewUINotify, object: nil, queue: nil) { (notification) in
+            self.mainTableView.reloadData()
+        }
+        
+        let reloadSidebarUINotify = Notification.Name(rawValue: "reloadSidebarUINotify")
+        NotificationCenter.default.addObserver(forName: reloadSidebarUINotify, object: nil, queue: nil) { (notification) in
+            self.reloadSidebar()
+        }
+    }
+    
     @IBAction func sidebarMenuDelete(_ sender: NSMenuItem) {
         guard let sbCatItem = sourceOutlineView.item(atRow: sourceOutlineView.clickedRow) as? SidebarCategoryItem else { return }
         cntlr.deleteSidebarCategory(withCategoryItem: sbCatItem)
@@ -111,13 +129,14 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     }
     
     @IBAction func menuDaily(_ sender: NSMenuItem) {
-        guard let theToDo = cntlr.getToDo(fromTableView: mainTableView) else { return }
+        guard let theToDo = cntlr.getToDo(fromTableView: mainTableView, atIndex: mainTableView.clickedRow) else { return }
         cntlr.setToDaily(toDo: theToDo, isDaily: !theToDo.daily)
     }
     
     @IBAction func markComplete(_ sender: NSMenuItem) {
         guard let clicked_view = mainTableView.view(atColumn: 0, row: mainTableView.clickedRow, makeIfNecessary: false) as? NSTableCellView  else { return }
         guard let button = clicked_view.subviews[0] as? NSButton else { return }
+        button.tag = mainTableView.clickedRow
         changeState(ofButton: button)
         completedCheck(button)
     }
@@ -133,7 +152,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         }
     }
     @IBAction func completedCheck(_ sender: NSButton) {
-        cntlr.completedWasChecked(atIndex: sender.tag, withState: sender.state.rawValue)
+        cntlr.completedWasChecked(inTableView: mainTableView, atIndex: sender.tag, withState: sender.state.rawValue)
     }
     
     @IBAction func btnAddItem(_ sender: NSButton) {
@@ -158,18 +177,29 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     }
     
     override func prepare(for segue: NSStoryboardSegue, sender: Any?) {
+        if let _ = segue.destinationController as? LoginViewController {
+            let firebaseAuthenticated = Notification.Name(rawValue: "FirebaseAuthenticated")
+            NotificationCenter.default.addObserver(forName: firebaseAuthenticated, object: nil, queue: nil) { (notification) in
+                self.firebaseAuthController.setUser(with: notification.object)
+                self.firebaseWasAuthenticated()
+            }
+        }
+        
         guard let dest = segue.destinationController as? InfoViewController else { return }
-        guard let theToDo = cntlr.getToDo(fromTableView: mainTableView) else { return }
+        guard let theToDo = cntlr.getToDo(fromTableView: mainTableView, atIndex: mainTableView.clickedRow) else { return }
         cntlr.setupInfoSegue(dest: dest, withToDo: theToDo)
         dest.infoControllerDelegate = cntlr
     }
     
-    func animate(hide: Bool) {
-        sidebarView.animator().isHidden = hide
+    func firebaseWasAuthenticated() {
+        guard let usr = firebaseAuthController.user else { return }
+        let firebaseConroller = FirebaseController(usr: usr)
+        mtvdel2 = firebaseConroller
+        cntlr.modelAccessorDel = firebaseConroller
     }
     
-    func reloadData() {
-        mainTableView.reloadData()
+    func animate(hide: Bool) {
+        sidebarView.animator().isHidden = hide
     }
     
     func reloadSidebar() {
@@ -177,7 +207,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         sbCategorySection.sbItem = []
         sbCategorySection.sbItem = mapGroupsToSidebarCategories(groupList: mtvd2.fetchedGroups)
         sourceOutlineView.reloadData()
-        sourceOutlineView?.expandItem(nil, expandChildren: true)
+        sourceOutlineView.expandItem(nil, expandChildren: true)
     }
     
     func mapGroupsToSidebarCategories(groupList list: [Group]) -> [SidebarCategoryItem] {
@@ -242,12 +272,12 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     }
     
     func addToDoToGroup(toDoRowIndex: Int, group: Group) {
-        guard let toDo = cntlr.getToDo(fromTableView: mainTableView) else { return }
-        cntlr.firebaseController.update(toDo: toDo, property: "group", with: group.groupName)
+        guard let toDo = cntlr.getToDo(fromTableView: mainTableView, atIndex: mainTableView.clickedRow) else { return }
+        cntlr.modelAccessorDel?.update(item: toDo, property: "group", with: group.groupName)
     }
     
     func setToDoToDaily(toDoRowIndex: Int) {
-        guard let theToDo = cntlr.getToDo(fromTableView: mainTableView) else { return }
+        guard let theToDo = cntlr.getToDo(fromTableView: mainTableView, atIndex: mainTableView.clickedRow) else { return }
         cntlr.setToDaily(toDo: theToDo, isDaily: !theToDo.daily)
     }
     
@@ -310,10 +340,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
             view.textField?.stringValue = sbItem.sidebarTitle
             return view
         case let sbCat as SidebarCategoryItem:
-            guard let group = sbCat.sbCategory else {
-                print("failed to get group from sbcat")
-                return nil
-            }
+            guard let group = sbCat.sbCategory else { return nil }
             let view = outlineView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "DataCell"), owner: self) as! GroupCellView
             view.groupID = group.groupID
             view.groupCellViewDelegate = cntlr
@@ -340,11 +367,20 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     func outlineViewSelectionDidChange(_ notification: Notification) {
         guard let sidebarView = notification.object as? NSOutlineView else { return }
         guard let sbItem = sidebarView.item(atRow: sidebarView.selectedRow) as? SidebarItem  else { return }
-        cntlr.firebaseController.updateMainView(with: sbItem)
+        
+        cntlr.updateMainView(withSidebarItem: sbItem)
     }
     
     func outlineView(_ outlineView: NSOutlineView, validateDrop info: NSDraggingInfo, proposedItem item: Any?, proposedChildIndex index: Int) -> NSDragOperation {
         if index < 0 {
+            if let filter = item as? SidebarFilterItem {
+                if filter.sbFilter == .daily {
+                    return .move
+                }
+                if filter.sbFilter == .completed {
+                    return .delete
+                }
+            }
             if let _ = item as? SidebarCategoryItem {
                 return .move
             }
@@ -356,8 +392,19 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         let pboard = info.draggingPasteboard()
         guard let pbItem = pboard.pasteboardItems?[0] else { return false }
         guard let toDoID = pbItem.string(forType: .string) else { return false }
-        guard let sbCat = (item as? SidebarCategoryItem)?.sbCategory else { return false }
-        cntlr.assignToDo(withID: toDoID, toGroup: sbCat)
+        if let sbCat = (item as? SidebarCategoryItem)?.sbCategory {
+            cntlr.assignToDo(withID: toDoID, toGroup: sbCat)
+        } else if let sbFilItem = (item as? SidebarFilterItem) {
+            guard let draggedToDoArray = mtvdel2?.fetchedToDos else { return false }
+            var draggedToDo = (draggedToDoArray.filter { $0.id == toDoID })[0]
+            if sbFilItem.sbFilter == .daily {
+                cntlr.setToDaily(toDo: draggedToDo, isDaily: true)
+            } else if sbFilItem.sbFilter == .completed {
+                draggedToDo.completedDate = Date()
+                draggedToDo.isComplete = true
+                cntlr.updateForCompletion(item: draggedToDo, withCompletedDate: draggedToDo.completedDate)
+            }
+        }
         return true
     }
 }
