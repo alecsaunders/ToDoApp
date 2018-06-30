@@ -34,7 +34,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     let registeredTypes = [NSPasteboard.PasteboardType.string]
     var clickedToDo: ToDo? {
         get {
-            return cntlr.getToDo(fromTableView: mainTableView, atIndex: mainTableView.clickedRow)
+            return cntlr.getItem(fromView: mainTableView.view(atColumn: 1, row: mainTableView.clickedRow, makeIfNecessary: false))
         }
     }
     var mtvdel2: MTVDel2?
@@ -129,7 +129,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     }
     
     @IBAction func menuDaily(_ sender: NSMenuItem) {
-        guard let theToDo = cntlr.getToDo(fromTableView: mainTableView, atIndex: mainTableView.clickedRow) else { return }
+        guard let theToDo = cntlr.getItem(fromView: mainTableView.view(atColumn: 1, row: mainTableView.clickedRow, makeIfNecessary: false)) else { return }
         cntlr.setToDaily(toDo: theToDo, isDaily: !theToDo.daily)
     }
     
@@ -152,7 +152,8 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         }
     }
     @IBAction func completedCheck(_ sender: NSButton) {
-        cntlr.completedWasChecked(inTableView: mainTableView, atIndex: sender.tag, withState: sender.state.rawValue)
+        guard let item = cntlr.getItem(fromView: mainTableView.view(atColumn: 1, row: sender.tag, makeIfNecessary: false)) else { return }
+        cntlr.completedWasChecked(forItem: item, withState: sender.state.rawValue)
     }
     
     @IBAction func btnAddItem(_ sender: NSButton) {
@@ -186,7 +187,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         }
         
         guard let dest = segue.destinationController as? InfoViewController else { return }
-        guard let theToDo = cntlr.getToDo(fromTableView: mainTableView, atIndex: mainTableView.clickedRow) else { return }
+        guard let theToDo = cntlr.getItem(fromView: mainTableView.view(atColumn: 1, row: mainTableView.clickedRow, makeIfNecessary: false)) else { return }
         cntlr.setupInfoSegue(dest: dest, withToDo: theToDo)
         dest.infoControllerDelegate = cntlr
     }
@@ -272,13 +273,13 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     }
     
     func addToDoToGroup(toDoRowIndex: Int, group: Group) {
-        guard let toDo = cntlr.getToDo(fromTableView: mainTableView, atIndex: mainTableView.clickedRow) else { return }
+        guard let toDo = cntlr.getItem(fromView: mainTableView.view(atColumn: 1, row: mainTableView.clickedRow, makeIfNecessary: false)) else { return }
         cntlr.modelAccessorDel?.update(item: toDo, property: "group", with: group.groupName)
     }
     
     func setToDoToDaily(toDoRowIndex: Int) {
-        guard let theToDo = cntlr.getToDo(fromTableView: mainTableView, atIndex: mainTableView.clickedRow) else { return }
-        cntlr.setToDaily(toDo: theToDo, isDaily: !theToDo.daily)
+        guard let toDo = cntlr.getItem(fromView: mainTableView.view(atColumn: 1, row: mainTableView.clickedRow, makeIfNecessary: false)) else { return }
+        cntlr.setToDaily(toDo: toDo, isDaily: !toDo.daily)
     }
     
     // MARK: - Window Controller Delegate

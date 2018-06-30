@@ -45,6 +45,15 @@ class TodoTests: XCTestCase {
         XCTAssertEqual(status_label3, "test group - 3 items")
     }
     
+    func test_mainController_getItemFromView() {
+        let testToDo = ToDo(id: "id", title: "infoSegueTitle", note: "infoSegueNote", daily: false, createdDate: Date(), isComplete: false, completedDate: nil, groupID: nil)
+        let testView = ToDoCellView()
+        testView.cellToDo = testToDo
+        XCTAssertEqual(cntrl.getItem(fromView: testView), testToDo)
+        let failView = NSView()
+        XCTAssertNil(cntrl.getItem(fromView: failView))
+    }
+    
     func test_mainController_getDailyState() {
         XCTAssertEqual(cntrl.getDailyState(withDailyBoolVal: true), .on)
         XCTAssertEqual(cntrl.getDailyState(withDailyBoolVal: false), .off)

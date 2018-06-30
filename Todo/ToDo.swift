@@ -64,3 +64,15 @@ extension ToDo {
         groupID = try allValues.decodeIfPresent(String.self, forKey: .groupID)
     }
 }
+
+extension ToDo: Equatable {
+    static func == (lhs: ToDo, rhs: ToDo) -> Bool {
+        return
+            lhs.id == rhs.id &&
+            lhs.title == rhs.title &&
+            lhs.daily == rhs.daily &&
+            lhs.isComplete == rhs.isComplete &&
+            lhs.note == rhs.note &&
+            lhs.createdDate == rhs.createdDate
+    }
+}
