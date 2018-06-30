@@ -374,8 +374,11 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     func outlineView(_ outlineView: NSOutlineView, validateDrop info: NSDraggingInfo, proposedItem item: Any?, proposedChildIndex index: Int) -> NSDragOperation {
         if index < 0 {
             if let filter = item as? SidebarFilterItem {
-                if filter.sbFilter != .all {
+                if filter.sbFilter == .daily {
                     return .move
+                }
+                if filter.sbFilter == .completed {
+                    return .delete
                 }
             }
             if let _ = item as? SidebarCategoryItem {
@@ -397,7 +400,6 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
             if sbFilItem.sbFilter == .daily {
                 cntlr.setToDaily(toDo: draggedToDo, isDaily: true)
             } else if sbFilItem.sbFilter == .completed {
-                print("Should mark completed")
                 draggedToDo.completedDate = Date()
                 draggedToDo.isComplete = true
                 cntlr.updateForCompletion(item: draggedToDo, withCompletedDate: draggedToDo.completedDate)
