@@ -115,7 +115,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         
         let reloadSidebarUINotify = Notification.Name(rawValue: "reloadSidebarUINotify")
         NotificationCenter.default.addObserver(forName: reloadSidebarUINotify, object: nil, queue: nil) { (notification) in
-            self.sourceOutlineView.reloadData()
+            self.reloadSidebar()
         }
     }
     
@@ -202,18 +202,12 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         sidebarView.animator().isHidden = hide
     }
     
-    func reloadData() {
-        mainTableView.reloadData()
-    }
-    
     func reloadSidebar() {
         guard let mtvd2 = mtvdel2 else { return }
-        print("FETCHED GROUPS: \(mtvd2.fetchedGroups)")
         sbCategorySection.sbItem = []
         sbCategorySection.sbItem = mapGroupsToSidebarCategories(groupList: mtvd2.fetchedGroups)
         sourceOutlineView.reloadData()
-        print("Expanding sidebar items")
-        sourceOutlineView?.expandItem(nil, expandChildren: true)
+        sourceOutlineView.expandItem(nil, expandChildren: true)
     }
     
     func mapGroupsToSidebarCategories(groupList list: [Group]) -> [SidebarCategoryItem] {
@@ -346,10 +340,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
             view.textField?.stringValue = sbItem.sidebarTitle
             return view
         case let sbCat as SidebarCategoryItem:
-            guard let group = sbCat.sbCategory else {
-                print("failed to get group from sbcat")
-                return nil
-            }
+            guard let group = sbCat.sbCategory else { return nil }
             let view = outlineView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "DataCell"), owner: self) as! GroupCellView
             view.groupID = group.groupID
             view.groupCellViewDelegate = cntlr

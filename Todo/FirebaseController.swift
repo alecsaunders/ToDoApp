@@ -36,18 +36,15 @@ class FirebaseController: MTVDel2, ModelAccessorDelegate {
     }
     
     func loadItems() {
-        print("Load Items")
         let query = setFirebaseQuery()
         query.observe(.value) { (snapshot) in
             self.parseFirebaseResults(snapshot)
             self.deleteOutOfDateToDos()
-            print("post reload tv notification")
             NotificationCenter.default.post(name: Notification.Name(rawValue: "reloadTableViewUINotify"), object: nil)
         }
     }
     
     func loadCategories() {
-        print("Load Categories")
         fbGroup.observe(.value) { (snapshot) in
             self.fetchedGroups = []
             for child in self.getAllChildren(fromSnapshot: snapshot) {
@@ -132,6 +129,7 @@ class FirebaseController: MTVDel2, ModelAccessorDelegate {
     func saveCagegory(category cat: Group) {
         let groupDict: [String: String] = ["groupID": cat.groupID, "groupName": cat.groupName]
         fbGroup.child(cat.groupID).setValue(groupDict)
+        loadCategories()
     }
     
     func delete(item: ToDo) {
@@ -176,7 +174,6 @@ class FirebaseController: MTVDel2, ModelAccessorDelegate {
     }
     
     func update(item: ToDo, property prop: String, with newVal: Any?) {
-        print("firebase update")
         if let newValUnwrapped = newVal {
             switch prop {
             case "id", "title", "note":
