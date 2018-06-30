@@ -50,6 +50,16 @@ class TodoTests: XCTestCase {
         XCTAssertEqual(cntrl.getDailyState(withDailyBoolVal: false), .off)
     }
     
+    func test_mainController_getString() {
+        let isoDate = "2112-12-21T21:12:00+0000"
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+        let date = dateFormatter.date(from: isoDate)!
+        
+        XCTAssertEqual(cntrl.getString(fromDate: date, withFormat: "yyyy-MM-dd'T'HH:mm:ssZ"), "2112-12-21T21:12:00+0000")
+        XCTAssertEqual(cntrl.getString(fromDate: date, withFormat: "yyyy-MM-dd"), "2112-12-21")
+    }
+    
     func testPerformanceExample() {
         // This is an example of a performance test case.
         self.measure {
