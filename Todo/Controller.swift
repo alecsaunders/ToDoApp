@@ -24,10 +24,9 @@ class MainController: NSObject, InfoControllerDelegate, TableViewMenuDelegate, T
 
     func saveNewToDo(withTitle title: String, withSidebarItem sbitem: SidebarItem?) {
         guard !title.isEmpty else { return }
-        guard let modelAccDel = modelAccessorDel else { return }
-        let newKey = modelAccDel.getNewItemKey()
+        guard let newKey = modelAccessorDel?.getNewItemKey() else { return }
         let newToDo = ToDo(id: newKey, title: title, note: "", daily: false, createdDate: Date(), isComplete: false, completedDate: nil, groupID: nil)
-        modelAccDel.saveItem(toDo: newToDo)
+        modelAccessorDel?.saveItem(toDo: newToDo)
     }
     
     func saveNewGroup(withName name: String) {
@@ -36,38 +35,30 @@ class MainController: NSObject, InfoControllerDelegate, TableViewMenuDelegate, T
         let newGroup = Group(groupID: newKey, groupName: name)
         modelAccDel.saveCagegory(category: newGroup)
     }
-    
-    // MARK: - To Do Table View Delegate Methods
-    func changeText(forToDo toDo: ToDo, withText text: String) {
-        modelAccessorDel?.update(item: toDo, property: "title", with: text)
-    }
-
-    func updateNote(forToDo toDo: ToDo, withNewNote note: String) {
-        modelAccessorDel?.update(item: toDo, property: "note", with: note)
-    }
 
     // MARK: - Update View
     func updateMainView(withSidebarItem sidebarItem: SidebarItem) {
         modelAccessorDel?.updateMainView(withSidebarItem: sidebarItem)
     }
-
     
-    func completedWasChecked(forItem item: ToDo?, withState state: Int) {
-        guard var completedItem = item else { return }
+    func completedWasChecked(forItem item: ToDo, withState state: Int) {
+        updateCompletedDate(forItem: toggleCompletion(forItem: item, withState: state))
+    }
+    
+    func toggleCompletion(forItem: ToDo, withState state: Int) -> ToDo {
+        var item = forItem
         switch state {
         case 1:
-            completedItem.completedDate = Date()
-            completedItem.isComplete = true
+            item.completedDate = Date()
+            item.isComplete = true
         case 0:
-            completedItem.completedDate = nil
-            completedItem.isComplete = false
+            item.completedDate = nil
+            item.isComplete = false
         default:
             break
         }
-        updateForCompletion(item: completedItem, withCompletedDate: completedItem.completedDate)
+        return item
     }
-    
-
     
     //MARK: - Table View Menu Delegate Functions
     func setMenuDailyState(sender: NSMenuItem) {
@@ -111,17 +102,23 @@ class MainController: NSObject, InfoControllerDelegate, TableViewMenuDelegate, T
     }
     
     // MARK: - Update To Do Items
-    func setToDaily(toDo: ToDo, isDaily: Bool) {
-        modelAccessorDel?.update(item: toDo, property: "daily", with: isDaily)
+    func changeText(forToDo toDo: ToDo, withText text: String) { // ToDoCellViewDelegate method
+        modelAccessorDel?.update(item: toDo, property: "title", with: text)
     }
     
-    func updateForCompletion(item: ToDo, withCompletedDate complDate: Date?) {
-        modelAccessorDel?.update(item: item, property: "completedDate", with: complDate)
+    func updateNote(forToDo toDo: ToDo, withNewNote note: String) {  // InfoControllerDelegate method
+        modelAccessorDel?.update(item: toDo, property: "note", with: note)
+    }
+    
+    func setToDaily(toDo: ToDo, isDaily: Bool) {
+        modelAccessorDel?.update(item: toDo, property: "daily", with: isDaily)
     }
     
     func assignToDo(withID id: String, toGroup group: Group) {
         guard let toDoId = modelAccessorDel?.getItem(fromUniqueID: id) else { return }
         modelAccessorDel?.update(item: toDoId, property: "groupID", with: group.groupID)
     }
-
+    func updateCompletedDate(forItem item: ToDo) {
+        modelAccessorDel?.update(item: item, property: "completedDate", with: item.completedDate)
+    }
 }
