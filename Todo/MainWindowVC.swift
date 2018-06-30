@@ -59,7 +59,12 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         if let windowConroller = self.view.window?.windowController as? WindowController {
             windowConroller.windowControllerDelegate = self
         }
-        performSegue(withIdentifier: NSStoryboardSegue.Identifier(rawValue: "loginSegue"), sender: nil)
+        
+        if firebaseAuthController.isUserValidated() {
+            firebaseWasAuthenticated()
+        } else {
+            performSegue(withIdentifier: NSStoryboardSegue.Identifier(rawValue: "loginSegue"), sender: nil)
+        }
     }
     
     override func viewDidLoad() {
@@ -110,7 +115,6 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         
         let reloadSidebarUINotify = Notification.Name(rawValue: "reloadSidebarUINotify")
         NotificationCenter.default.addObserver(forName: reloadSidebarUINotify, object: nil, queue: nil) { (notification) in
-            print("Update sidebar")
             self.sourceOutlineView.reloadData()
         }
     }
@@ -204,9 +208,11 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     
     func reloadSidebar() {
         guard let mtvd2 = mtvdel2 else { return }
+        print("FETCHED GROUPS: \(mtvd2.fetchedGroups)")
         sbCategorySection.sbItem = []
         sbCategorySection.sbItem = mapGroupsToSidebarCategories(groupList: mtvd2.fetchedGroups)
         sourceOutlineView.reloadData()
+        print("Expanding sidebar items")
         sourceOutlineView?.expandItem(nil, expandChildren: true)
     }
     
