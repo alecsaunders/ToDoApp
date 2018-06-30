@@ -78,6 +78,13 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
 
     }
     
+    override func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
+        if mainTableView.clickedRow <= -1 && sourceOutlineView.clickedRow <= -1 {
+            return false
+        }
+        return true
+    }
+    
     func setupPrefs() {
         let notificationName = Notification.Name(rawValue: "PrefsChanged")
         NotificationCenter.default.addObserver(forName: notificationName, object: nil, queue: nil) { (notification) in
