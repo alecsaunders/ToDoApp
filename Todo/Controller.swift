@@ -14,7 +14,7 @@ class MainController: NSObject, InfoControllerDelegate, TableViewMenuDelegate, T
     var modelAccessorDel: ModelAccessorDelegate?
     
     func getStatusLabel(withNumber num: Int, forGroup group: Group?) -> String {
-        return "\(group != nil ? "\(group!) - " : "")\(num == 1  ? "\(num) item" : "\(num) items")"
+        return "\(group != nil ? "\(group!.groupName) - " : "")\(num == 1  ? "\(num) item" : "\(num) items")"
     }
 
     func getToDo(fromTableView tableView: NSTableView, atIndex index: Int) -> ToDo? {
@@ -92,13 +92,15 @@ class MainController: NSObject, InfoControllerDelegate, TableViewMenuDelegate, T
     
     //MARK: - Table View Menu Delegate Functions
     func setMenuDailyState(sender: NSMenuItem) {
-        guard let mTvDel = mainTableViewDelgate else { return }
-        guard let clickedToDo = mTvDel.clickedToDo else { return }
-        
-        if clickedToDo.daily {
-            sender.state = .on
+        guard let clickedToDo = mainTableViewDelgate?.clickedToDo else { return }
+        sender.state = getDailyState(withDailyBoolVal: clickedToDo.daily)
+    }
+    
+    func getDailyState(withDailyBoolVal boolVal: Bool) -> NSControl.StateValue {
+        if boolVal {
+            return .on
         } else {
-            sender.state = .off
+            return .off
         }
     }
     
