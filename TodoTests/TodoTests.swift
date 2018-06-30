@@ -56,8 +56,16 @@ class TodoTests: XCTestCase {
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
         let date = dateFormatter.date(from: isoDate)!
         
-        XCTAssertEqual(cntrl.getString(fromDate: date, withFormat: "yyyy-MM-dd'T'HH:mm:ssZ"), "2112-12-21T21:12:00+0000")
         XCTAssertEqual(cntrl.getString(fromDate: date, withFormat: "yyyy-MM-dd"), "2112-12-21")
+    }
+    
+    func test_mainController_SetupInfoSegue() {
+        let dest = InfoViewController()
+        let testToDo = ToDo(id: "id", title: "infoSegueTitle", note: "infoSegueNote", daily: false, createdDate: Date(), isComplete: false, completedDate: nil, groupID: nil)
+        cntrl.setupInfoSegue(dest: dest, withToDo: testToDo)
+        XCTAssertEqual(dest.infoToDo?.id, testToDo.id)
+        XCTAssertEqual(dest.infoToDo?.title, "infoSegueTitle")
+        XCTAssertEqual(dest.infoToDo?.note, "infoSegueNote")
     }
     
     func testPerformanceExample() {

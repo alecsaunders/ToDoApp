@@ -14,9 +14,7 @@ protocol InfoControllerDelegate: class {
 
 class InfoViewController: NSViewController {
     var infoToDo: ToDo?
-    var infoTitleString: String?
     var intoCreatedDateString: String?
-    var note: String?
     weak var infoControllerDelegate: InfoControllerDelegate?
     
     @IBOutlet var infoTitleTextField: NSTextField!
@@ -25,9 +23,12 @@ class InfoViewController: NSViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        infoTitleTextField.stringValue = infoTitleString ?? "title"
+        // Data Settup
+        infoTitleTextField.stringValue = infoToDo?.title ?? "title"
+        infoNote.string = infoToDo?.note ?? ""
         infoCreatedDate.stringValue = intoCreatedDateString ?? "createDate"
-        infoNote.string = note ?? ""
+        
+        // View Settup
         infoNote.drawsBackground = false
         infoNote.backgroundColor = .clear
         infoNote.resignFirstResponder()

@@ -99,9 +99,8 @@ class MainController: NSObject, InfoControllerDelegate, TableViewMenuDelegate, T
     func getDailyState(withDailyBoolVal boolVal: Bool) -> NSControl.StateValue {
         if boolVal {
             return .on
-        } else {
-            return .off
         }
+        return .off
     }
     
     func mainTableViewSetAlternatingRows() -> Bool {
@@ -111,11 +110,8 @@ class MainController: NSObject, InfoControllerDelegate, TableViewMenuDelegate, T
     }
     
     func setupInfoSegue(dest: InfoViewController, withToDo todo: ToDo) {
-        let clickedCreateDateString = getString(fromDate: todo.createdDate, withFormat: "yyyy-MM-dd")
         dest.infoToDo = todo
-        dest.infoTitleString = todo.title
-        dest.intoCreatedDateString = clickedCreateDateString
-        dest.note = todo.note
+        dest.intoCreatedDateString = getString(fromDate: todo.createdDate, withFormat: "yyyy-MM-dd")
     }
     
     func getString(fromDate date: Date, withFormat format: String) -> String {
