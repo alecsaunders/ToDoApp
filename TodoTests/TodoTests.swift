@@ -12,10 +12,9 @@ import XCTest
 
 class TodoTests: XCTestCase {
     let cntrl = MainController()
-
+    
     override func setUp() {
         super.setUp()
-        // Put setup code here. This method is called before the invocation of each test method in the class.
     }
 
     override func tearDown() {
@@ -68,13 +67,27 @@ class TodoTests: XCTestCase {
         XCTAssertEqual(cntrl.getString(fromDate: date, withFormat: "yyyy-MM-dd"), "2112-12-21")
     }
     
-    func test_mainController_SetupInfoSegue() {
+    func test_mainController_setupInfoSegue() {
         let dest = InfoViewController()
         let testToDo = ToDo(id: "id", title: "infoSegueTitle", note: "infoSegueNote", daily: false, createdDate: Date(), isComplete: false, completedDate: nil, groupID: nil)
         cntrl.setupInfoSegue(dest: dest, withToDo: testToDo)
         XCTAssertEqual(dest.infoToDo?.id, testToDo.id)
         XCTAssertEqual(dest.infoToDo?.title, "infoSegueTitle")
         XCTAssertEqual(dest.infoToDo?.note, "infoSegueNote")
+    }
+    
+    func test_mainController_toggleCompletion() {
+        let testToDo = ToDo(id: "id", title: "infoSegueTitle", note: "infoSegueNote", daily: false, createdDate: Date(), isComplete: false, completedDate: nil, groupID: nil)
+
+        let completedToDo = cntrl.toggleCompletion(forItem: testToDo, withState: 1)
+        let unCompletedToDo = cntrl.toggleCompletion(forItem: completedToDo, withState: 0)
+        let breakCaseToDo = cntrl.toggleCompletion(forItem: testToDo, withState: 2)
+        XCTAssertEqual(completedToDo.isComplete, true)
+        XCTAssertNotNil(completedToDo.completedDate)
+        XCTAssertEqual(unCompletedToDo.isComplete, false)
+        XCTAssertNil(unCompletedToDo.completedDate)
+        XCTAssertEqual(breakCaseToDo.isComplete, false)
+        XCTAssertNil(breakCaseToDo.completedDate)
     }
     
     func testPerformanceExample() {
