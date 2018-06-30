@@ -29,12 +29,8 @@ class FirebaseAuthController {
     
     func isUserValidated() -> Bool {
         if let curUser = Auth.auth().currentUser {
-            if curUser.isEmailVerified {
-                user = curUser
-                return true
-            } else {
-                return false
-            }
+            user = curUser
+            return true
         } else {
             print("firebase auth cntl, could not get user")
             return false
