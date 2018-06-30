@@ -106,15 +106,13 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     func setupUINotifications() {
         let reloadTableViewUINotify = Notification.Name(rawValue: "reloadTableViewUINotify")
         NotificationCenter.default.addObserver(forName: reloadTableViewUINotify, object: nil, queue: nil) { (notification) in
-            guard let noti_fetchedItems = notification.object as? [ToDo] else { return }
-            self.fetchedToDos = noti_fetchedItems
+            self.fetchedToDos = self.cntlr.getFetchedItems(fromNotificationObject: notification.object)
             self.mainTableView.reloadData()
         }
         
         let reloadSidebarUINotify = Notification.Name(rawValue: "reloadSidebarUINotify")
         NotificationCenter.default.addObserver(forName: reloadSidebarUINotify, object: nil, queue: nil) { (notification) in
-            guard let noti_fetchedCategories = notification.object as? [Group] else { return }
-            self.fetchedGroups = noti_fetchedCategories
+            self.fetchedGroups = self.cntlr.getFetchedCategories(fromNotificationObject: notification.object)
             self.reloadSidebar()
         }
     }

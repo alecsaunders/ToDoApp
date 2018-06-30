@@ -60,6 +60,16 @@ class MainController: NSObject, InfoControllerDelegate, TableViewMenuDelegate, T
         return item
     }
     
+    func getFetchedItems(fromNotificationObject obj: Any?) -> [ToDo] {
+        guard let noti_fetchedItems = obj as? [ToDo] else { return [] }
+        return noti_fetchedItems
+    }
+    
+    func getFetchedCategories(fromNotificationObject obj: Any?) -> [Group] {
+        guard let noti_fetchedCategories = obj as? [Group] else { return [] }
+        return noti_fetchedCategories
+    }
+    
     //MARK: - Table View Menu Delegate Functions
     func setMenuDailyState(sender: NSMenuItem) {
         guard let clickedToDo = mainTableViewDelgate?.clickedToDo else { return }

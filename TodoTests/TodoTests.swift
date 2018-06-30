@@ -90,6 +90,19 @@ class TodoTests: XCTestCase {
         XCTAssertNil(breakCaseToDo.completedDate)
     }
     
+    func test_mainController_getFetchedItems() {
+        let testToDo = ToDo(id: "id", title: "infoSegueTitle", note: "infoSegueNote", daily: false, createdDate: Date(), isComplete: false, completedDate: nil, groupID: nil)
+        let testCategory = Group(groupID: "id", groupName: "group name")
+        let testToDoArray = [testToDo]
+        let testCategoryArray = [testCategory]
+        XCTAssertEqual(cntrl.getFetchedItems(fromNotificationObject: nil), [])
+        XCTAssertEqual(cntrl.getFetchedItems(fromNotificationObject: [1, 2, 3]), [])
+        XCTAssertEqual(cntrl.getFetchedItems(fromNotificationObject: testToDoArray).count, 1)
+        XCTAssertEqual(cntrl.getFetchedCategories(fromNotificationObject: nil), [])
+        XCTAssertEqual(cntrl.getFetchedCategories(fromNotificationObject: [1, 2, 3]), [])
+        XCTAssertEqual(cntrl.getFetchedCategories(fromNotificationObject: testCategoryArray).count, 1)
+    }
+    
     func testPerformanceExample() {
         // This is an example of a performance test case.
         self.measure {
