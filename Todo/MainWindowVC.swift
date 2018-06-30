@@ -17,11 +17,6 @@ protocol MainTableViewDelgate: class {
     var clickedToDo: ToDo? { get }
 }
 
-protocol MTVDel2 {
-    var fetchedToDos: [ToDo] { get set }
-    var fetchedGroups: [Group] { get set }
-}
-
 class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSource, NSOutlineViewDataSource, NSOutlineViewDelegate, MainTableViewDelgate, WindowControllerDelegate {
     let firebaseAuthController = FirebaseAuthController()
     var userIsLoggedIn: Bool = false
@@ -37,7 +32,8 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
             return cntlr.getItem(fromView: mainTableView.view(atColumn: 1, row: mainTableView.clickedRow, makeIfNecessary: false))
         }
     }
-    var mtvdel2: MTVDel2?
+    var fetchedToDos: [ToDo] = []
+    var fetchedGroups: [Group] = []
     var cntlr: MainController!
     
     var sbFilterSection: SidebarSection {
@@ -110,11 +106,15 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     func setupUINotifications() {
         let reloadTableViewUINotify = Notification.Name(rawValue: "reloadTableViewUINotify")
         NotificationCenter.default.addObserver(forName: reloadTableViewUINotify, object: nil, queue: nil) { (notification) in
+            guard let noti_fetchedItems = notification.object as? [ToDo] else { return }
+            self.fetchedToDos = noti_fetchedItems
             self.mainTableView.reloadData()
         }
         
         let reloadSidebarUINotify = Notification.Name(rawValue: "reloadSidebarUINotify")
         NotificationCenter.default.addObserver(forName: reloadSidebarUINotify, object: nil, queue: nil) { (notification) in
+            guard let noti_fetchedCategories = notification.object as? [Group] else { return }
+            self.fetchedGroups = noti_fetchedCategories
             self.reloadSidebar()
         }
     }
@@ -195,7 +195,6 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     func firebaseWasAuthenticated() {
         guard let usr = firebaseAuthController.user else { return }
         let firebaseConroller = FirebaseController(usr: usr)
-        mtvdel2 = firebaseConroller
         cntlr.modelAccessorDel = firebaseConroller
     }
     
@@ -204,9 +203,8 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     }
     
     func reloadSidebar() {
-        guard let mtvd2 = mtvdel2 else { return }
         sbCategorySection.sbItem = []
-        sbCategorySection.sbItem = mapGroupsToSidebarCategories(groupList: mtvd2.fetchedGroups)
+        sbCategorySection.sbItem = mapGroupsToSidebarCategories(groupList: fetchedGroups)
         sourceOutlineView.reloadData()
         sourceOutlineView.expandItem(nil, expandChildren: true)
     }
@@ -221,14 +219,11 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     }
     
     func numberOfRows(in tableView: NSTableView) -> Int {
-        guard let mtv2 = mtvdel2 else { return 0 }
-        updateStatusBar(withText: cntlr.getStatusLabel(withNumber: mtv2.fetchedToDos.count, forGroup: nil))
-        return mtv2.fetchedToDos.count
+        return fetchedToDos.count
     }
     
     func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
-        guard let mtv2 = mtvdel2 else { return nil }
-        let theToDo = mtv2.fetchedToDos[row]
+        let theToDo = fetchedToDos[row]
         if tableColumn == tableView.tableColumns[0] {
             guard let cell = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "col_complete"),
                                                 owner: nil) as? NSTableCellView else { return nil }
@@ -396,8 +391,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         if let sbCat = (item as? SidebarCategoryItem)?.sbCategory {
             cntlr.assignToDo(withID: toDoID, toGroup: sbCat)
         } else if let sbFilItem = (item as? SidebarFilterItem) {
-            guard let draggedToDoArray = mtvdel2?.fetchedToDos else { return false }
-            var draggedToDo = (draggedToDoArray.filter { $0.id == toDoID })[0]
+            var draggedToDo = (fetchedToDos.filter { $0.id == toDoID })[0]
             if sbFilItem.sbFilter == .daily {
                 cntlr.setToDaily(toDo: draggedToDo, isDaily: true)
             } else if sbFilItem.sbFilter == .completed {

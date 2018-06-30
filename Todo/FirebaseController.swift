@@ -11,7 +11,7 @@ import FirebaseCore
 import FirebaseDatabase
 import FirebaseAuth
 
-class FirebaseController: MTVDel2, ModelAccessorDelegate {
+class FirebaseController: ModelAccessorDelegate {
     private var user: User
     private var ref: DatabaseReference!
     private var fbItem: DatabaseReference!
@@ -20,7 +20,7 @@ class FirebaseController: MTVDel2, ModelAccessorDelegate {
     var itemsAreComplete = false
     
     var fetchedToDos: [ToDo] = []
-    var fetchedGroups: [Group] = []
+    var fetchedCategories: [Group] = []
     
     init(usr: User) {
         ref = Database.database().reference()
@@ -40,24 +40,24 @@ class FirebaseController: MTVDel2, ModelAccessorDelegate {
         query.observe(.value) { (snapshot) in
             self.parseFirebaseResults(snapshot)
             self.deleteOutOfDateToDos()
-            NotificationCenter.default.post(name: Notification.Name(rawValue: "reloadTableViewUINotify"), object: nil)
+            NotificationCenter.default.post(name: Notification.Name(rawValue: "reloadTableViewUINotify"), object: self.fetchedToDos)
         }
     }
     
     func loadCategories() {
         fbGroup.observe(.value) { (snapshot) in
-            self.fetchedGroups = []
+            self.fetchedCategories = []
             for child in self.getAllChildren(fromSnapshot: snapshot) {
                 guard let fbGroupDict = child.value as? [String: String] else { continue }
                 do {
                     let groupData = try JSONSerialization.data(withJSONObject: fbGroupDict, options: [])
                     let decodedGroup = try JSONDecoder().decode(Group.self, from: groupData)
-                    self.fetchedGroups.append(decodedGroup)
+                    self.fetchedCategories.append(decodedGroup)
                 } catch {
                     print("Error decoding group: \(error)")
                 }
             }
-            NotificationCenter.default.post(name: Notification.Name(rawValue: "reloadSidebarUINotify"), object: nil)
+            NotificationCenter.default.post(name: Notification.Name(rawValue: "reloadSidebarUINotify"), object: self.fetchedCategories)
         }
     }
     
@@ -223,7 +223,7 @@ class FirebaseController: MTVDel2, ModelAccessorDelegate {
     }
     
     func getCategory(fromUniqueID id: String) -> Group? {
-        let filteredGroups = fetchedGroups.filter { $0.groupID == id }
+        let filteredGroups = fetchedCategories.filter { $0.groupID == id }
         if filteredGroups.count == 0 {
             print("ERROR: No match found for id '\(id)'")
             return nil
