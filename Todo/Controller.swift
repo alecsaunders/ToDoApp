@@ -21,6 +21,14 @@ class MainController: NSObject, InfoControllerDelegate, TableViewMenuDelegate, T
         return cellChk
     }
     
+    func viewForTableViewColumn(itemColumnCell view: NSView?, atRow row: Int, withItem item: ToDo) -> NSView? {
+        guard let cellItm = view as? ToDoCellView else { return nil }
+        cellItm.cellToDo = item
+        cellItm.textField?.stringValue = cellItm.cellToDo!.title
+        cellItm.toDoCellViewDelegate = self
+        return cellItm
+    }
+    
     func getStatusLabel(withNumber num: Int, forGroup group: Group?) -> String {
         return "\(group != nil ? "\(group!.groupName) - " : "")\(num == 1  ? "\(num) item" : "\(num) items")"
     }

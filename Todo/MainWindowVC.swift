@@ -232,17 +232,13 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         if tableColumn == tableView.tableColumns[0] {
             let cell = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "col_complete"), owner: nil)
             return cntlr.viewForTableViewColumn(completedCheckboxColumnCell: cell, atRow: row, withItem: item)
-        }
-        if tableColumn == tableView.tableColumns[1] {
+        } else if tableColumn == tableView.tableColumns[1] {
             tableColumn?.headerCell.stringValue = "Name"
-            guard let cell = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "col_toDoText"),
-                                                owner: nil) as? ToDoCellView else { return nil }
-            cell.cellToDo = item
-            cell.textField?.stringValue = cell.cellToDo!.title
-            cell.toDoCellViewDelegate = cntlr
-            return cell
+            let cell = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "col_toDoText"), owner: nil)
+            return cntlr.viewForTableViewColumn(itemColumnCell: cell, atRow: row, withItem: item)
+        } else {
+            return nil
         }
-        return nil
     }
     
     func tableView(_ tableView: NSTableView, mouseDownInHeaderOf tableColumn: NSTableColumn) {
