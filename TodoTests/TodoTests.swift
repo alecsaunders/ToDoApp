@@ -34,6 +34,26 @@ class TodoTests: XCTestCase {
         XCTAssertEqual(toDo.groupID, nil)
     }
     
+    func test_mainController_viewForTableViewColumnCompletedCheckboxColumnCell() {
+        let toDo = ToDo(id: "id", title: "title", note: "note", daily: false, createdDate: Date(), isComplete: false, completedDate: nil, groupID: nil)
+        let toDoComplete = ToDo(id: "id", title: "title", note: "note", daily: false, createdDate: Date(), isComplete: true, completedDate: Date(), groupID: nil)
+        let completeChk = NSButton()
+        completeChk.setButtonType(.switch)
+        completeChk.state = .off
+        let cell = NSTableCellView()
+        cell.subviews.append(completeChk)
+        
+        let outButton = cntrl.viewForTableViewColumn(completedCheckboxColumnCell: cell, atRow: 1, withItem: toDo)?.subviews[0] as? NSButton
+        XCTAssertNotNil(outButton)
+        XCTAssertEqual(outButton?.tag, 1)
+        XCTAssertEqual(outButton?.state, .off)
+        
+        let outButtonComplete = cntrl.viewForTableViewColumn(completedCheckboxColumnCell: cell, atRow: 2, withItem: toDoComplete)?.subviews[0] as? NSButton
+        XCTAssertNotNil(outButtonComplete)
+        XCTAssertEqual(outButtonComplete?.tag, 2)
+        XCTAssertEqual(outButtonComplete?.state, .on)
+    }
+    
     func test_mainController_getStatusLabel() {
         let status_label1 = cntrl.getStatusLabel(withNumber: 1, forGroup: nil)
         let status_label2 = cntrl.getStatusLabel(withNumber: 2, forGroup: nil)

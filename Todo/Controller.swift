@@ -17,7 +17,7 @@ class MainController: NSObject, InfoControllerDelegate, TableViewMenuDelegate, T
         guard let cellChk = view as? NSTableCellView else { return nil }
         guard let completeBtn = cellChk.subviews[0] as? NSButton else { return nil }
         completeBtn.tag = row
-        completeBtn.state = item.completedDate != nil ? .on : .off
+        completeBtn.state = item.isComplete ? .on : .off
         return cellChk
     }
     
