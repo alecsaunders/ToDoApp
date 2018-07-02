@@ -37,6 +37,15 @@ class MainController: NSObject, InfoControllerDelegate, TableViewMenuDelegate, T
         guard let itemCellView = view as? ToDoCellView else { return nil }
         return itemCellView.cellToDo
     }
+    
+    func mapGroupsToSidebarCategories(groupList list: [Group]) -> [SidebarCategoryItem] {
+        let sidebarCategories = list.map { (g) -> SidebarCategoryItem in
+            let newSbCatItem = SidebarCategoryItem(withTitle: g.groupName)
+            newSbCatItem.sbCategory = g
+            return newSbCatItem
+        }
+        return sidebarCategories
+    }
 
     func saveNewToDo(withTitle title: String, withSidebarItem sbitem: SidebarItem?) {
         guard !title.isEmpty else { return }

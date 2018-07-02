@@ -174,6 +174,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     @IBAction func menuGetInfo(_ sender: NSMenuItem) {
         showInfoViewController()
     }
+    
     @objc func doubleClick(sender: AnyObject) {
         showInfoViewController()
     }
@@ -209,18 +210,9 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     
     func reloadSidebar() {
         sbCategorySection.sbItem = []
-        sbCategorySection.sbItem = mapGroupsToSidebarCategories(groupList: fetchedGroups)
+        sbCategorySection.sbItem = cntlr.mapGroupsToSidebarCategories(groupList: fetchedGroups)
         sourceOutlineView.reloadData()
         sourceOutlineView.expandItem(nil, expandChildren: true)
-    }
-    
-    func mapGroupsToSidebarCategories(groupList list: [Group]) -> [SidebarCategoryItem] {
-        let sidebarCategories = list.map { (g) -> SidebarCategoryItem in
-            let newSbCatItem = SidebarCategoryItem(withTitle: g.groupName)
-            newSbCatItem.sbCategory = g
-            return newSbCatItem
-        }
-        return sidebarCategories
     }
     
     func numberOfRows(in tableView: NSTableView) -> Int {
