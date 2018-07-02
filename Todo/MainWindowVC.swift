@@ -228,26 +228,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     }
     
     func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
-        let theToDo = fetchedToDos[row]
-        if tableColumn == tableView.tableColumns[0] {
-            guard let cell = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "col_complete"),
-                                                owner: nil) as? NSTableCellView else { return nil }
-            guard let completeBtn = cell.subviews[0] as? NSButton else { return nil }
-            completeBtn.tag = row
-            completeBtn.state = theToDo.completedDate != nil ? .on : .off
-            return cell
-        }
-        if tableColumn == tableView.tableColumns[1] {
-            tableColumn?.headerCell.stringValue = "Name"
-            tableColumn?.headerCell.identifier = NSUserInterfaceItemIdentifier.init("Name")
-            guard let cell = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "col_toDoText"),
-                                                owner: nil) as? ToDoCellView else { return nil }
-            cell.cellToDo = theToDo
-            cell.textField?.stringValue = cell.cellToDo!.title
-            cell.toDoCellViewDelegate = cntlr
-            return cell
-        }
-        return nil
+        return cntlr.viewFor(tableView: tableView, atColumn: tableColumn, atRow: row, withItem: fetchedToDos[row])
     }
     
     func tableView(_ tableView: NSTableView, mouseDownInHeaderOf tableColumn: NSTableColumn) {

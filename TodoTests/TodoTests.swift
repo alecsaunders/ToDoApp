@@ -34,6 +34,24 @@ class TodoTests: XCTestCase {
         XCTAssertEqual(toDo.groupID, nil)
     }
     
+    func test_mainController_viewForTableViewAtColumnAtRowWithItem() {
+        let toDo = ToDo(id: "id", title: "title", note: "note", daily: false, createdDate: Date(), isComplete: false, completedDate: nil, groupID: nil)
+        let tv = NSTableView()
+        let tvCol_0 = NSTableColumn()
+        let tvCol_1 = NSTableColumn()
+        let tvCol_2 = NSTableColumn()
+        tv.addTableColumn(tvCol_0)
+        tv.addTableColumn(tvCol_1)
+        
+        print("View 0")
+        let view_0 = cntrl.viewFor(tableView: tv, atColumn: tv.tableColumns[0], atRow: 1, withItem: toDo)
+        print(view_0)
+        
+        
+        print("View 2")
+        XCTAssertNil(cntrl.viewFor(tableView: tv, atColumn: tvCol_2, atRow: 1, withItem: toDo))
+    }
+    
     func test_mainController_getStatusLabel() {
         let status_label1 = cntrl.getStatusLabel(withNumber: 1, forGroup: nil)
         let status_label2 = cntrl.getStatusLabel(withNumber: 2, forGroup: nil)
