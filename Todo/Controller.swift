@@ -13,34 +13,12 @@ class MainController: NSObject, InfoControllerDelegate, TableViewMenuDelegate, T
     weak var mainTableViewDelgate: MainTableViewDelgate?
     var modelAccessorDel: ModelAccessorDelegate?
     
-    func viewFor(tableView: NSTableView, atColumn column: NSTableColumn?, atRow row: Int, withItem item: ToDo) -> NSView? {
-        if column == tableView.tableColumns[0] {
-            print("- Is column 0 -------------------")
-            guard let cell = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "col_complete"),
-                                                owner: nil) as? NSTableCellView else {
-                                                    print("Could not make table view in column 0")
-                                                    return nil
-            }
-            guard let completeBtn = cell.subviews[0] as? NSButton else {
-                print("not cell.subview[0]")
-                return nil
-            }
-            completeBtn.tag = row
-            completeBtn.state = item.completedDate != nil ? .on : .off
-            return cell
-        }
-        if column == tableView.tableColumns[1] {
-            print("- Is column 1 -------------------")
-            column?.headerCell.stringValue = "Name"
-            guard let cell = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "col_toDoText"),
-                                                owner: nil) as? ToDoCellView else { return nil }
-            cell.cellToDo = item
-            cell.textField?.stringValue = cell.cellToDo!.title
-            cell.toDoCellViewDelegate = self
-            return cell
-        }
-        print("- Not any column -------------------")
-        return nil
+    func viewForTableViewColumn(completedCheckboxColumnCell view: NSView?, atRow row: Int, withItem item: ToDo) -> NSView? {
+        guard let cellChk = view as? NSTableCellView else { return nil }
+        guard let completeBtn = cellChk.subviews[0] as? NSButton else { return nil }
+        completeBtn.tag = row
+        completeBtn.state = item.completedDate != nil ? .on : .off
+        return cellChk
     }
     
     func getStatusLabel(withNumber num: Int, forGroup group: Group?) -> String {

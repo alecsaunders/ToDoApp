@@ -228,7 +228,21 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     }
     
     func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
-        return cntlr.viewFor(tableView: tableView, atColumn: tableColumn, atRow: row, withItem: fetchedToDos[row])
+        let item = fetchedToDos[row]
+        if tableColumn == tableView.tableColumns[0] {
+            let cell = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "col_complete"), owner: nil)
+            return cntlr.viewForTableViewColumn(completedCheckboxColumnCell: cell, atRow: row, withItem: item)
+        }
+        if tableColumn == tableView.tableColumns[1] {
+            tableColumn?.headerCell.stringValue = "Name"
+            guard let cell = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "col_toDoText"),
+                                                owner: nil) as? ToDoCellView else { return nil }
+            cell.cellToDo = item
+            cell.textField?.stringValue = cell.cellToDo!.title
+            cell.toDoCellViewDelegate = cntlr
+            return cell
+        }
+        return nil
     }
     
     func tableView(_ tableView: NSTableView, mouseDownInHeaderOf tableColumn: NSTableColumn) {
