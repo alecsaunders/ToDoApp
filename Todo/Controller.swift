@@ -70,6 +70,17 @@ class MainController: NSObject, InfoControllerDelegate, TableViewMenuDelegate, T
         updateCompletedDate(forItem: toggleCompletion(forItem: item, withState: state))
     }
     
+    func changeState(ofButton button: NSButton) -> NSControl.StateValue {
+        switch button.state {
+        case .on:
+            return .off
+        case .off:
+            return .on
+        default:
+            return .off
+        }
+    }
+    
     func toggleCompletion(forItem: ToDo, withState state: Int) -> ToDo {
         var item = forItem
         switch state {

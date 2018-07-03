@@ -142,20 +142,10 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         guard let clicked_view = mainTableView.view(atColumn: 0, row: mainTableView.clickedRow, makeIfNecessary: false) as? NSTableCellView  else { return }
         guard let button = clicked_view.subviews[0] as? NSButton else { return }
         button.tag = mainTableView.clickedRow
-        changeState(ofButton: button)
+        button.state = cntlr.changeState(ofButton: button)
         completedCheck(button)
     }
     
-    func changeState(ofButton button: NSButton) {
-        switch button.state {
-        case .on:
-            button.state = .off
-        case .off:
-            button.state = .on
-        default:
-            print("Cannot change state")
-        }
-    }
     @IBAction func completedCheck(_ sender: NSButton) {
         guard let item = cntlr.getItem(fromView: mainTableView.view(atColumn: 1, row: sender.tag, makeIfNecessary: false)) else { return }
         cntlr.completedWasChecked(forItem: item, withState: sender.state.rawValue)

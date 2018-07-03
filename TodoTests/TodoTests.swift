@@ -52,6 +52,41 @@ class TodoTests: XCTestCase {
         XCTAssertNotNil(outButtonComplete)
         XCTAssertEqual(outButtonComplete?.tag, 2)
         XCTAssertEqual(outButtonComplete?.state, .on)
+        
+        let plainView = NSView()
+        XCTAssertNil(cntrl.viewForTableViewColumn(itemColumnCell: plainView, atRow: 1, withItem: toDo))
+    }
+    
+    func test_mainController_mapGroupsToSidebarCategories() {
+        let g1 = Group(groupID: "1", groupName: "group one")
+        let g2 = Group(groupID: "2", groupName: "group two")
+        let g3 = Group(groupID: "3", groupName: "group three")
+        let gArray = [g1, g2, g3]
+        let sidebarCategoryArray = cntrl.mapGroupsToSidebarCategories(groupList: gArray)
+        XCTAssertEqual(sidebarCategoryArray.count, 3)
+        XCTAssertEqual(sidebarCategoryArray[0].sbCategory?.groupID, "1")
+        XCTAssertEqual(sidebarCategoryArray[1].sbCategory?.groupID, "2")
+        XCTAssertEqual(sidebarCategoryArray[2].sbCategory?.groupID, "3")
+        XCTAssertEqual(sidebarCategoryArray[0].sidebarTitle, "group one")
+        XCTAssertEqual(sidebarCategoryArray[1].sidebarTitle, "group two")
+        XCTAssertEqual(sidebarCategoryArray[2].sidebarTitle, "group three")
+        
+        XCTAssertEqual(cntrl.mapGroupsToSidebarCategories(groupList: []).count, 0)
+
+    }
+    
+    func test_mainController_changeStateOfButton() {
+        let button1 = NSButton()
+        button1.state = .on
+        XCTAssertEqual(cntrl.changeState(ofButton: button1), .off)
+        
+        let button2 = NSButton()
+        button2.state = .off
+        XCTAssertEqual(cntrl.changeState(ofButton: button2), .on)
+        
+        let button3 = NSButton()
+        button3.state = .init(-1)
+        XCTAssertEqual(cntrl.changeState(ofButton: button3), .off)
     }
     
     func test_mainController_getStatusLabel() {
