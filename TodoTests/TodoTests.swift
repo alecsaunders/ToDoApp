@@ -145,6 +145,22 @@ class TodoTests: XCTestCase {
         XCTAssertNil(breakCaseToDo.completedDate)
     }
     
+    func test_mainController_tvDragOperationForAnyAtIndex() {
+        let sidebarFilterAll = SidebarFilterItem(withTitle: "all")
+        sidebarFilterAll.sbFilter = .all
+        XCTAssertEqual(cntrl.tvDragOperation(forAny: sidebarFilterAll, atIndex: -1), [])
+        let sidebarFilterDaily = SidebarFilterItem(withTitle: "daily")
+        sidebarFilterDaily.sbFilter = .daily
+        XCTAssertEqual(cntrl.tvDragOperation(forAny: sidebarFilterDaily, atIndex: -1), .move)
+        let sidebarFilterComplete = SidebarFilterItem(withTitle: "complete")
+        sidebarFilterComplete.sbFilter = .completed
+        XCTAssertEqual(cntrl.tvDragOperation(forAny: sidebarFilterComplete, atIndex: -1), .delete)
+        
+        let sidebarCategory = SidebarCategoryItem(withTitle: "category")
+        XCTAssertEqual(cntrl.tvDragOperation(forAny: sidebarCategory, atIndex: -1), .move)
+        XCTAssertEqual(cntrl.tvDragOperation(forAny: sidebarCategory, atIndex: 0), [])
+    }
+    
     func test_mainController_getFetchedItems() {
         let testToDo = ToDo(id: "id", title: "infoSegueTitle", note: "infoSegueNote", daily: false, createdDate: Date(), isComplete: false, completedDate: nil, groupID: nil)
         let testCategory = Group(groupID: "id", groupName: "group name")
