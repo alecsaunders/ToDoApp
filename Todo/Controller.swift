@@ -147,6 +147,23 @@ class MainController: NSObject, InfoControllerDelegate, TableViewMenuDelegate, T
         modelAccessorDel?.delete(category: deletedGroup)
     }
     
+    func tvDragOperation(forAny item: Any?, atIndex index: Int) -> NSDragOperation {
+        if index < 0 {
+            if let filter = item as? SidebarFilterItem {
+                if filter.sbFilter == .daily {
+                    return .move
+                }
+                if filter.sbFilter == .completed {
+                    return .delete
+                }
+            }
+            if let _ = item as? SidebarCategoryItem {
+                return .move
+            }
+        }
+        return []
+    }
+    
     // MARK: - Update To Do Items
     func changeText(forToDo toDo: ToDo, withText text: String) { // ToDoCellViewDelegate method
         modelAccessorDel?.update(item: toDo, property: "title", with: text)

@@ -346,20 +346,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     }
     
     func outlineView(_ outlineView: NSOutlineView, validateDrop info: NSDraggingInfo, proposedItem item: Any?, proposedChildIndex index: Int) -> NSDragOperation {
-        if index < 0 {
-            if let filter = item as? SidebarFilterItem {
-                if filter.sbFilter == .daily {
-                    return .move
-                }
-                if filter.sbFilter == .completed {
-                    return .delete
-                }
-            }
-            if let _ = item as? SidebarCategoryItem {
-                return .move
-            }
-        }
-        return []
+        return cntlr.tvDragOperation(forAny: item, atIndex: index)
     }
     
     func outlineView(_ outlineView: NSOutlineView, acceptDrop info: NSDraggingInfo, item: Any?, childIndex index: Int) -> Bool {
