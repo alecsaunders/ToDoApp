@@ -124,6 +124,7 @@ class FirebaseController: ModelAccessorDelegate {
     
     func saveItem(toDo: ToDo) {
         fbItem.child(toDo.id).setValue(toDo.getDictionary())
+        loadItems()
     }
     
     func saveCagegory(category cat: Group) {

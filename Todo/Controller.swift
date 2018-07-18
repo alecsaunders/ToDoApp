@@ -50,7 +50,8 @@ class MainController: NSObject, InfoControllerDelegate, TableViewMenuDelegate, T
     func saveNewToDo(withTitle title: String, withSidebarItem sbitem: SidebarItem?) {
         guard !title.isEmpty else { return }
         guard let newKey = modelAccessorDel?.getNewItemKey() else { return }
-        let newToDo = ToDo(id: newKey, title: title, note: "", daily: false, createdDate: Date(), isComplete: false, completedDate: nil, groupID: nil)
+        let gid = (sbitem as? SidebarCategoryItem)?.sbCategory?.groupID
+        let newToDo = ToDo(id: newKey, title: title, note: "", daily: false, createdDate: Date(), isComplete: false, completedDate: nil, groupID: gid)
         modelAccessorDel?.saveItem(toDo: newToDo)
     }
     
