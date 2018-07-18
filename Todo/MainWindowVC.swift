@@ -206,6 +206,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     }
     
     func numberOfRows(in tableView: NSTableView) -> Int {
+        lblStatusBottom.stringValue = cntlr.getStatusLabel(withNumber: fetchedToDos.count, forGroup: nil)
         return fetchedToDos.count
     }
     
