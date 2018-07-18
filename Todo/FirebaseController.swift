@@ -203,6 +203,7 @@ class FirebaseController: ModelAccessorDelegate {
                 fbItem.child(item.id).child(prop).removeValue()
             }
         }
+        loadItems()
     }
     
     func update(category: Group, forProperty prop: String, withNewVal val: String) {
